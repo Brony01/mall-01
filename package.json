@@ -1,0 +1,24 @@
+{
+  "name": "root",
+  "version": "1.0.0",
+  "scripts": {
+    "install:serve": "npm install -g serve",
+    "postinstall:all": "yarn install && cd server && yarn install && cd ../client && yarn install",
+    "postinstall:server": "yarn install && cd server && yarn install",
+    "postinstall:client": "yarn install && cd client && yarn install",
+    "postinstall:root": "yarn install",
+    "start:server": "cd server && yarn start",
+    "start:client": "cd client && yarn start",
+    "start:all": "concurrently \"yarn start:server\" \"yarn start:client\"",
+    "serve": "serve -s ./client/build",
+    "start": "concurrently \"yarn start:server\" \"serve -s ./server/build\""
+  },
+  "devDependencies": {
+    "concurrently": "^7.0.0"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "lockfile": "^1.0.4",
+    "wrapper": "^0.1.0"
+  }
+}
