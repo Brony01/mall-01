@@ -10,7 +10,7 @@
     "start:server": "cd server && yarn start",
     "start:client": "cd client && yarn start",
     "start:all": "concurrently \"yarn start:server\" \"yarn start:client\"",
-    "serve": "serve -s ./client/build",
+    "serve": "serve -s ./server/build",
     "start": "concurrently \"yarn start:server\" \"serve -s ./server/build\""
   },
   "devDependencies": {
