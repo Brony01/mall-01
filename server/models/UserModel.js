@@ -18,9 +18,9 @@ const UserModel = mongoose.model('users', userSchema);
 const initializeAdminUser = async () => {
     const userExists = await UserModel.findOne({ username: 'admin' }).exec();
     if (!userExists) {
-        const hashedPassword = md5('admin123');
+        const hashedPassword = md5('admin');
         await UserModel.create({ username: 'admin', password: hashedPassword });
-        console.log('Initialized super admin user: Username: admin, Password: admin123');
+        console.log('Initialized super admin user: Username: admin, Password: admin');
     }
 };
 
