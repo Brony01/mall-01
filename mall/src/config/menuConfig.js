@@ -15,6 +15,7 @@ const menuList = [
     icon: 'category',
   },
   {
+
     title: '我的',
     key: '/mainpage/my',
     icon: 'my',
