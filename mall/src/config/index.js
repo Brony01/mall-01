@@ -1,5 +1,5 @@
 module.exports = {
-  serverAddress: 'http://localhost:8081',
+  serverAddress: 'http://47.94.129.28:8081',
   baseURl: '/api',
-  imgUrl: 'http://localhost:8081/upload/',
+  imgUrl: 'http://47.94.129.28:8081/api/upload/',
 };

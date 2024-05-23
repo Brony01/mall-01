@@ -1,5 +1,5 @@
 import React, { Component, Suspense } from "react";
-import { Redirect, Switch, Route } from "react-router-dom";
+import { Redirect, Switch } from "react-router-dom";
 import { BackTop, Layout } from "antd";
 import { connect } from "react-redux";
 import Loadable from "react-loadable";
@@ -9,6 +9,15 @@ import FooterComponent from "../../components/footer";
 import Loading from "../../components/loading";
 import AuthRouter from "../../components/AuthRouter";
 import NotFoundPage from "../../components/404";
+import { TabBar } from 'antd-mobile'; // 导入 TabBar 组件
+import { NavLink } from "react-router-dom"; // 导入 NavLink
+
+// 导入页面组件
+import HomePage from '../MainPage/HomePage'; // 请根据实际路径调整
+import CategoryPage from '../MainPage/CategoryPage';
+import CartPage from '../MainPage/CartPage';
+import MyPage from '../MainPage/MyPage';
+
 
 const Home = Loadable({
     loader: () => import("../home/home"),
@@ -44,12 +53,38 @@ const { Footer, Sider, Content } = Layout;
 
 class Admin extends Component {
     state = {
-        collapsed: false
+        collapsed: false,
+        selectedTab: 'home'
     };
 
     onCollapse = collapsed => {
         this.setState({ collapsed });
     };
+
+    renderTabBarItem(title, key, icon, selectedIcon, path) {
+        return (
+            <TabBar.Item
+                title={title}
+                key={key}
+                icon={<div style={{
+                    width: '22px',
+                    height: '22px',
+                    background: `url(${icon}) center center / 21px 21px no-repeat` }} />}
+                selectedIcon={<div style={{
+                    width: '22px',
+                    height: '22px',
+                    background: `url(${selectedIcon}) center center / 21px 21px no-repeat` }} />}
+                selected={this.state.selectedTab === key}
+                onPress={() => {
+                    this.setState({
+                        selectedTab: key,
+                    });
+                }}
+            >
+                <NavLink to={path} />
+            </TabBar.Item>
+        );
+    }
 
     render() {
         const { userInfo } = this.props;
@@ -71,7 +106,10 @@ class Admin extends Component {
                     <Content style={{ margin: "100px 14px 14px", background: "#fff" }}>
                         <Suspense fallback={<Loading />}>
                             <Switch>
-                                <AuthRouter exact path="/" component={Home} />
+                                <AuthRouter path="/mainpage/home" component={HomePage} />
+                                <AuthRouter path="/mainpage/category" component={CategoryPage} />
+                                <AuthRouter path="/mainpage/cart" component={CartPage} />
+                                <AuthRouter path="/mainpage/my" component={MyPage} />
                                 <AuthRouter path="/home" component={Home} />
                                 <AuthRouter path="/category" component={Category} />
                                 <AuthRouter path="/product" component={Product} />
@@ -82,6 +120,12 @@ class Admin extends Component {
                             </Switch>
                         </Suspense>
                     </Content>
+                    <TabBar>
+                        {this.renderTabBarItem('首页', 'home', 'home-icon-url', 'home-selected-icon-url', '/mainpage/home')}
+                        {this.renderTabBarItem('分类', 'category', 'category-icon-url', 'category-selected-icon-url', '/mainpage/category')}
+                        {this.renderTabBarItem('购物车', 'cart', 'cart-icon-url', 'cart-selected-icon-url', '/mainpage/cart')}
+                        {this.renderTabBarItem('我的', 'my', 'my-icon-url', 'my-selected-icon-url', '/mainpage/my')}
+                    </TabBar>
                     <Footer style={{ textAlign: "center", background: "#fff" }}>
                         <FooterComponent />
                     </Footer>
