@@ -1,0 +1,60 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* 提高层次感 */
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 添加轻微的阴影以增强层次感 */
+  overflow: hidden;
+
+  /* 确保滚动条不显示 */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  -ms-overflow-style: none; /* 对 IE 和 Edge */
+  scrollbar-width: none; /* 对 Firefox */
+}
+
+.header .border {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* 调整为两端对齐，更符合现代设计 */
+  padding: 0 20px; /* 增加左右内边距，提高边缘空间 */
+  border-bottom: 1px solid #e0e0e0; /* 设置边框颜色，更微妙的视觉效果 */
+}
+
+.header .header-top {
+  display: flex;
+  justify-content: space-between; /* 内容两端对齐 */
+  align-items: center;
+  padding: 16px 20px; /* 调整内边距，增加舒适度 */
+}
+
+.header .header-top .header-exit-btn {
+  padding: 8px 16px; /* 增加按钮的点击区域，改善用户体验 */
+  background-color: #f2f2f2; /* 轻微的背景色，更易点击 */
+  border-radius: 4px; /* 圆角效果 */
+  font-size: 16px; /* 文字大小 */
+  cursor: pointer; /* 鼠标悬停时显示指针 */
+}
+
+.header .header-bottom {
+  display: flex;
+  align-items: center;
+  padding: 8px 20px;
+}
+
+.header .header-bottom span {
+  margin: 0 10px; /* 增加间距，避免挤在一起 */
+}
+
+.header .header-bottom .header-bottom-weather-img {
+  width: 30px; /* 定义图像尺寸 */
+
+  img {
+    width: 100%;
+    height: auto; /* 高度自适应 */
+  }
+}
