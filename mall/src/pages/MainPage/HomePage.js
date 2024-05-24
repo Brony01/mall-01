@@ -1,24 +1,23 @@
 import React from 'react';
 import {
-  Carousel, Input, Card, List,
+  Carousel, Input, Card, List, Button,
 } from 'antd';
 
 const { Search } = Input;
 
 const hotItems = [
-  { title: '商品1', price: '¥100' },
-  { title: '商品2', price: '¥200' },
-  { title: '商品3', price: '¥300' },
+  { title: '小米12 Pro', price: '¥2999' },
+  { title: 'Redmi K50', price: '¥2099' },
 ];
 
 const HomePage = () => (
   <div>
-    <Search placeholder="搜索商品" onSearch={(value) => console.log(value)} enterButton />
+    <Search placeholder="请输入商品名称" onSearch={(value) => console.log(value)} enterButton />
 
     <Carousel autoplay>
-      <div><h3>轮播图片1</h3></div>
-      <div><h3>轮播图片2</h3></div>
-      <div><h3>轮播图片3</h3></div>
+      <div><img src="轮播图1.png" alt="轮播图1" /></div>
+      <div><img src="轮播图2.png" alt="轮播图2" /></div>
+      <div><img src="轮播图3.png" alt="轮播图3" /></div>
     </Carousel>
 
     <Card title="热门商品">
@@ -32,6 +31,13 @@ const HomePage = () => (
         )}
       />
     </Card>
+
+    <div className="categories">
+      <Button>专题</Button>
+      <Button>活动</Button>
+      <Button>优惠</Button>
+      <Button>特惠</Button>
+    </div>
   </div>
 );
 
