@@ -17,7 +17,11 @@ import HomePage from '../MainPage/HomePage'; // 请根据实际路径调整
 import CategoryPage from '../MainPage/CategoryPage';
 import CartPage from '../MainPage/CartPage';
 import MyPage from '../MainPage/MyPage';
-
+import ProductListPage from '../purchase/ProductListPage';
+import ProductDetailPage from '../purchase/ProductDetailPage';
+import CheckoutPage from '../purchase/CheckoutPage';
+import OrderConfirmedPage from '../purchase/OrderConfirmedPage';
+import OrderDetailsPage from '../purchase/OrderDetailsPage';
 
 const Home = Loadable({
     loader: () => import("../home/home"),
@@ -79,10 +83,9 @@ class Admin extends Component {
                     this.setState({
                         selectedTab: key,
                     });
+                    this.props.history.push(path);
                 }}
-            >
-                <NavLink to={path} />
-            </TabBar.Item>
+            />
         );
     }
 
@@ -110,6 +113,11 @@ class Admin extends Component {
                                 <AuthRouter path="/mainpage/category" component={CategoryPage} />
                                 <AuthRouter path="/mainpage/cart" component={CartPage} />
                                 <AuthRouter path="/mainpage/my" component={MyPage} />
+                                <AuthRouter path="/mainpage/products" component={ProductListPage} />
+                                <AuthRouter path="/mainpage/product/detail" component={ProductDetailPage} />
+                                <AuthRouter path="/checkout" component={CheckoutPage} />
+                                <AuthRouter path="/order-confirmed" component={OrderConfirmedPage} />
+                                <AuthRouter path="/order-details" component={OrderDetailsPage} />
                                 <AuthRouter path="/home" component={Home} />
                                 <AuthRouter path="/category" component={Category} />
                                 <AuthRouter path="/product" component={Product} />

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { List, Card } from 'antd';
+import { withRouter } from 'react-router-dom';
 
 const categories = [
   { title: '服装', items: ['上衣', '裤子', '鞋子'] },
@@ -10,8 +11,19 @@ const categories = [
   { title: '电脑办公', items: ['笔记本', '台式机', '打印机'] },
 ];
 
-const CategoryPage = () => {
+const CategoryPage = ({ history }) => {
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category);
+  };
+
+  const handleItemClick = (item) => {
+    history.push({
+      pathname: '/mainpage/products',
+      state: { searchText: item },
+    });
+  };
 
   return (
     <div style={{ display: 'flex' }}>
@@ -19,7 +31,7 @@ const CategoryPage = () => {
         <List
           dataSource={categories}
           renderItem={(category) => (
-            <List.Item onClick={() => setSelectedCategory(category)}>
+            <List.Item onClick={() => handleCategoryClick(category)}>
               <div>{category.title}</div>
             </List.Item>
           )}
@@ -32,7 +44,7 @@ const CategoryPage = () => {
             dataSource={selectedCategory.items}
             renderItem={(item) => (
               <List.Item>
-                <Card>{item}</Card>
+                <Card onClick={() => handleItemClick(item)}>{item}</Card>
               </List.Item>
             )}
           />
@@ -42,4 +54,4 @@ const CategoryPage = () => {
   );
 };
 
-export default CategoryPage;
+export default withRouter(CategoryPage);

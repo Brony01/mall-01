@@ -1,5 +1,5 @@
 module.exports = {
-  serverAddress: 'http://47.94.129.28:8081',
+  serverAddress: 'http://127.0.0.1:8081',
   baseURl: '/api',
-  imgUrl: 'http://47.94.129.28:8081/api/upload/',
+  imgUrl: 'http://127.0.0.1:8081/api/upload/',
 };

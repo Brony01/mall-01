@@ -8,7 +8,7 @@ const cartItems = [
   { title: 'Redmi K50', price: 2099, quantity: 1 },
 ];
 
-const CartPage = () => {
+const CartPage = ({ history }) => {
   const [selectedItems, setSelectedItems] = useState(cartItems.map(() => false));
   const [items, setItems] = useState(cartItems);
 
@@ -26,6 +26,10 @@ const CartPage = () => {
     const newItems = [...items];
     newItems[index].quantity = value;
     setItems(newItems);
+  };
+
+  const handleCheckout = () => {
+    history.push('/checkout');
   };
 
   const totalPrice = items.reduce((total, item, index) => {
@@ -63,7 +67,7 @@ const CartPage = () => {
           {' '}
           元
         </div>
-        <Button type="primary">去结算</Button>
+        <Button type="primary" onClick={handleCheckout}>去结算</Button>
       </div>
     </Card>
   );
