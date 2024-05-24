@@ -48,3 +48,28 @@ export const reqRoleList = (data) => request('/manage/role/list', 'GET', data);
 
 // 设置权限
 export const reqSettingRole = (data) => request('/manage/role/update', 'POST', data);
+
+// 购物车
+export const reqAddToCart = (data) => request('/cart/add', 'POST', data);
+export const reqGetCart = (data) => request('/cart', 'GET', data);
+export const reqUpdateCart = (data) => request('/cart/update', 'POST', data);
+export const reqDeleteCartItem = (data) => request('/cart/delete', 'POST', data);
+
+// 收藏
+export const reqAddToFavorites = (data) => request('/favorite/add', 'POST', data);
+export const reqGetFavorites = (data) => request('/favorite', 'GET', data);
+export const reqDeleteFavoriteItem = (data) => request('/favorite/delete', 'POST', data);
+
+// 足迹
+export const reqAddToFootprints = (data) => request('/footprint/add', 'POST', data);
+export const reqGetFootprints = (data) => request('/footprint', 'GET', data);
+
+// 订单
+export const reqCreateOrder = (data) => request('/order/create', 'POST', data);
+export const reqGetOrders = (data) => request('/order', 'GET', data);
+export const reqUpdateOrder = (data) => request('/order/update', 'POST', data);
+export const reqDeleteOrder = (data) => request('/order/delete', 'POST', data);
+
+// 优惠券
+export const reqAddCoupon = (data) => request('/coupon/add', 'POST', data);
+export const reqGetCoupons = (data) => request('/coupon', 'GET', data);

@@ -9,6 +9,11 @@ const UserModel = require('../models/UserModel');
 const CategoryModel = require('../models/CategoryModel');
 const ProductModel = require('../models/ProductModel');
 const RoleModel = require('../models/RoleModel');
+const CartModel = require('../models/CartModel');
+const CouponModel = require('../models/CouponModel');
+const FavoriteModel = require('../models/FavoriteModel');
+const OrderModel = require('../models/OrderModel');
+const FootprintModel = require('../models/FootprintModel');
 
 // 生成token的方法
 function generateToken(data = {}) {
@@ -338,6 +343,215 @@ router.post('/manage/role/update', (req, res) => {
             console.error('更新角色异常', error);
             res.send({ status: 1, msg: '更新角色异常, 请重新尝试' });
         });
+});
+
+// 购物车
+router.post('/cart/add', async (req, res) => {
+    const { userId, productId, quantity, price } = req.body;
+    try {
+        let cart = await CartModel.findOne({ userId });
+        if (cart) {
+            const productIndex = cart.products.findIndex(p => p.productId === productId);
+            if (productIndex > -1) {
+                cart.products[productIndex].quantity += quantity;
+            } else {
+                cart.products.push({ productId, quantity, price });
+            }
+        } else {
+            cart = new CartModel({ userId, products: [{ productId, quantity, price }] });
+        }
+        await cart.save();
+        res.send({ status: 0 });
+    } catch (error) {
+        res.send({ status: 1, msg: '添加到购物车失败' });
+    }
+});
+
+router.get('/cart', async (req, res) => {
+    const { userId } = req.query;
+    try {
+        const cart = await CartModel.findOne({ userId });
+        res.send({ status: 0, data: cart });
+    } catch (error) {
+        res.send({ status: 1, msg: '获取购物车信息失败' });
+    }
+});
+
+router.post('/cart/update', async (req, res) => {
+    const { userId, productId, quantity } = req.body;
+    try {
+        let cart = await CartModel.findOne({ userId });
+        if (cart) {
+            const productIndex = cart.products.findIndex(p => p.productId === productId);
+            if (productIndex > -1) {
+                cart.products[productIndex].quantity = quantity;
+                await cart.save();
+                res.send({ status: 0 });
+            } else {
+                res.send({ status: 1, msg: '商品不在购物车中' });
+            }
+        } else {
+            res.send({ status: 1, msg: '购物车不存在' });
+        }
+    } catch (error) {
+        res.send({ status: 1, msg: '更新购物车失败' });
+    }
+});
+
+router.post('/cart/delete', async (req, res) => {
+    const { userId, productId } = req.body;
+    try {
+        let cart = await CartModel.findOne({ userId });
+        if (cart) {
+            cart.products = cart.products.filter(p => p.productId !== productId);
+            await cart.save();
+            res.send({ status: 0 });
+        } else {
+            res.send({ status: 1, msg: '购物车不存在' });
+        }
+    } catch (error) {
+        res.send({ status: 1, msg: '删除购物车商品失败' });
+    }
+});
+
+// 收藏
+router.post('/favorite/add', async (req, res) => {
+    const { userId, productId } = req.body;
+    try {
+        let favorite = await FavoriteModel.findOne({ userId });
+        if (favorite) {
+            const productIndex = favorite.products.findIndex(p => p.productId === productId);
+            if (productIndex === -1) {
+                favorite.products.push({ productId });
+            }
+        } else {
+            favorite = new FavoriteModel({ userId, products: [{ productId }] });
+        }
+        await favorite.save();
+        res.send({ status: 0 });
+    } catch (error) {
+        res.send({ status: 1, msg: '添加到收藏失败' });
+    }
+});
+
+router.get('/favorite', async (req, res) => {
+    const { userId } = req.query;
+    try {
+        const favorite = await FavoriteModel.findOne({ userId });
+        res.send({ status: 0, data: favorite });
+    } catch (error) {
+        res.send({ status: 1, msg: '获取收藏信息失败' });
+    }
+});
+
+router.post('/favorite/delete', async (req, res) => {
+    const { userId, productId } = req.body;
+    try {
+        let favorite = await FavoriteModel.findOne({ userId });
+        if (favorite) {
+            favorite.products = favorite.products.filter(p => p.productId !== productId);
+            await favorite.save();
+            res.send({ status: 0 });
+        } else {
+            res.send({ status: 1, msg: '收藏列表不存在' });
+        }
+    } catch (error) {
+        res.send({ status: 1, msg: '删除收藏商品失败' });
+    }
+});
+
+// 足迹
+router.post('/footprint/add', async (req, res) => {
+    const { userId, productId } = req.body;
+    try {
+        let footprint = await FootprintModel.findOne({ userId });
+        if (footprint) {
+            const productIndex = footprint.products.findIndex(p => p.productId === productId);
+            if (productIndex === -1) {
+                footprint.products.push({ productId });
+            }
+        } else {
+            footprint = new FootprintModel({ userId, products: [{ productId }] });
+        }
+        await footprint.save();
+        res.send({ status: 0 });
+    } catch (error) {
+        res.send({ status: 1, msg: '添加到足迹失败' });
+    }
+});
+
+router.get('/footprint', async (req, res) => {
+    const { userId } = req.query;
+    try {
+        const footprint = await FootprintModel.findOne({ userId });
+        res.send({ status: 0, data: footprint });
+    } catch (error) {
+        res.send({ status: 1, msg: '获取足迹信息失败' });
+    }
+});
+
+// 订单
+router.post('/order/create', async (req, res) => {
+    const { userId, products, totalAmount } = req.body;
+    try {
+        const order = new OrderModel({ userId, products, totalAmount, status: '待付款' });
+        await order.save();
+        res.send({ status: 0 });
+    } catch (error) {
+        res.send({ status: 1, msg: '创建订单失败' });
+    }
+});
+
+router.get('/order', async (req, res) => {
+    const { userId } = req.query;
+    try {
+        const orders = await OrderModel.find({ userId });
+        res.send({ status: 0, data: orders });
+    } catch (error) {
+        res.send({ status: 1, msg: '获取订单信息失败' });
+    }
+});
+
+router.post('/order/update', async (req, res) => {
+    const { orderId, status } = req.body;
+    try {
+        await OrderModel.findOneAndUpdate({ _id: orderId }, { status });
+        res.send({ status: 0 });
+    } catch (error) {
+        res.send({ status: 1, msg: '更新订单状态失败' });
+    }
+});
+
+router.post('/order/delete', async (req, res) => {
+    const { orderId } = req.body;
+    try {
+        await OrderModel.deleteOne({ _id: orderId });
+        res.send({ status: 0 });
+    } catch (error) {
+        res.send({ status: 1, msg: '删除订单失败' });
+    }
+});
+
+// 优惠券
+router.post('/coupon/add', async (req, res) => {
+    const { code, discount, expiryDate, userId } = req.body;
+    try {
+        const coupon = new CouponModel({ code, discount, expiryDate, userId });
+        await coupon.save();
+        res.send({ status: 0 });
+    } catch (error) {
+        res.send({ status: 1, msg: '添加优惠券失败' });
+    }
+});
+
+router.get('/coupon', async (req, res) => {
+    const { userId } = req.query;
+    try {
+        const coupons = await CouponModel.find({ userId });
+        res.send({ status: 0, data: coupons });
+    } catch (error) {
+        res.send({ status: 1, msg: '获取优惠券信息失败' });
+    }
 });
 
 /*

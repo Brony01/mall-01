@@ -1,6 +1,8 @@
 import React from 'react';
-import { Card, List, Typography, Icon, Button } from 'antd';
+import { Card, List, Typography, Icon, Button, message } from 'antd';
 import { withRouter } from 'react-router-dom';
+import { reqAddToCart, reqAddToFavorites, reqAddToFootprints } from 'api';
+import {reqCreateOrder} from "../../api";
 
 const { Text } = Typography;
 const listStyle = { fontSize: 15, marginRight: '1rem' };
@@ -17,13 +19,65 @@ class ProductDetailPage extends React.Component {
         this.props.history.goBack();
     }
 
-    handleBuyNow = () => {
-        this.props.history.push('/checkout');
+    handleBuyNow = async () => {
+        const { userId, productId, quantity, price } = this.props.location.state;
+        const products = [{ productId, quantity, price }];
+        const totalAmount = price * quantity;
+
+        try {
+            await reqCreateOrder({ userId, products, totalAmount });
+            message.success('订单已创建');
+            this.props.history.push('/checkout');
+        } catch (error) {
+            message.error('创建订单失败');
+        }
     }
 
-    handleAddToCart = () => {
-        // 逻辑: 将商品添加到购物车
-        this.props.history.push('/mainpage/cart');
+    handleAddToCart = async () => {
+        const { productId, price } = this.props.location.state;
+        const userId = '当前用户的ID'; // 从用户登录信息中获取
+
+        try {
+            await reqAddToCart({
+                userId,
+                productId,
+                quantity: 1,
+                price
+            });
+            message.success('商品已加入购物车');
+        } catch (error) {
+            message.error('添加到购物车失败');
+        }
+    }
+
+    handleAddToFavorites = async () => {
+        const { productId } = this.props.location.state;
+        const userId = '当前用户的ID'; // 从用户登录信息中获取
+
+        try {
+            await reqAddToFavorites({
+                userId,
+                productId
+            });
+            message.success('商品已收藏');
+        } catch (error) {
+            message.error('收藏商品失败');
+        }
+    }
+
+    handleAddToFootprints = async () => {
+        const { productId } = this.props.location.state;
+        const userId = '当前用户的ID'; // 从用户登录信息中获取
+
+        try {
+            await reqAddToFootprints({
+                userId,
+                productId
+            });
+            message.success('商品已添加到足迹');
+        } catch (error) {
+            message.error('添加到足迹失败');
+        }
     }
 
     handleHome = () => {
@@ -86,7 +140,7 @@ class ProductDetailPage extends React.Component {
                 <div className="bottom-buttons">
                     <Button onClick={this.handleHome}>首页</Button>
                     <Button onClick={this.handleCart}>购物车</Button>
-                    <Button>收藏</Button>
+                    <Button onClick={this.handleAddToFavorites}>收藏</Button>
                     <Button type="primary" onClick={this.handleBuyNow}>立即购买</Button>
                     <Button type="primary" onClick={this.handleAddToCart}>加入购物车</Button>
                 </div>

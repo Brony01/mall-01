@@ -1,25 +1,61 @@
-import React from 'react';
-import { Card, Button } from 'antd';
+import React, { useState, useEffect } from 'react';
+import {
+  Card, Button, List, Typography, message,
+} from 'antd';
+import { withRouter } from 'react-router-dom';
+import { reqGetProducts } from 'api';
 
-const product = {
-  title: '小米12 Pro',
-  price: '¥2999',
-  description: '高性能手机，适合各种需求',
-};
+const { Text } = Typography;
 
 const ProductPage = ({ history }) => {
-  const handleBuyNow = () => {
-    // 创建订单并跳转到支付页面
-    history.push('/checkout');
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const res = await reqGetProducts();
+      setProducts(res.data);
+      setLoading(false);
+    } catch (error) {
+      message.error('获取商品列表失败');
+      setLoading(false);
+    }
+  };
+
+  const handleDetail = (product) => {
+    history.push({
+      pathname: '/mainpage/product/detail',
+      state: product,
+    });
   };
 
   return (
-    <Card title={product.title}>
-      <p>{product.description}</p>
-      <p>{product.price}</p>
-      <Button type="primary" onClick={handleBuyNow}>立即购买</Button>
+    <Card title="商品列表">
+      <List
+        dataSource={products}
+        renderItem={(product) => (
+          <List.Item>
+            <Card
+              title={product.name}
+              extra={<Button type="link" onClick={() => handleDetail(product)}>详情</Button>}
+            >
+              <Text>{product.desc}</Text>
+              <Text>
+                价格: ¥
+                {product.price}
+              </Text>
+            </Card>
+          </List.Item>
+        )}
+        loading={loading}
+      />
     </Card>
   );
 };
 
-export default ProductPage;
+export default withRouter(ProductPage);
