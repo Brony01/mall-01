@@ -73,3 +73,6 @@ export const reqDeleteOrder = (data) => request('/order/delete', 'POST', data);
 // 优惠券
 export const reqAddCoupon = (data) => request('/coupon/add', 'POST', data);
 export const reqGetCoupons = (data) => request('/coupon', 'GET', data);
+
+// 商品详情
+export const reqGetProductDetails = (productId) => request(`/product/${productId}`, 'GET');

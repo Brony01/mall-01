@@ -5,7 +5,7 @@ const footprintSchema = new mongoose.Schema({
     userId: { type: String, required: true },
     products: [
         {
-            productId: { type: String, required: true },
+            productId: { type: mongoose.Types.ObjectId, ref: 'products' },
             viewTime: { type: Number, default: Date.now }
         }
     ]

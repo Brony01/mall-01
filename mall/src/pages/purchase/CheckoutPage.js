@@ -1,26 +1,51 @@
 import React from 'react';
 import { Card, Button, message } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { reqCreateOrder, reqUpdateOrder } from 'api';
+import { reqCreateOrder, reqUpdateOrder, reqGetProductDetails } from 'api';
 
 class CheckoutPage extends React.Component {
     state = {
-        order: this.props.location.state || {
+        order: {
             products: [],
             totalAmount: 0,
             status: '待支付',
             orderId: null,
+            productDetails: {},
         },
     };
 
     componentDidMount() {
-        if (!this.state.order.orderId) {
-            this.createOrder();
+        const { location } = this.props;
+        if (location.state && location.state.products && location.state.products.length > 0) {
+            this.setState({ order: { ...location.state, status: '待支付' } }, this.fetchProductDetails);
+        } else {
+            message.error('未能获取订单信息，请返回购物车重新结算');
+            this.props.history.push('/mainpage/cart');
         }
     }
 
+    fetchProductDetails = async () => {
+        const { products } = this.state.order;
+        const productIds = products.map((product) => product.productId);
+        try {
+            const productDetails = await Promise.all(productIds.map(id => reqGetProductDetails(id)));
+            const productDetailsMap = productDetails.reduce((acc, detail) => {
+                acc[detail.data._id] = detail.data;
+                return acc;
+            }, {});
+            this.setState((prevState) => ({
+                order: {
+                    ...prevState.order,
+                    productDetails: productDetailsMap,
+                },
+            }));
+        } catch (error) {
+            message.error('获取商品详情失败');
+        }
+    };
+
     createOrder = async () => {
-        const { products, totalAmount } = this.props.location.state;
+        const { products, totalAmount } = this.state.order;
         const userId = '当前用户的ID'; // 从用户登录信息中获取
         try {
             const res = await reqCreateOrder({ userId, products, totalAmount });
@@ -55,14 +80,16 @@ class CheckoutPage extends React.Component {
     };
 
     render() {
-        const { products, totalAmount, status } = this.state.order;
+        const { products, totalAmount, status, productDetails } = this.state.order;
         return (
             <Card title="支付页面">
                 <p>商品列表:</p>
                 <ul>
                     {products.map((product, index) => (
                         <li key={index}>
-                            {product.productId} - {product.quantity}件 - ¥{product.price}
+                            {productDetails[product.productId]?.name || product.productId} - {product.quantity}件 - ¥{product.price}
+                            <br />
+                            {productDetails[product.productId]?.desc || ''}
                         </li>
                     ))}
                 </ul>

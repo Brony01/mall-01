@@ -420,12 +420,12 @@ router.post('/favorite/add', async (req, res) => {
     try {
         let favorite = await FavoriteModel.findOne({ userId });
         if (favorite) {
-            const productIndex = favorite.products.findIndex(p => p.productId === productId);
+            const productIndex = favorite.products.findIndex(p => p.productId.equals(productId));
             if (productIndex === -1) {
-                favorite.products.push({ productId });
+                favorite.products.push({ productId: mongoose.Types.ObjectId(productId) });
             }
         } else {
-            favorite = new FavoriteModel({ userId, products: [{ productId }] });
+            favorite = new FavoriteModel({ userId, products: [{ productId: mongoose.Types.ObjectId(productId) }] });
         }
         await favorite.save();
         res.send({ status: 0 });
@@ -437,8 +437,16 @@ router.post('/favorite/add', async (req, res) => {
 router.get('/favorite', async (req, res) => {
     const { userId } = req.query;
     try {
-        const favorite = await FavoriteModel.findOne({ userId });
-        res.send({ status: 0, data: favorite });
+        const favorite = await FavoriteModel.findOne({ userId }).populate('products.productId');
+        if (favorite) {
+            const populatedProducts = favorite.products.map((product) => ({
+                ...product._doc,
+                productDetails: product.productId
+            }));
+            res.send({ status: 0, data: populatedProducts });
+        } else {
+            res.send({ status: 0, data: [] });
+        }
     } catch (error) {
         res.send({ status: 1, msg: '获取收藏信息失败' });
     }
@@ -449,7 +457,7 @@ router.post('/favorite/delete', async (req, res) => {
     try {
         let favorite = await FavoriteModel.findOne({ userId });
         if (favorite) {
-            favorite.products = favorite.products.filter(p => p.productId !== productId);
+            favorite.products = favorite.products.filter(p => !p.productId.equals(productId));
             await favorite.save();
             res.send({ status: 0 });
         } else {
@@ -466,12 +474,12 @@ router.post('/footprint/add', async (req, res) => {
     try {
         let footprint = await FootprintModel.findOne({ userId });
         if (footprint) {
-            const productIndex = footprint.products.findIndex(p => p.productId === productId);
+            const productIndex = footprint.products.findIndex(p => p.productId.equals(productId));
             if (productIndex === -1) {
-                footprint.products.push({ productId });
+                footprint.products.push({ productId: mongoose.Types.ObjectId(productId) });
             }
         } else {
-            footprint = new FootprintModel({ userId, products: [{ productId }] });
+            footprint = new FootprintModel({ userId, products: [{ productId: mongoose.Types.ObjectId(productId) }] });
         }
         await footprint.save();
         res.send({ status: 0 });
@@ -483,8 +491,16 @@ router.post('/footprint/add', async (req, res) => {
 router.get('/footprint', async (req, res) => {
     const { userId } = req.query;
     try {
-        const footprint = await FootprintModel.findOne({ userId });
-        res.send({ status: 0, data: footprint });
+        const footprint = await FootprintModel.findOne({ userId }).populate('products.productId');
+        if (footprint) {
+            const populatedProducts = footprint.products.map((product) => ({
+                ...product._doc,
+                productDetails: product.productId
+            }));
+            res.send({ status: 0, data: populatedProducts });
+        } else {
+            res.send({ status: 0, data: [] });
+        }
     } catch (error) {
         res.send({ status: 1, msg: '获取足迹信息失败' });
     }
@@ -496,7 +512,7 @@ router.post('/order/create', async (req, res) => {
     try {
         const order = new OrderModel({ userId, products, totalAmount, status: '待付款' });
         await order.save();
-        res.send({ status: 0 });
+        res.send({ status: 0, data: order });
     } catch (error) {
         res.send({ status: 1, msg: '创建订单失败' });
     }
@@ -551,6 +567,21 @@ router.get('/coupon', async (req, res) => {
         res.send({ status: 0, data: coupons });
     } catch (error) {
         res.send({ status: 1, msg: '获取优惠券信息失败' });
+    }
+});
+
+// 商品详情
+router.get('/product/:id', async (req, res) => {
+    const productId = req.params.id;
+    try {
+        const product = await ProductModel.findById(productId);
+        if (product) {
+            res.send({status: 0, data: product});
+        } else {
+            res.send({status: 1, msg: '商品不存在'});
+        }
+    } catch (error) {
+        res.send({status: 1, msg: '获取商品详情失败'});
     }
 });
 

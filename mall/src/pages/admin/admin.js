@@ -22,6 +22,8 @@ import ProductDetailPage from '../purchase/ProductDetailPage';
 import CheckoutPage from '../purchase/CheckoutPage';
 import OrderConfirmedPage from '../purchase/OrderConfirmedPage';
 import OrderDetailsPage from '../purchase/OrderDetailsPage';
+import FavoritePage from "../purchase/FavoritePage";
+import FootprintPage from "../purchase/FootprintPage";
 
 const Home = Loadable({
     loader: () => import("../home/home"),
@@ -118,6 +120,11 @@ class Admin extends Component {
                                 <AuthRouter path="/checkout" component={CheckoutPage} />
                                 <AuthRouter path="/order-confirmed" component={OrderConfirmedPage} />
                                 <AuthRouter path="/order-details" component={OrderDetailsPage} />
+                                <AuthRouter path="/favorite" component={FavoritePage} />
+                                {/*<AuthRouter path="/mainpage/my/address" component={AddressPage} />*/}
+                                <AuthRouter path="/footprint" component={FootprintPage} />
+                                {/*<AuthRouter path="/mainpage/my/reviews" component={ReviewsPage} />*/}
+
                                 <AuthRouter path="/home" component={Home} />
                                 <AuthRouter path="/category" component={Category} />
                                 <AuthRouter path="/product" component={Product} />

@@ -49,7 +49,16 @@ const CartPage = ({ history }) => {
   };
 
   const handleCheckout = () => {
-    history.push('/checkout');
+    const selectedProducts = cartItems.filter((_, index) => selectedItems[index]);
+    const totalAmount = selectedProducts.reduce((total, item) => total + item.price * item.quantity, 0);
+    if (selectedProducts.length === 0) {
+      message.warning('请选择至少一个商品');
+      return;
+    }
+    history.push({
+      pathname: '/checkout',
+      state: { products: selectedProducts, totalAmount },
+    });
   };
 
   const handleDeleteItem = (index) => async () => {

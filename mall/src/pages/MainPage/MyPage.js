@@ -1,5 +1,5 @@
 import React from 'react';
-import {List, Card, Button, message} from 'antd';
+import { List, Card, Button, message } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { reqGetOrders } from 'api';
 
@@ -29,11 +29,15 @@ class MyPage extends React.Component {
 
     handleOrderClick = (status) => {
         const { orders } = this.state;
-        const filteredOrders = orders.filter((order) => order.status === status);
+        const filteredOrders = status === 'all' ? orders : orders.filter((order) => order.status === status);
         this.props.history.push({
             pathname: '/order-details',
             state: { orders: filteredOrders },
         });
+    };
+
+    handlePageNavigation = (page) => {
+        this.props.history.push(page);
     };
 
     render() {
@@ -47,11 +51,11 @@ class MyPage extends React.Component {
         ];
 
         const otherItems = [
-            { title: '地址管理', icon: 'address-icon-url' },
-            { title: '我的足迹', icon: 'footprint-icon-url' },
-            { title: '我的关注', icon: 'favorites-icon-url' },
-            { title: '我的收藏', icon: 'collection-icon-url' },
-            { title: '我的评价', icon: 'reviews-icon-url' },
+            { title: '地址管理', icon: 'address-icon-url', page: '/address' },
+            { title: '我的足迹', icon: 'footprint-icon-url', page: '/footprint' },
+            { title: '我的关注', icon: 'favorites-icon-url', page: '/favorites' },
+            { title: '我的收藏', icon: 'collection-icon-url', page: '/favorite' },
+            { title: '我的评价', icon: 'reviews-icon-url', page: '/reviews' },
         ];
 
         return (
@@ -81,7 +85,9 @@ class MyPage extends React.Component {
                     dataSource={otherItems}
                     renderItem={(item) => (
                         <List.Item>
-                            <Card title={item.title}><img src={item.icon} alt={item.title} /></Card>
+                            <Card title={item.title} onClick={() => this.handlePageNavigation(item.page)}>
+                                <img src={item.icon} alt={item.title} />
+                            </Card>
                         </List.Item>
                     )}
                 />
