@@ -25,7 +25,7 @@ class CheckoutPage extends React.Component {
 
     createOrder = async () => {
         const { products, totalAmount } = this.state.order;
-        const userId = '当前用户的ID'; // 从用户登录信息中获取
+        const userId = this.props.userInfo._id; // 从用户登录信息中获取
         try {
             const res = await reqCreateOrder({ userId, products, totalAmount });
             if (res.status === 0) {
@@ -66,7 +66,7 @@ class CheckoutPage extends React.Component {
                 <ul>
                     {products.map((product, index) => (
                         <li key={index}>
-                            {product.productId} - {product.quantity}件 - ¥{product.price}
+                            名称: {product.name} - 数量: {product.quantity}件 - 价格: ¥{product.price} - 描述: {product.desc}
                         </li>
                     ))}
                 </ul>

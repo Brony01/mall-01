@@ -9,7 +9,7 @@ const FootprintPage = ({ history, userInfo }) => {
 
   useEffect(() => {
     const fetchFootprints = async () => {
-      const userId = userInfo._id; // 从用户登录信息中获取
+      const userId = '当前用户的ID'; // 从用户登录信息中获取
       try {
         const res = await reqGetFootprints({ userId });
         if (res.status === 0) {
