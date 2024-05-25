@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
 import {
   List, Card, Button, message,
 } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { reqGetFavorites, reqDeleteFavoriteItem } from 'api';
 
-const FavoritePage = ({ history, userInfo }) => {
+const FavoritePage = ({ history }) => {
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
     const fetchFavorites = async () => {
+      const userId = '当前用户的ID'; // 从用户登录信息中获取
       try {
-        const res = await reqGetFavorites({ userId: userInfo._id });
+        const res = await reqGetFavorites({ userId });
         if (res.status === 0) {
           setFavorites(res.data || []);
         } else {
@@ -24,7 +24,7 @@ const FavoritePage = ({ history, userInfo }) => {
     };
 
     fetchFavorites();
-  }, [userInfo._id]);
+  }, []);
 
   const handleDetail = (productId) => {
     history.push({
@@ -33,8 +33,9 @@ const FavoritePage = ({ history, userInfo }) => {
   };
 
   const handleDelete = async (productId) => {
+    const userId = '当前用户的ID'; // 从用户登录信息中获取
     try {
-      await reqDeleteFavoriteItem({ userId: userInfo._id, productId });
+      await reqDeleteFavoriteItem({ userId, productId });
       setFavorites(favorites.filter((item) => item.productDetails._id !== productId));
       message.success('删除收藏商品成功');
     } catch (error) {
@@ -67,8 +68,4 @@ const FavoritePage = ({ history, userInfo }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  userInfo: state.loginUserInfo, // 从Redux store中获取用户信息
-});
-
-export default connect(mapStateToProps)(withRouter(FavoritePage));
+export default withRouter(FavoritePage);

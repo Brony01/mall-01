@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { List, Card, message } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { reqGetFootprints } from 'api';
+import { connect } from 'react-redux';
 
-const FootprintPage = ({ history }) => {
+const FootprintPage = ({ history, userInfo }) => {
   const [footprints, setFootprints] = useState([]);
 
   useEffect(() => {
     const fetchFootprints = async () => {
-      const userId = '当前用户的ID'; // 从用户登录信息中获取
+      const userId = userInfo._id; // 从用户登录信息中获取
       try {
         const res = await reqGetFootprints({ userId });
         if (res.status === 0) {
@@ -22,7 +23,7 @@ const FootprintPage = ({ history }) => {
     };
 
     fetchFootprints();
-  }, []);
+  }, [userInfo]);
 
   const handleDetail = (productId) => {
     history.push({
@@ -50,4 +51,8 @@ const FootprintPage = ({ history }) => {
   );
 };
 
-export default withRouter(FootprintPage);
+const mapStateToProps = (state) => ({
+  userInfo: state.loginUserInfo, // 从Redux store中获取用户信息
+});
+
+export default connect(mapStateToProps)(withRouter(FootprintPage));
