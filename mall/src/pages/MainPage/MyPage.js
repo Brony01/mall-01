@@ -2,6 +2,7 @@ import React from 'react';
 import { List, Card, Button, message } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { reqGetOrders } from 'api';
+import {connect} from "react-redux";
 
 class MyPage extends React.Component {
     state = {
@@ -18,7 +19,7 @@ class MyPage extends React.Component {
     }
 
     fetchOrders = async () => {
-        const userId = '当前用户的ID'; // 从用户登录信息中获取
+        const userId = this.props.userInfo._id; // 从用户登录信息中获取
         try {
             const res = await reqGetOrders({ userId });
             this.setState({ orders: res.data });
@@ -31,7 +32,7 @@ class MyPage extends React.Component {
         const { orders } = this.state;
         const filteredOrders = status === 'all' ? orders : orders.filter((order) => order.status === status);
         this.props.history.push({
-            pathname: '/order-details',
+            pathname: '/order',
             state: { orders: filteredOrders },
         });
     };
@@ -96,4 +97,8 @@ class MyPage extends React.Component {
     }
 }
 
-export default withRouter(MyPage);
+const mapStateToProps = (state) => ({
+    userInfo: state.loginUserInfo, // 从Redux store中获取用户信息
+});
+
+export default connect(mapStateToProps)(withRouter(MyPage));

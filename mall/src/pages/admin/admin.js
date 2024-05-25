@@ -21,6 +21,7 @@ import ProductListPage from '../purchase/ProductListPage';
 import ProductDetailPage from '../purchase/ProductDetailPage';
 import CheckoutPage from '../purchase/CheckoutPage';
 import OrderConfirmedPage from '../purchase/OrderConfirmedPage';
+import OrderPage from '../purchase/OrderPage';
 import OrderDetailsPage from '../purchase/OrderDetailsPage';
 import FavoritePage from "../purchase/FavoritePage";
 import FootprintPage from "../purchase/FootprintPage";
@@ -118,6 +119,7 @@ class Admin extends Component {
                                 <AuthRouter path="/mainpage/products" component={ProductListPage} />
                                 <AuthRouter path="/mainpage/product/detail" component={ProductDetailPage} />
                                 <AuthRouter path="/checkout" component={CheckoutPage} />
+                                <AuthRouter path="/order" component={OrderPage} />
                                 <AuthRouter path="/order-confirmed" component={OrderConfirmedPage} />
                                 <AuthRouter path="/order-details" component={OrderDetailsPage} />
                                 <AuthRouter path="/favorite" component={FavoritePage} />

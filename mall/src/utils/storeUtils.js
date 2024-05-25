@@ -8,9 +8,7 @@ const localStorageService = {
   },
 
   // 获取 localStorage 中的值
-  get: (key) => {
-    return store.get(key);
-  },
+  get: (key) => store.get(key),
 
   // 移除 localStorage 中的值
   remove: (key) => {
@@ -20,7 +18,7 @@ const localStorageService = {
   // 清空所有 localStorage 中的值
   clearAll: () => {
     store.clearAll();
-  }
+  },
 };
 
 export default localStorageService;

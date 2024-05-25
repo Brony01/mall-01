@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const jwt = require('jsonwebtoken');
 
+const mongoose = require('mongoose');
 const UserModel = require('../models/UserModel');
 const CategoryModel = require('../models/CategoryModel');
 const ProductModel = require('../models/ProductModel');
@@ -473,7 +474,7 @@ router.post('/footprint/add', async (req, res) => {
     const { userId, productId } = req.body;
     try {
         let footprint = await FootprintModel.findOne({ userId });
-        if (footprint) {
+        if (footprint !== null) {
             const productIndex = footprint.products.findIndex(p => p.productId.equals(productId));
             if (productIndex === -1) {
                 footprint.products.push({ productId: mongoose.Types.ObjectId(productId) });
@@ -486,6 +487,23 @@ router.post('/footprint/add', async (req, res) => {
     } catch (error) {
         res.send({ status: 1, msg: '添加到足迹失败' });
     }
+});
+
+router.post('/footprint/delete', async (req, res) => {
+    const { userId, productId } = req.body;
+    try {
+        let footprint = await FootprintModel.findOne({userId});
+        if (footprint) {
+            footprint.products = footprint.products.filter(p => !p.productId.equals(productId));
+            await footprint.save();
+            res.send({status: 0});
+        } else {
+            res.send({status: 1, msg: '足迹列表不存在'});
+        }
+    } catch (error) {
+        res.send({status: 1, msg: '删除足迹商品失败'});
+    }
+
 });
 
 router.get('/footprint', async (req, res) => {
@@ -547,6 +565,18 @@ router.post('/order/delete', async (req, res) => {
         res.send({ status: 1, msg: '删除订单失败' });
     }
 });
+
+// 根据订单号获取订单
+router.get('/order/:id', async (req, res) => {
+    const orderId = req.params.id;
+    try {
+        const order = await OrderModel.findById(orderId);
+        res.send({ status: 0, data: order });
+    } catch (error) {
+        res.send({ status: 1, msg: '获取订单详情失败' });
+    }
+});
+
 
 // 优惠券
 router.post('/coupon/add', async (req, res) => {

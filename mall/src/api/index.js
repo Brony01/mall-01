@@ -28,51 +28,53 @@ export const reqProductStatus = (data) => request('/manage/product/updateStatus'
 
 export const reqProductUpdate = (data) => request('/manage/product/update', 'POST', data);
 
-// åˆ é™¤äº§å“
+// É¾³ý²úÆ·
 export const reqDeleteProduct = (data) => request('/manage/product/delete', 'POST', data);
 
-// èŽ·å–äº§å“åˆ—è¡¨
+// »ñÈ¡²úÆ·ÁÐ±í
 export const reqProductList = (data) => request('/manage/product/list', 'GET', data);
 
-// æœç´¢äº§å“
+// ËÑË÷²úÆ·
 export const reqSearchProduct = (data) => request('/manage/product/search', 'GET', data);
 
-// æ·»åŠ è§’è‰²
+// Ìí¼Ó½ÇÉ«
 export const reqAddRole = (data) => request('/manage/role/add', 'POST', data);
 
-// åˆ é™¤è§’è‰²
+// É¾³ý½ÇÉ«
 export const reqDeleteRole = (data) => request('/manage/role/delete', 'POST', data);
 
-// è§’è‰²åˆ—è¡¨
+// ½ÇÉ«ÁÐ±í
 export const reqRoleList = (data) => request('/manage/role/list', 'GET', data);
 
-// è®¾ç½®æƒé™
+// ÉèÖÃÈ¨ÏÞ
 export const reqSettingRole = (data) => request('/manage/role/update', 'POST', data);
 
-// è´­ç‰©è½¦
+// ¹ºÎï³µ
 export const reqAddToCart = (data) => request('/cart/add', 'POST', data);
 export const reqGetCart = (data) => request('/cart', 'GET', data);
 export const reqUpdateCart = (data) => request('/cart/update', 'POST', data);
 export const reqDeleteCartItem = (data) => request('/cart/delete', 'POST', data);
 
-// æ”¶è—
+// ÊÕ²Ø
 export const reqAddToFavorites = (data) => request('/favorite/add', 'POST', data);
 export const reqGetFavorites = (data) => request('/favorite', 'GET', data);
 export const reqDeleteFavoriteItem = (data) => request('/favorite/delete', 'POST', data);
 
-// è¶³è¿¹
+// ×ã¼£
 export const reqAddToFootprints = (data) => request('/footprint/add', 'POST', data);
 export const reqGetFootprints = (data) => request('/footprint', 'GET', data);
+export const reqDeleteFootprintItem = (data) => request('/footprint/delete', 'POST', data);
 
-// è®¢å•
+// ¶©µ¥
 export const reqCreateOrder = (data) => request('/order/create', 'POST', data);
 export const reqGetOrders = (data) => request('/order', 'GET', data);
 export const reqUpdateOrder = (data) => request('/order/update', 'POST', data);
 export const reqDeleteOrder = (data) => request('/order/delete', 'POST', data);
-
-// ä¼˜æƒ åˆ¸
+// ¸ù¾Ý¶©µ¥ºÅ»ñÈ¡¶©µ¥ÏêÇé
+export const reqGetOrderDetails = (orderId) => request(`/order/${orderId}`, 'GET');
+// ÓÅ»ÝÈ¯
 export const reqAddCoupon = (data) => request('/coupon/add', 'POST', data);
 export const reqGetCoupons = (data) => request('/coupon', 'GET', data);
 
-// å•†å“è¯¦æƒ…
+// ÉÌÆ·ÏêÇé
 export const reqGetProductDetails = (productId) => request(`/product/${productId}`, 'GET');

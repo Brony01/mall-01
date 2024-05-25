@@ -4,13 +4,14 @@ import {
 } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { reqGetFavorites, reqDeleteFavoriteItem } from 'api';
+import { connect } from 'react-redux';
 
-const FavoritePage = ({ history }) => {
+const FavoritePage = ({ history, userInfo }) => {
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
     const fetchFavorites = async () => {
-      const userId = '当前用户的ID'; // 从用户登录信息中获取
+      const userId = userInfo._id; // 从用户登录信息中获取
       try {
         const res = await reqGetFavorites({ userId });
         if (res.status === 0) {
@@ -24,16 +25,17 @@ const FavoritePage = ({ history }) => {
     };
 
     fetchFavorites();
-  }, []);
+  }, [userInfo]);
 
   const handleDetail = (productId) => {
     history.push({
-      pathname: `/mainpage/product/detail/${productId}`,
+      pathname: '/mainpage/product/detail/',
+      state: { productId },
     });
   };
 
   const handleDelete = async (productId) => {
-    const userId = '当前用户的ID'; // 从用户登录信息中获取
+    const userId = userInfo._id; // 从用户登录信息中获取
     try {
       await reqDeleteFavoriteItem({ userId, productId });
       setFavorites(favorites.filter((item) => item.productDetails._id !== productId));
@@ -68,4 +70,8 @@ const FavoritePage = ({ history }) => {
   );
 };
 
-export default withRouter(FavoritePage);
+const mapStateToProps = (state) => ({
+  userInfo: state.loginUserInfo, // 从Redux store中获取用户信息
+});
+
+export default connect(mapStateToProps)(withRouter(FavoritePage));

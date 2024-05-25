@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, Button, message } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { reqCreateOrder, reqUpdateOrder } from 'api';
+import { connect } from 'react-redux';
 
 class CheckoutPage extends React.Component {
     state = {
@@ -61,22 +62,26 @@ class CheckoutPage extends React.Component {
     render() {
         const { products, totalAmount, status } = this.state.order;
         return (
-            <Card title="支付页面">
-                <p>商品列表:</p>
-                <ul>
-                    {products.map((product, index) => (
-                        <li key={index}>
-                            名称: {product.name} - 数量: {product.quantity}件 - 价格: ¥{product.price} - 描述: {product.desc}
-                        </li>
-                    ))}
-                </ul>
-                <p>总金额: ¥{totalAmount}</p>
-                <p>状态: {status}</p>
-                <Button type="primary" onClick={this.handleConfirmPayment}>确认支付</Button>
-                <Button type="default" onClick={this.handleBack}>返回购物车</Button>
-            </Card>
+          <Card title="支付页面">
+              <p>商品列表:</p>
+              <ul>
+                  {products.map((product, index) => (
+                    <li key={index}>
+                        名称: {product.name} - 数量: {product.quantity}件 - 价格: ¥{product.price} - 描述: {product.desc}
+                    </li>
+                  ))}
+              </ul>
+              <p>总金额: ¥{totalAmount}</p>
+              <p>状态: {status}</p>
+              <Button type="primary" onClick={this.handleConfirmPayment}>确认支付</Button>
+              <Button type="default" onClick={this.handleBack}>返回购物车</Button>
+          </Card>
         );
     }
 }
 
-export default withRouter(CheckoutPage);
+const mapStateToProps = (state) => ({
+    userInfo: state.loginUserInfo, // 从Redux store中获取用户信息
+});
+
+export default connect(mapStateToProps)(withRouter(CheckoutPage));

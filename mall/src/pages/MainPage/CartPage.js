@@ -3,14 +3,15 @@ import {
   List, Button, Card, Checkbox, InputNumber, message,
 } from 'antd';
 import { reqGetCart, reqUpdateCart, reqDeleteCartItem } from 'api';
+import { connect } from 'react-redux';
 
-const CartPage = ({ history }) => {
+const CartPage = ({ history, userInfo }) => {
   const [cartItems, setCartItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
 
   useEffect(() => {
+    const userId = userInfo._id; // 从用户登录信息中获取
     const fetchCart = async () => {
-      const userId = '当前用户的ID'; // 从用户登录信息中获取
       try {
         const res = await reqGetCart({ userId });
         setCartItems(res.data.products || []);
@@ -21,7 +22,7 @@ const CartPage = ({ history }) => {
     };
 
     fetchCart();
-  }, []);
+  }, [userInfo]);
 
   const handleSelectAll = (e) => {
     setSelectedItems(cartItems.map(() => e.target.checked));
@@ -39,7 +40,7 @@ const CartPage = ({ history }) => {
     setCartItems(newItems);
 
     const { productId } = newItems[index];
-    const userId = '当前用户的ID'; // 从用户登录信息中获取
+    const userId = userInfo._id; // 从用户登录信息中获取
     try {
       await reqUpdateCart({ userId, productId, quantity: value });
       message.success('更新购物车成功');
@@ -64,7 +65,7 @@ const CartPage = ({ history }) => {
   const handleDeleteItem = (index) => async () => {
     const newItems = [...cartItems];
     const { productId } = newItems[index];
-    const userId = '当前用户的ID'; // 从用户登录信息中获取
+    const userId = userInfo._id; // 从用户登录信息中获取
 
     try {
       await reqDeleteCartItem({ userId, productId });
@@ -118,4 +119,8 @@ const CartPage = ({ history }) => {
   );
 };
 
-export default CartPage;
+const mapStateToProps = (state) => ({
+  userInfo: state.loginUserInfo, // 从Redux store中获取用户信息
+});
+
+export default connect(mapStateToProps)(CartPage);

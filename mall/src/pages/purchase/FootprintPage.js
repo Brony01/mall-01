@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { List, Card, message } from 'antd';
+import {
+  List, Card, message, Button,
+} from 'antd';
 import { withRouter } from 'react-router-dom';
 import { reqGetFootprints } from 'api';
 import { connect } from 'react-redux';
+import { reqDeleteFootprintItem } from '../../api';
 
 const FootprintPage = ({ history, userInfo }) => {
   const [footprints, setFootprints] = useState([]);
 
   useEffect(() => {
     const fetchFootprints = async () => {
-      const userId = '当前用户的ID'; // 从用户登录信息中获取
+      const userId = userInfo._id;
       try {
         const res = await reqGetFootprints({ userId });
         if (res.status === 0) {
@@ -32,13 +35,30 @@ const FootprintPage = ({ history, userInfo }) => {
     });
   };
 
+  const handleDelete = async (productId) => {
+    const userId = userInfo._id;
+    try {
+      await reqDeleteFootprintItem({ userId, productId });
+      setFootprints(footprints.filter((item) => item.productDetails._id !== productId));
+      message.success('删除足迹商品成功');
+    } catch (error) {
+      message.error('删除足迹商品失败');
+    }
+  };
+
   return (
     <Card title="我的足迹">
       <List
         dataSource={footprints}
         renderItem={(item) => (
-          <List.Item onClick={() => handleDetail(item.productDetails._id)}>
-            <Card title={item.productDetails.name}>
+          <List.Item>
+            <Card
+              title={item.productDetails.name}
+              actions={[
+                <Button type="link" onClick={() => handleDetail(item.productDetails._id)}>详情</Button>,
+                <Button type="link" onClick={() => handleDelete(item.productDetails._id)}>删除</Button>,
+              ]}
+            >
               {item.productDetails.desc}
               {' '}
               -
