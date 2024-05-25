@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Card, List, Typography, Icon, Button, message } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { reqGetProductDetails, reqAddToCart, reqAddToFavorites, reqAddToFootprints, reqCreateOrder } from 'api';
+import { reqAddToCart, reqAddToFavorites, reqAddToFootprints, reqCreateOrder, reqGetProductDetails } from 'api';
 
 const { Text } = Typography;
 const listStyle = { fontSize: 15, marginRight: '1rem' };
@@ -23,7 +23,7 @@ class ProductDetailPage extends React.Component {
     }
 
     fetchProductDetails = async () => {
-        const { productId } = this.props.match.params;
+        const { productId } = this.props.location.state;
         try {
             const res = await reqGetProductDetails(productId);
             if (res.status === 0) {

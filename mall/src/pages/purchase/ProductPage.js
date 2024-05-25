@@ -19,18 +19,21 @@ const ProductPage = ({ history }) => {
     setLoading(true);
     try {
       const res = await reqGetProducts();
-      setProducts(res.data);
-      setLoading(false);
+      if (res.status === 0) {
+        setProducts(res.data);
+      } else {
+        message.error('获取商品列表失败');
+      }
     } catch (error) {
       message.error('获取商品列表失败');
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   const handleDetail = (product) => {
     history.push({
       pathname: '/mainpage/product/detail',
-      state: product,
+      state: { productId: product._id },
     });
   };
 

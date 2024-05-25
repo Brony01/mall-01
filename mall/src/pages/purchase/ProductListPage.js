@@ -3,7 +3,7 @@ import {
   Card, Input, Select, Table, Typography, Button, message,
 } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { reqProductList, reqProductStatus, reqDeleteProduct } from 'api';
+import { reqProductList } from 'api';
 import { formatNumber } from '../../utils/common';
 
 const { Option } = Select;
@@ -24,14 +24,20 @@ const ProductListPage = ({ history }) => {
 
   const getProductList = async (pageNum) => {
     setLoading(true);
-    const res = await reqProductList({ pageNum, pageSize: PAGE_SIZE });
-    const { total, list } = res.data;
-    if (res.status === 0 && list.length > 0) {
-      list.forEach((item) => item.price = formatNumber(item.price));
-      setProductListSource(list);
-      setTotal(total);
-      setLoading(false);
+    try {
+      const res = await reqProductList({ pageNum, pageSize: PAGE_SIZE });
+      if (res.status === 0) {
+        const { total, list } = res.data;
+        list.forEach((item) => item.price = formatNumber(item.price));
+        setProductListSource(list);
+        setTotal(total);
+      } else {
+        message.error('获取商品列表失败');
+      }
+    } catch (error) {
+      message.error('获取商品列表失败');
     }
+    setLoading(false);
   };
 
   const handleSearch = (value) => {
@@ -41,7 +47,8 @@ const ProductListPage = ({ history }) => {
   const filterData = () => {
     if (!searchText) {
       return productListSource;
-    } if (selectValue === '1') {
+    }
+    if (selectValue === '1') {
       return productListSource.filter((product) => product.name.toLowerCase().includes(searchText.toLowerCase()));
     }
     return productListSource.filter((product) => product.desc.toLowerCase().includes(searchText.toLowerCase()));
@@ -50,7 +57,7 @@ const ProductListPage = ({ history }) => {
   const handleDetail = (data) => {
     history.push({
       pathname: '/mainpage/product/detail',
-      state: data,
+      state: { productId: data._id },
     });
   };
 

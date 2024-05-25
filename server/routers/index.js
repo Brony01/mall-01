@@ -576,12 +576,12 @@ router.get('/product/:id', async (req, res) => {
     try {
         const product = await ProductModel.findById(productId);
         if (product) {
-            res.send({status: 0, data: product});
+            res.send({ status: 0, data: product });
         } else {
-            res.send({status: 1, msg: '商品不存在'});
+            res.send({ status: 1, msg: '商品不存在' });
         }
     } catch (error) {
-        res.send({status: 1, msg: '获取商品详情失败'});
+        res.send({ status: 1, msg: '获取商品详情失败' });
     }
 });
 
