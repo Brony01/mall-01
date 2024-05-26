@@ -2,7 +2,7 @@ import React from 'react';
 import { List, Card, Button, message } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { reqGetOrders } from 'api';
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 
 class MyPage extends React.Component {
     state = {
@@ -30,7 +30,12 @@ class MyPage extends React.Component {
 
     handleOrderClick = (status) => {
         const { orders } = this.state;
-        const filteredOrders = status === 'all' ? orders : orders.filter((order) => order.status === status);
+        const filteredOrders = status === 'all' ? orders : orders.filter((order) => {
+            if (status === '退款/售后') {
+                return order.status.includes('退款') || order.status.startsWith('售后处理中');
+            }
+            return order.status === status;
+        });
         this.props.history.push({
             pathname: '/order',
             state: { orders: filteredOrders },
@@ -47,7 +52,7 @@ class MyPage extends React.Component {
         const menuItems = [
             { title: '全部订单', icon: 'order-icon-url', status: 'all' },
             { title: '待付款', icon: 'payment-icon-url', status: '待付款' },
-            { title: '待发货', icon: 'delivery-icon-url', status: '待发货'},
+            { title: '待发货', icon: 'delivery-icon-url', status: '待发货' },
             { title: '待收货', icon: 'shipping-icon-url', status: '待收货' },
             { title: '退换售后', icon: 'aftersale-icon-url', status: '退款/售后' },
             { title: '已取消', icon: 'cancel-icon-url', status: '已取消' },
