@@ -581,53 +581,52 @@ router.get('/order/:id', async (req, res) => {
 
 // 取消订单
 router.post('/order/cancel', async (req, res) => {
-    const {orderId} = req.body;
+    const { orderId } = req.body;
     try {
         const order = await OrderModel.findById(orderId);
-        if (order && order.status === '待付款') {
+        if (order && (order.status === '待付款' || order.status === '待发货')) {
             order.status = '已取消';
             await order.save();
-            res.send({status: 0, msg: '订单已取消'});
+            res.send({ status: 0, msg: '订单已取消' });
         } else {
-            res.send({status: 1, msg: '订单无法取消'});
+            res.send({ status: 1, msg: '订单无法取消' });
         }
     } catch (error) {
-        res.send({status: 1, msg: '取消订单失败'});
+        res.send({ status: 1, msg: '取消订单失败' });
     }
 });
 
 // 确认收货
 router.post('/order/confirmReceipt', async (req, res) => {
-    const {orderId} = req.body;
+    const { orderId } = req.body;
     try {
         const order = await OrderModel.findById(orderId);
         if (order && order.status === '待收货') {
             order.status = '已收货';
             await order.save();
-            res.send({status: 0, msg: '确认收货成功'});
+            res.send({ status: 0, msg: '确认收货成功' });
         } else {
-            res.send({status: 1, msg: '无法确认收货'});
+            res.send({ status: 1, msg: '无法确认收货' });
         }
     } catch (error) {
-        res.send({status: 1, msg: '确认收货失败'});
+        res.send({ status: 1, msg: '确认收货失败' });
     }
 });
 
 // 售后请求
 router.post('/order/afterSales', async (req, res) => {
-    const {orderId} = req.body;
+    const { orderId } = req.body;
     try {
         const order = await OrderModel.findById(orderId);
         if (order && (order.status === '待收货' || order.status === '已收货')) {
-            // 假设售后请求将订单状态设置为"售后处理中"
             order.status = '售后处理中';
             await order.save();
-            res.send({status: 0, msg: '售后请求已提交'});
+            res.send({ status: 0, msg: '售后请求已提交' });
         } else {
-            res.send({status: 1, msg: '无法提交售后请求'});
+            res.send({ status: 1, msg: '无法提交售后请求' });
         }
     } catch (error) {
-        res.send({status: 1, msg: '售后请求失败'});
+        res.send({ status: 1, msg: '售后请求失败' });
     }
 });
 

@@ -50,6 +50,7 @@ class MyPage extends React.Component {
             { title: '待发货', icon: 'delivery-icon-url', status: '待发货'},
             { title: '待收货', icon: 'shipping-icon-url', status: '待收货' },
             { title: '退换售后', icon: 'aftersale-icon-url', status: '退款/售后' },
+            { title: '已取消', icon: 'cancel-icon-url', status: '已取消' },
         ];
 
         const otherItems = [

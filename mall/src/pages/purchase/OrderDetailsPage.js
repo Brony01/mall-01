@@ -1,7 +1,7 @@
 import React from 'react';
-import { Card, List, Typography, Button, message } from 'antd';
+import { Button, Card, List, message, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { reqGetOrderDetails, reqCancelOrder, reqConfirmReceipt, reqRequestAfterSales } from '../../api';
+import { reqCancelOrder, reqConfirmReceipt, reqCreateOrder, reqGetOrderDetails, reqRequestAfterSales } from '../../api';
 
 const { Text } = Typography;
 
@@ -13,16 +13,17 @@ class OrderDetailsPage extends React.Component {
     };
 
     componentDidMount() {
-        this.fetchProductDetails();
+        this.fetchOrderDetails();
     }
 
-    fetchProductDetails = async () => {
-        if (this.state.orderId) {
-            const orderId = this.state.orderId;
+    fetchOrderDetails = async () => {
+        const { orderId } = this.state;
+        if (orderId) {
             const res = await reqGetOrderDetails(orderId);
-
             if (res.status === 0) {
                 this.setState({ order: res.data, products: res.data.products });
+            } else {
+                message.error('获取订单详情失败');
             }
         }
     };
@@ -38,31 +39,59 @@ class OrderDetailsPage extends React.Component {
     };
 
     handleCancelOrder = async () => {
-        const res = await reqCancelOrder(this.state.orderId);
+        const { orderId } = this.state;
+        const res = await reqCancelOrder({ orderId });
         if (res.status === 0) {
             message.success('订单已取消');
             this.setState({ order: { ...this.state.order, status: '已取消' } });
         } else {
-            message.error('取消订单失败');
+            message.error(res.msg || '取消订单失败');
         }
     };
 
     handleConfirmReceipt = async () => {
-        const res = await reqConfirmReceipt(this.state.orderId);
+        const { orderId } = this.state;
+        const res = await reqConfirmReceipt({ orderId });
         if (res.status === 0) {
             message.success('已确认收货');
             this.setState({ order: { ...this.state.order, status: '已收货' } });
         } else {
-            message.error('确认收货失败');
+            message.error(res.msg || '确认收货失败');
         }
     };
 
     handleRequestAfterSales = async () => {
-        const res = await reqRequestAfterSales(this.state.orderId);
+        const { orderId } = this.state;
+        const res = await reqRequestAfterSales({ orderId });
         if (res.status === 0) {
             message.success('售后请求已提交');
         } else {
-            message.error('售后请求提交失败');
+            message.error(res.msg || '售后请求提交失败');
+        }
+    };
+
+    handleReorder = async () => {
+        const { products } = this.state;
+        const { userInfo } = this.props;
+        const totalAmount = products.reduce((total, product) => total + product.price * product.quantity, 0);
+
+        if (products.length === 0) {
+            message.warning('没有商品可以重新下单');
+            return;
+        }
+
+        try {
+            const res = await reqCreateOrder({ userId: userInfo._id, products, totalAmount });
+            if (res.status === 0) {
+                this.props.history.push({
+                    pathname: '/checkout',
+                    state: { products, totalAmount, orderId: res.data._id },
+                });
+            } else {
+                message.error('重新下单失败');
+            }
+        } catch (error) {
+            message.error('重新下单失败');
         }
     };
 
@@ -77,7 +106,7 @@ class OrderDetailsPage extends React.Component {
                     renderItem={(product) => (
                         <List.Item key={product._id}>
                             <List.Item.Meta
-                                title={product.name}
+                                title={`商品名：${product.name} | 商品描述：${product.desc}`}
                                 description={`价格: ¥${product.price} | 数量: ${product.quantity}`}
                             />
                         </List.Item>
@@ -94,6 +123,11 @@ class OrderDetailsPage extends React.Component {
                         <Button onClick={this.handleCancelOrder} style={{ marginLeft: 10 }}>取消订单</Button>
                     </>
                 )}
+                {order.status === '待发货' && (
+                    <>
+                        <Button onClick={this.handleCancelOrder} style={{ marginLeft: 10 }}>取消订单</Button>
+                    </>
+                )}
                 {order.status === '待收货' && (
                     <>
                         <Button type="primary" onClick={this.handleConfirmReceipt}>确认收货</Button>
@@ -102,6 +136,9 @@ class OrderDetailsPage extends React.Component {
                 )}
                 {order.status === '已收货' && (
                     <Button type="primary" onClick={this.handleRequestAfterSales}>售后</Button>
+                )}
+                {order.status === '已取消' && (
+                    <Button type="primary" onClick={this.handleReorder}>重新下单</Button>
                 )}
             </Card>
         );
