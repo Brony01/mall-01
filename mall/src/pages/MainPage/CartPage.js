@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  List, Button, Card, Checkbox, InputNumber, message,
+  Button, Card, Checkbox, InputNumber, List, message,
 } from 'antd';
-import { reqGetCart, reqUpdateCart, reqDeleteCartItem } from 'api';
+import { reqDeleteCartItem, reqGetCart, reqUpdateCart } from 'api';
 import { connect } from 'react-redux';
 
 const CartPage = ({ history, userInfo }) => {
@@ -39,10 +39,12 @@ const CartPage = ({ history, userInfo }) => {
     newItems[index].quantity = value;
     setCartItems(newItems);
 
-    const { productId } = newItems[index];
+    const { productId, name, desc } = newItems[index];
     const userId = userInfo._id; // 从用户登录信息中获取
     try {
-      await reqUpdateCart({ userId, productId, quantity: value });
+      await reqUpdateCart({
+        userId, productId, name, desc, quantity: value,
+      });
       message.success('更新购物车成功');
     } catch (error) {
       message.error('更新购物车失败');
@@ -95,13 +97,24 @@ const CartPage = ({ history, userInfo }) => {
             <Button type="link" onClick={handleDeleteItem(index)}>删除</Button>,
           ]}
           >
-            <Checkbox checked={selectedItems[index]} onChange={handleSelectItem(index)}>{item.title}</Checkbox>
+            <Checkbox
+              checked={selectedItems[index]}
+              onChange={handleSelectItem(index)}
+            >
+              {item.title}
+            </Checkbox>
             <div>
+              名称:
+              {item.name}
+              {'  | '}
+              单价:
               {item.price}
-              {' '}
-              x
-              {' '}
+              {'  | '}
+              数量:
               {item.quantity}
+              {'  | '}
+              描述:
+              {item.desc}
             </div>
           </List.Item>
         )}

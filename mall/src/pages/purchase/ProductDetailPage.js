@@ -59,13 +59,15 @@ class ProductDetailPage extends React.Component {
     }
 
     handleAddToCart = async () => {
-        const {_id: productId, price} = this.state.product;
+        const {_id: productId, name, desc, price} = this.state.product;
         const {userInfo} = this.props;
 
         try {
             await reqAddToCart({
                 userId: userInfo._id,
                 productId,
+                name,
+                desc,
                 quantity: 1,
                 price
             });
