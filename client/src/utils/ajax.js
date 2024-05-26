@@ -3,7 +3,7 @@ import { message } from 'antd';
 import config from '../config';
 
 const instance = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,// || config.baseURl,
+  baseURL: process.env.REACT_APP_API_URL, // || config.baseURl,
   timeout: 300000,
   headers: {
     'Content-Type': 'application/json',

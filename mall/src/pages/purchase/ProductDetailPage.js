@@ -1,11 +1,11 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { Card, List, Typography, Icon, Button, message } from 'antd';
-import { withRouter } from 'react-router-dom';
-import { reqAddToCart, reqAddToFavorites, reqAddToFootprints, reqCreateOrder, reqGetProductDetails } from 'api';
+import {connect} from 'react-redux';
+import {Button, Card, Icon, List, message, Typography} from 'antd';
+import {withRouter} from 'react-router-dom';
+import {reqAddToCart, reqAddToFavorites, reqAddToFootprints, reqCreateOrder, reqGetProductDetails} from 'api';
 
-const { Text } = Typography;
-const listStyle = { fontSize: 15, marginRight: '1rem' };
+const {Text} = Typography;
+const listStyle = {fontSize: 15, marginRight: '1rem'};
 
 class ProductDetailPage extends React.Component {
     constructor(props) {
@@ -14,7 +14,7 @@ class ProductDetailPage extends React.Component {
             product: null,
         };
         this.title = (
-            <Icon type="arrow-left" onClick={this.goBack} style={{ fontSize: 20 }} />
+            <Icon type="arrow-left" onClick={this.goBack} style={{fontSize: 20}}/>
         );
     }
 
@@ -23,12 +23,12 @@ class ProductDetailPage extends React.Component {
     }
 
     fetchProductDetails = async () => {
-        const { productId } = this.props.location.state;
+        const {productId} = this.props.location.state;
         try {
             const res = await reqGetProductDetails(productId);
             if (res.status === 0) {
-                this.setState({ product: res.data });
-                await reqAddToFootprints({ userId: this.props.userInfo._id, productId });
+                this.setState({product: res.data});
+                await reqAddToFootprints({userId: this.props.userInfo._id, productId});
             } else {
                 message.error(res.msg || '获取商品详情失败');
             }
@@ -42,16 +42,16 @@ class ProductDetailPage extends React.Component {
     }
 
     handleBuyNow = async () => {
-        const { _id: productId, price } = this.state.product;
-        const { userInfo } = this.props;
-        const products = [{ productId, quantity: 1, price }];
+        const {_id: productId, name, desc, price} = this.state.product;
+        const {userInfo} = this.props;
+        const products = [{productId, name, desc, quantity: 1, price}];
         const totalAmount = price;
 
         try {
-            await reqCreateOrder({ userId: userInfo._id, products, totalAmount });
+            await reqCreateOrder({userId: userInfo._id, products, totalAmount});
             this.props.history.push({
                 pathname: '/checkout',
-                state: { products, totalAmount },
+                state: {products, totalAmount},
             });
         } catch (error) {
             message.error('创建订单失败');
@@ -59,8 +59,8 @@ class ProductDetailPage extends React.Component {
     }
 
     handleAddToCart = async () => {
-        const { _id: productId, price } = this.state.product;
-        const { userInfo } = this.props;
+        const {_id: productId, price} = this.state.product;
+        const {userInfo} = this.props;
 
         try {
             await reqAddToCart({
@@ -76,8 +76,8 @@ class ProductDetailPage extends React.Component {
     }
 
     handleAddToFavorites = async () => {
-        const { _id: productId } = this.state.product;
-        const { userInfo } = this.props;
+        const {_id: productId} = this.state.product;
+        const {userInfo} = this.props;
 
         try {
             await reqAddToFavorites({
@@ -99,7 +99,7 @@ class ProductDetailPage extends React.Component {
     }
 
     render() {
-        const { product } = this.state;
+        const {product} = this.state;
         if (!product) {
             return <p>加载中...</p>;
         }
@@ -110,7 +110,7 @@ class ProductDetailPage extends React.Component {
 
         return (
             <Card title={this.title}>
-                <img src={product.imgs[0]} alt={product.name} style={{ width: '100%', marginBottom: '1rem' }} />
+                <img src={product.imgs[0]} alt={product.name} style={{width: '100%', marginBottom: '1rem'}}/>
                 <List bordered>
                     <List.Item>
                         <Text style={listStyle}>{listTitle[0]}:</Text>{product.name}
