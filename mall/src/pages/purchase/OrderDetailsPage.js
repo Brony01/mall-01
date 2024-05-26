@@ -39,6 +39,7 @@ class OrderDetailsPage extends React.Component {
         });
     };
 
+
     handleCancelOrder = async () => {
         const { orderId } = this.state;
         const res = await reqCancelOrder({ orderId });
