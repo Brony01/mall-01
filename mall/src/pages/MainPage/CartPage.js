@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import {
   Button, Card, Checkbox, InputNumber, List, message,
 } from 'antd';
-import { reqDeleteCartItem, reqGetCart, reqUpdateCart } from 'api';
+import {
+  reqDeleteCartItem, reqGetCart, reqUpdateCart, reqCreateOrder,
+} from 'api';
 import { connect } from 'react-redux';
 
 const CartPage = ({ history, userInfo }) => {
@@ -51,17 +53,26 @@ const CartPage = ({ history, userInfo }) => {
     }
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     const selectedProducts = cartItems.filter((_, index) => selectedItems[index]);
     const totalAmount = selectedProducts.reduce((total, item) => total + item.price * item.quantity, 0);
     if (selectedProducts.length === 0) {
       message.warning('请选择至少一个商品');
       return;
     }
-    history.push({
-      pathname: '/checkout',
-      state: { products: selectedProducts, totalAmount },
-    });
+    try {
+      const res = await reqCreateOrder({ userId: userInfo._id, products: selectedProducts, totalAmount });
+      if (res.status === 0) {
+        history.push({
+          pathname: '/checkout',
+          state: { products: selectedProducts, totalAmount, orderId: res.data._id },
+        });
+      } else {
+        message.error('创建订单失败');
+      }
+    } catch (error) {
+      message.error('创建订单失败');
+    }
   };
 
   const handleDeleteItem = (index) => async () => {

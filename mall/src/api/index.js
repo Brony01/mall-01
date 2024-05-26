@@ -70,6 +70,9 @@ export const reqCreateOrder = (data) => request('/order/create', 'POST', data);
 export const reqGetOrders = (data) => request('/order', 'GET', data);
 export const reqUpdateOrder = (data) => request('/order/update', 'POST', data);
 export const reqDeleteOrder = (data) => request('/order/delete', 'POST', data);
+export const reqCancelOrder = (data) => request('/order/cancel', 'POST', data);
+export const reqConfirmReceipt = (data) => request('/order/confirmReceipt', 'POST', data);
+export const reqRequestAfterSales = (data) => request('/order/afterSales', 'POST', data);
 // ���ݶ����Ż�ȡ��������
 export const reqGetOrderDetails = (orderId) => request(`/order/${orderId}`, 'GET');
 // �Ż�ȯ

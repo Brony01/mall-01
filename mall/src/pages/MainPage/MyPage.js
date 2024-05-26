@@ -70,7 +70,7 @@ class MyPage extends React.Component {
                     </div>
                 </div>
                 <List
-                    grid={{ gutter: 16, column: 4 }}
+                    grid={{ gutter: 16, column: 5 }}
                     dataSource={menuItems}
                     renderItem={(item) => (
                         <List.Item>
