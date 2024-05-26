@@ -9,7 +9,7 @@ class CheckoutPage extends React.Component {
         order: {
             products: [],
             totalAmount: 0,
-            status: '待支付',
+            status: '待付款',
             orderId: null,
         },
     };
@@ -17,7 +17,7 @@ class CheckoutPage extends React.Component {
     componentDidMount() {
         const { location } = this.props;
         if (location.state && location.state.products && location.state.products.length > 0) {
-            this.setState({ order: { ...location.state, status: '待支付' } }, this.createOrder);
+            this.setState({ order: { ...location.state, status: '待付款' } }, this.createOrder);
         } else {
             message.error('未能获取订单信息，请返回购物车重新结算');
             this.props.history.push('/mainpage/cart');
@@ -47,7 +47,7 @@ class CheckoutPage extends React.Component {
     handleConfirmPayment = async () => {
         const { orderId } = this.state.order;
         try {
-            await reqUpdateOrder({ orderId, status: '已支付' });
+            await reqUpdateOrder({ orderId, status: '待发货' });
             message.success('支付成功');
             this.props.history.push('/order-confirmed');
         } catch (error) {

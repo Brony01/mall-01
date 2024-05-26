@@ -47,6 +47,7 @@ class MyPage extends React.Component {
         const menuItems = [
             { title: '全部订单', icon: 'order-icon-url', status: 'all' },
             { title: '待付款', icon: 'payment-icon-url', status: '待付款' },
+            { title: '待发货', icon: 'delivery-icon-url', status: '待发货'},
             { title: '待收货', icon: 'shipping-icon-url', status: '待收货' },
             { title: '退换售后', icon: 'aftersale-icon-url', status: '退款/售后' },
         ];
