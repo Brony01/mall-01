@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Card, List, message, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { reqCancelOrder, reqConfirmReceipt, reqCreateOrder, reqGetOrderDetails, reqRequestAfterSales } from '../../api';
+import {connect} from "react-redux";
 
 const { Text } = Typography;
 
@@ -80,6 +81,7 @@ class OrderDetailsPage extends React.Component {
             return;
         }
 
+        console.log({ userId: userInfo._id, products, totalAmount })
         try {
             const res = await reqCreateOrder({ userId: userInfo._id, products, totalAmount });
             if (res.status === 0) {
@@ -145,4 +147,8 @@ class OrderDetailsPage extends React.Component {
     }
 }
 
-export default withRouter(OrderDetailsPage);
+const mapStateToProps = (state) => ({
+    userInfo: state.loginUserInfo,
+});
+
+export default withRouter(connect(mapStateToProps)(OrderDetailsPage));
