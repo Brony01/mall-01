@@ -48,11 +48,15 @@ class ProductDetailPage extends React.Component {
         const totalAmount = price;
 
         try {
-            await reqCreateOrder({userId: userInfo._id, products, totalAmount});
-            this.props.history.push({
-                pathname: '/checkout',
-                state: {products, totalAmount},
-            });
+            const res = await reqCreateOrder({userId: userInfo._id, products, totalAmount});
+            if (res.status === 0) {
+                this.props.history.push({
+                    pathname: '/checkout',
+                    state: {products, totalAmount, orderId: res.data._id},
+                });
+            } else {
+                message.error('创建订单失败');
+            }
         } catch (error) {
             message.error('创建订单失败');
         }

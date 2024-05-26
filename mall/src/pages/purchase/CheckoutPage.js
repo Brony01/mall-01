@@ -17,7 +17,7 @@ class CheckoutPage extends React.Component {
     componentDidMount() {
         const { location } = this.props;
         if (location.state && location.state.products && location.state.products.length > 0) {
-            this.setState({ order: { ...location.state, status: '待付款' } });
+            this.setState({ order: { ...location.state, status: '待付款', orderId: location.state.orderId } });
         } else {
             message.error('未能获取订单信息，请返回购物车重新结算');
             this.props.history.push('/mainpage/cart');
