@@ -473,23 +473,30 @@ router.post('/favorite/delete', async (req, res) => {
 
 // 足迹
 router.post('/footprint/add', async (req, res) => {
-    const {userId, productId} = req.body;
+    const { userId, productId } = req.body;
     try {
-        let footprint = await FootprintModel.findOne({userId});
-        if (footprint !== null) {
+        let footprint = await FootprintModel.findOne({ userId });
+        if (footprint) {
             const productIndex = footprint.products.findIndex(p => p.productId.equals(productId));
-            if (productIndex === -1) {
-                footprint.products.push({productId: mongoose.Types.ObjectId(productId)});
+            if (productIndex !== -1) {
+                footprint.products[productIndex].lastVisited = new Date(); // 更新访问时间
+            } else {
+                footprint.products.push({ productId: mongoose.Types.ObjectId(productId), lastVisited: new Date() });
             }
         } else {
-            footprint = new FootprintModel({userId, products: [{productId: mongoose.Types.ObjectId(productId)}]});
+            footprint = new FootprintModel({
+                userId,
+                products: [{ productId: mongoose.Types.ObjectId(productId), lastVisited: new Date() }]
+            });
         }
         await footprint.save();
-        res.send({status: 0});
+        res.send({ status: 0 });
     } catch (error) {
-        res.send({status: 1, msg: '添加到足迹失败'});
+        res.send({ status: 1, msg: '添加到足迹失败' });
     }
 });
+
+
 
 router.post('/footprint/delete', async (req, res) => {
     const {userId, productId} = req.body;

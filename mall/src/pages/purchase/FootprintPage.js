@@ -62,7 +62,7 @@ const FootprintPage = ({ history, userInfo }) => {
               {item.productDetails.desc}
               {' '}
               -
-              {new Date(item.viewTime).toLocaleString()}
+              {new Date(item.lastVisited).toLocaleString()}
             </Card>
           </List.Item>
         )}
