@@ -9,7 +9,10 @@ const productSchema = new mongoose.Schema({
     desc: { type: String }, // Description of the product
     status: { type: Number, default: 1 }, // Product status: 1 for on sale, 2 for discontinued
     imgs: { type: [String], default: [] }, // Array of image filenames
-    detail: { type: String } // Detailed description of the product
+    detail: { type: String }, // Detailed description of the product
+    visitCount: { type: Number, default: 0 }, // Number of visits
+    favoriteCount: { type: Number, default: 0 }, // Number of times favorited
+    orderCount: { type: Number, default: 0 } // Number of times ordered
 });
 
 // Define Model (corresponds to the collection and can operate on it)

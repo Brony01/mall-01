@@ -81,6 +81,9 @@ const ProductListPage = ({ history }) => {
     { title: '商品名称', dataIndex: 'name' },
     { title: '价格', dataIndex: 'price', render: (record) => (`￥${record}`) },
     { title: '商品描述', dataIndex: 'desc' },
+    { title: '访问量', dataIndex: 'visitCount' },
+    { title: '收藏量', dataIndex: 'favoriteCount' },
+    { title: '成交量', dataIndex: 'orderCount' },
     {
       title: '操作',
       render: (record) => (

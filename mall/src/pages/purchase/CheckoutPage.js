@@ -1,68 +1,63 @@
 import React from 'react';
-import { Card, Button, message } from 'antd';
+import { Button, Card, List, message, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { reqUpdateOrder } from 'api';
-import { connect } from 'react-redux';
+import { reqConfirmOrder } from 'api';
+
+const { Text } = Typography;
 
 class CheckoutPage extends React.Component {
     state = {
-        order: {
-            products: [],
-            totalAmount: 0,
-            status: '待付款',
-            orderId: null,
-        },
+        products: [],
+        totalAmount: 0,
+        orderId: ''
     };
 
     componentDidMount() {
-        const { location } = this.props;
-        if (location.state && location.state.products && location.state.products.length > 0) {
-            this.setState({ order: { ...location.state, status: '待付款', orderId: location.state.orderId } });
-        } else {
-            message.error('未能获取订单信息，请返回购物车重新结算');
-            this.props.history.push('/mainpage/cart');
-        }
+        const { products, totalAmount, orderId } = this.props.location.state;
+        this.setState({ products, totalAmount, orderId });
     }
 
-    handleConfirmPayment = async () => {
-        const { orderId } = this.state.order;
+    handleConfirmOrder = async () => {
+        const { orderId } = this.state;
         try {
-            await reqUpdateOrder({ orderId, status: '待发货' });
-            message.success('支付成功');
-            this.props.history.push('/order-confirmed');
+            const res = await reqConfirmOrder({ orderId });
+            if (res.status === 0) {
+                this.props.history.push({
+                    pathname: '/order-confirmed',
+                    state: { totalAmount: this.state.totalAmount }
+                });
+            } else {
+                message.error('支付失败');
+            }
         } catch (error) {
             message.error('支付失败');
         }
     };
 
-    handleBack = () => {
-        this.props.history.push('/mainpage/cart');
-    };
-
     render() {
-        const { products, totalAmount, status, orderId } = this.state.order;
+        const { products, totalAmount } = this.state;
+
         return (
-            <Card title="支付页面">
-                <p>订单号: {orderId}</p>
-                <p>商品列表:</p>
-                <ul>
-                    {products.map((product, index) => (
-                        <li key={index}>
-                            名称: {product.name} - 数量: {product.quantity}件 - 价格: ¥{product.price} - 描述: {product.desc}
-                        </li>
-                    ))}
-                </ul>
-                <p>总金额: ¥{totalAmount}</p>
-                <p>状态: {status}</p>
-                <Button type="primary" onClick={this.handleConfirmPayment}>确认支付</Button>
-                <Button type="default" onClick={this.handleBack}>返回购物车</Button>
+            <Card title="订单结算">
+                <List
+                    itemLayout="vertical"
+                    dataSource={products}
+                    renderItem={(product) => (
+                        <List.Item key={product.productId}>
+                            <List.Item.Meta
+                                title={product.name}
+                                description={`价格: ¥${product.price} | 数量: ${product.quantity}`}
+                            />
+                        </List.Item>
+                    )}
+                />
+                <Text>总金额: ¥{totalAmount}</Text>
+                <br />
+                <br />
+                <Button type="primary" onClick={this.handleConfirmOrder}>确认支付</Button>
             </Card>
         );
     }
 }
 
-const mapStateToProps = (state) => ({
-    userInfo: state.loginUserInfo, // 从Redux store中获取用户信息
-});
-
-export default connect(mapStateToProps)(withRouter(CheckoutPage));
+export default withRouter(CheckoutPage);

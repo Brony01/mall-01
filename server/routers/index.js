@@ -417,23 +417,25 @@ router.post('/cart/delete', async (req, res) => {
     }
 });
 
-// 收藏
+// 收藏商品
 router.post('/favorite/add', async (req, res) => {
-    const {userId, productId} = req.body;
+    const { userId, productId } = req.body;
     try {
-        let favorite = await FavoriteModel.findOne({userId});
+        let favorite = await FavoriteModel.findOne({ userId });
         if (favorite) {
             const productIndex = favorite.products.findIndex(p => p.productId.equals(productId));
             if (productIndex === -1) {
-                favorite.products.push({productId: mongoose.Types.ObjectId(productId)});
+                favorite.products.push({ productId: mongoose.Types.ObjectId(productId) });
+                await ProductModel.findByIdAndUpdate(productId, { $inc: { favoriteCount: 1 } }); // 增加收藏量
             }
         } else {
-            favorite = new FavoriteModel({userId, products: [{productId: mongoose.Types.ObjectId(productId)}]});
+            favorite = new FavoriteModel({ userId, products: [{ productId: mongoose.Types.ObjectId(productId) }] });
+            await ProductModel.findByIdAndUpdate(productId, { $inc: { favoriteCount: 1 } }); // 增加收藏量
         }
         await favorite.save();
-        res.send({status: 0});
+        res.send({ status: 0 });
     } catch (error) {
-        res.send({status: 1, msg: '添加到收藏失败'});
+        res.send({ status: 1, msg: '添加到收藏失败' });
     }
 });
 
@@ -533,15 +535,15 @@ router.get('/footprint', async (req, res) => {
     }
 });
 
-// 订单
+// 创建订单
 router.post('/order/create', async (req, res) => {
-    const {userId, products, totalAmount} = req.body;
+    const { userId, products, totalAmount } = req.body;
     try {
-        const order = new OrderModel({userId, products, totalAmount, status: '待付款'});
+        const order = new OrderModel({ userId, products, totalAmount, status: '待付款' });
         await order.save();
         res.send({status: 0, data: order});
     } catch (error) {
-        res.send({status: 1, msg: '创建订单失败'});
+        res.send({ status: 1, msg: '创建订单失败' });
     }
 });
 
@@ -600,6 +602,26 @@ router.post('/order/cancel', async (req, res) => {
         }
     } catch (error) {
         res.send({ status: 1, msg: '取消订单失败' });
+    }
+});
+
+// 确认订单支付
+router.post('/order/confirm', async (req, res) => {
+    const { orderId } = req.body;
+    try {
+        const order = await OrderModel.findById(orderId);
+        if (order) {
+            order.status = '待发货';
+            await order.save();
+            await Promise.all(order.products.map(async (product) => {
+                await ProductModel.findByIdAndUpdate(product.productId, { $inc: { orderCount: 1 } }); // 增加成交量
+            }));
+            res.send({ status: 0, msg: '支付成功' });
+        } else {
+            res.send({ status: 1, msg: '订单无法支付' });
+        }
+    } catch (error) {
+        res.send({ status: 1, msg: '支付失败' });
     }
 });
 
@@ -665,12 +687,14 @@ router.get('/product/:id', async (req, res) => {
     try {
         const product = await ProductModel.findById(productId);
         if (product) {
-            res.send({status: 0, data: product});
+            product.visitCount += 1; // 增加访问量
+            await product.save();
+            res.send({ status: 0, data: product });
         } else {
-            res.send({status: 1, msg: '商品不存在'});
+            res.send({ status: 1, msg: '商品不存在' });
         }
     } catch (error) {
-        res.send({status: 1, msg: '获取商品详情失败'});
+        res.send({ status: 1, msg: '获取商品详情失败' });
     }
 });
 
