@@ -94,3 +94,6 @@ export const reqClaimCoupon = (data) => request('/coupon/claim', 'POST', data);
 
 // 获取用户的优惠券
 export const reqGetUserCoupons = (data) => request('/coupons/user', 'GET', data);
+
+// 秒杀
+export const reqSeckill = (data) => request('/seckill', 'POST', data);

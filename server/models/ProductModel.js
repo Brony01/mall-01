@@ -2,17 +2,21 @@ const mongoose = require('mongoose');
 
 // Define Schema (describes the structure of documents)
 const productSchema = new mongoose.Schema({
-    categoryId: { type: String, required: true }, // ID of the category to which the product belongs
-    pCategoryId: { type: String, required: true }, // ID of the parent category of the category to which the product belongs
-    name: { type: String, required: true }, // Name of the product
-    price: { type: Number, required: true }, // Price of the product
-    desc: { type: String }, // Description of the product
-    status: { type: Number, default: 1 }, // Product status: 1 for on sale, 2 for discontinued
-    imgs: { type: [String], default: [] }, // Array of image filenames
-    detail: { type: String }, // Detailed description of the product
-    visitCount: { type: Number, default: 0 }, // Number of visits
-    favoriteCount: { type: Number, default: 0 }, // Number of times favorited
-    orderCount: { type: Number, default: 0 } // Number of times ordered
+    categoryId: { type: String, required: true },
+    pCategoryId: { type: String, required: true },
+    name: { type: String, required: true },
+    price: { type: Number, required: true },
+    desc: { type: String },
+    status: { type: Number, default: 1 },
+    imgs: { type: [String], default: [] },
+    detail: { type: String },
+    visitCount: { type: Number, default: 0 },
+    favoriteCount: { type: Number, default: 0 },
+    orderCount: { type: Number, default: 0 },
+    seckillPrice: { type: Number }, // 秒杀价格
+    seckillStock: { type: Number }, // 秒杀库存
+    seckillStart: { type: Date }, // 秒杀开始时间
+    seckillEnd: { type: Date } // 秒杀结束时间
 });
 
 // Define Model (corresponds to the collection and can operate on it)

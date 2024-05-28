@@ -766,6 +766,38 @@ router.get('/product/:id', async (req, res) => {
     }
 });
 
+// 秒杀抢购API
+router.post('/seckill', async (req, res) => {
+    const { productId, userId } = req.body;
+    try {
+        const product = await ProductModel.findById(productId);
+        const now = new Date();
+
+        if (product.seckillStart > now || product.seckillEnd < now) {
+            return res.send({ status: 1, msg: '秒杀未开始或已结束' });
+        }
+
+        if (product.seckillStock <= 0) {
+            return res.send({ status: 1, msg: '秒杀商品已售罄' });
+        }
+
+        product.seckillStock -= 1;
+        await product.save();
+
+        const order = new OrderModel({
+            userId,
+            products: [{ productId, name: product.name, desc: product.desc, quantity: 1, price: product.seckillPrice }],
+            totalAmount: product.seckillPrice,
+            status: '待付款'
+        });
+        await order.save();
+
+        res.send({ status: 0, msg: '秒杀成功', orderId: order._id });
+    } catch (error) {
+        res.send({ status: 1, msg: '秒杀失败' });
+    }
+});
+
 /*
 得到指定数组的分页信息对象
 */
