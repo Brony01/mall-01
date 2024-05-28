@@ -14,6 +14,7 @@ class ProductDetailPage extends React.Component {
             product: null,
             countdown: null,
             isSeckillActive: false,
+            seckillStatus: '',  // 新增状态字段
         };
         this.title = (
             <Icon type="arrow-left" onClick={this.goBack} style={{ fontSize: 20 }} />
@@ -46,24 +47,40 @@ class ProductDetailPage extends React.Component {
     }
 
     startCountdown = () => {
-        const { seckillEnd } = this.state.product;
-        if (!seckillEnd) return;
+        const { seckillStart, seckillEnd } = this.state.product;
+        if (!seckillStart || !seckillEnd) return;
 
+        const startTime = new Date(seckillStart).getTime();
         const endTime = new Date(seckillEnd).getTime();
         this.countdownInterval = setInterval(() => {
             const now = new Date().getTime();
-            const distance = endTime - now;
 
-            if (distance < 0) {
-                clearInterval(this.countdownInterval);
-                this.setState({ countdown: '秒杀已结束', isSeckillActive: false });
-            } else {
+            if (now < startTime) {
+                const distance = startTime - now;
                 const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
                 this.setState({
-                    countdown: `${hours}小时 ${minutes}分钟 ${seconds}秒`,
+                    countdown: `秒杀未开始，倒计时: ${hours}小时 ${minutes}分钟 ${seconds}秒`,
+                    isSeckillActive: false,
+                    seckillStatus: 'not_started'
+                });
+            } else if (now >= startTime && now <= endTime) {
+                const distance = endTime - now;
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                this.setState({
+                    countdown: `秒杀进行中，剩余时间: ${hours}小时 ${minutes}分钟 ${seconds}秒`,
                     isSeckillActive: true,
+                    seckillStatus: 'ongoing'
+                });
+            } else {
+                clearInterval(this.countdownInterval);
+                this.setState({
+                    countdown: '秒杀已结束',
+                    isSeckillActive: false,
+                    seckillStatus: 'ended'
                 });
             }
         }, 1000);
@@ -160,7 +177,7 @@ class ProductDetailPage extends React.Component {
     }
 
     render() {
-        const { product, countdown, isSeckillActive } = this.state;
+        const { product, countdown, isSeckillActive, seckillStatus } = this.state;
         if (!product) {
             return <p>加载中...</p>;
         }
@@ -203,7 +220,7 @@ class ProductDetailPage extends React.Component {
                                 <Text style={listStyle}>秒杀库存:</Text>{product.seckillStock}
                             </List.Item>
                             <List.Item>
-                                <Text style={listStyle}>秒杀倒计时:</Text>{countdown}
+                                <Text style={listStyle}>秒杀状态:</Text>{countdown}
                             </List.Item>
                         </>
                     )}
