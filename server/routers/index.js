@@ -632,7 +632,8 @@ router.post('/order/confirm', async (req, res) => {
             let totalAmount = order.totalAmount;
             if (coupon && coupon.userId.equals(order.userId) && coupon.minSpend <= totalAmount) {
                 totalAmount -= coupon.discount;
-                coupon.isClaimed = true;
+                coupon.isClaimed = false;
+                coupon.userId = null;
                 await coupon.save();
             }
             order.totalAmount = totalAmount;
@@ -649,6 +650,7 @@ router.post('/order/confirm', async (req, res) => {
         res.send({ status: 1, msg: '支付失败' });
     }
 });
+
 
 
 // 确认收货

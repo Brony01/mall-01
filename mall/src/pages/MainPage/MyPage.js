@@ -108,6 +108,16 @@ const MyPage = ({ history, userInfo }) => {
     <Card title="我的页面">
       <div className="user-info">
         <img src="user-avatar-url" alt="用户头像" />
+        <div>
+          <div>会员</div>
+          <div>
+            积分:
+            {userInfo.points}
+            {' '}
+            成长值:
+            {userInfo.growth}
+          </div>
+        </div>
       </div>
       <Card title="可领取优惠券">
         <List

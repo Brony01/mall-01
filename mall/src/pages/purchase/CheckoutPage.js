@@ -92,7 +92,7 @@ class CheckoutPage extends React.Component {
                     onChange={this.handleCouponChange}
                 >
                     {coupons.map((coupon) => (
-                        <Option key={coupon._id} value={coupon._id}>
+                        <Option key={coupon._id} value={coupon._id} disabled={totalAmount < coupon.minSpend}>
                             {coupon.code} - 满{coupon.minSpend}减{coupon.discount} (有效期: {new Date(coupon.expiryDate).toLocaleDateString()})
                         </Option>
                     ))}
