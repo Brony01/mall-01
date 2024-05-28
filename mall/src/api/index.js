@@ -73,6 +73,7 @@ export const reqDeleteOrder = (data) => request('/order/delete', 'POST', data);
 export const reqCancelOrder = (data) => request('/order/cancel', 'POST', data);
 export const reqConfirmReceipt = (data) => request('/order/confirmReceipt', 'POST', data);
 export const reqRequestAfterSales = (data) => request('/order/afterSales', 'POST', data);
+export const reqClearCart = (data) => request('/cart/clear', 'POST', data);
 
 export const reqConfirmOrder = (data) => request('/order/confirm', 'POST', data);
 

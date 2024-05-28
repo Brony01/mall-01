@@ -4,7 +4,7 @@ import {
 } from 'antd';
 import { connect } from 'react-redux';
 import {
-  reqDeleteCartItem, reqGetCart, reqUpdateCart, reqCreateOrder,
+  reqDeleteCartItem, reqGetCart, reqUpdateCart, reqCreateOrder, reqClearCart, // 确保引入 reqClearCart
 } from '../../api';
 
 const CartPage = ({ history, userInfo }) => {
@@ -63,6 +63,10 @@ const CartPage = ({ history, userInfo }) => {
     try {
       const res = await reqCreateOrder({ userId: userInfo._id, products: selectedProducts, totalAmount });
       if (res.status === 0) {
+        // 创建订单成功后清空购物车
+        await reqClearCart({ userId: userInfo._id });
+        setCartItems([]); // 更新购物车为空
+        setSelectedItems([]);
         history.push({
           pathname: '/checkout',
           state: { products: selectedProducts, totalAmount, orderId: res.data._id },

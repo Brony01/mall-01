@@ -417,6 +417,23 @@ router.post('/cart/delete', async (req, res) => {
     }
 });
 
+router.post('/cart/clear', async (req, res) => {
+    const {userId} = req.body;
+    try {
+        let cart = await CartModel.findOne({userId});
+        if (cart) {
+            cart.products = []; // 清空购物车中的所有产品
+            await cart.save();
+            res.send({status: 0});
+        } else {
+            res.send({status: 1, msg: '购物车不存在'});
+        }
+    } catch (error) {
+        res.send({status: 1, msg: '清空购物车失败'});
+    }
+});
+
+
 // 收藏商品
 router.post('/favorite/add', async (req, res) => {
     const { userId, productId } = req.body;
