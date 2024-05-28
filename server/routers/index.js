@@ -349,7 +349,7 @@ router.post('/manage/role/update', (req, res) => {
 // 购物车
 router.post('/cart/add', async (req, res) => {
     const {userId, productId, name, desc, quantity, price} = req.body;
-    try {
+try {
         let cart = await CartModel.findOne({userId});
         if (cart) {
             const productIndex = cart.products.findIndex(p => p.productId === productId);
@@ -359,12 +359,12 @@ router.post('/cart/add', async (req, res) => {
                 cart.products.push({productId, name, desc, quantity, price});
             }
         } else {
-            cart = new CartModel({userId, products: [{productId, quantity, price}]});
+            cart = new CartModel({userId, products: [{productId, name, desc, quantity, price}]});
         }
         await cart.save();
         res.send({status: 0});
     } catch (error) {
-        res.send({status: 1, msg: '添加到购物车失败'});
+        res.send({status: 1, msg: '添加购物车失败'});
     }
 });
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Button, Card, Icon, List, message, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { reqAddToCart, reqAddToFavorites, reqAddToFootprints, reqCreateOrder, reqGetProductDetails } from 'api';
+import { reqAddToCart, reqAddToFavorites, reqAddToFootprints, reqCreateOrder, reqGetProductDetails } from '../../api';
 
 const { Text } = Typography;
 const listStyle = { fontSize: 15, marginRight: '1rem' };

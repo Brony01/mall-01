@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import {
   Button, Card, Checkbox, InputNumber, List, message,
 } from 'antd';
+import { connect } from 'react-redux';
 import {
   reqDeleteCartItem, reqGetCart, reqUpdateCart, reqCreateOrder,
-} from 'api';
-import { connect } from 'react-redux';
+} from '../../api';
 
 const CartPage = ({ history, userInfo }) => {
   const [cartItems, setCartItems] = useState([]);
