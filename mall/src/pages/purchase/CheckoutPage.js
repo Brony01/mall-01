@@ -1,38 +1,69 @@
-import React from 'react';
-import { Card, Button, message } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Card, Button, message, List, Select, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { reqUpdateOrder } from 'api';
+import { reqConfirmOrder, reqGetUserCoupons } from 'api';
 import { connect } from 'react-redux';
+
+const { Text } = Typography;
+const { Option } = Select;
 
 class CheckoutPage extends React.Component {
     state = {
-        order: {
-            products: [],
-            totalAmount: 0,
-            status: '待付款',
-            orderId: null,
-        },
+        products: [],
+        totalAmount: 0,
+        orderId: null,
+        coupons: [],
+        selectedCoupon: null,
+        discount: 0
     };
 
     componentDidMount() {
         const { location } = this.props;
         if (location.state && location.state.products && location.state.products.length > 0) {
-            this.setState({ order: { ...location.state, status: '待付款', orderId: location.state.orderId } });
+            this.setState({ products: location.state.products, totalAmount: location.state.totalAmount, orderId: location.state.orderId });
+            this.fetchUserCoupons();
         } else {
             message.error('未能获取订单信息，请返回购物车重新结算');
             this.props.history.push('/mainpage/cart');
         }
     }
 
-    handleConfirmPayment = async () => {
-        const { orderId } = this.state.order;
+    fetchUserCoupons = async () => {
+        const { userInfo } = this.props;
         try {
-            await reqUpdateOrder({ orderId, status: '待发货' });
-            message.success('支付成功');
-            this.props.history.push('/order-confirmed');
+            const res = await reqGetUserCoupons({ userId: userInfo._id });
+            if (res.status === 0) {
+                this.setState({ coupons: res.data });
+            } else {
+                message.error('获取用户优惠券失败');
+            }
+        } catch (error) {
+            message.error('获取用户优惠券失败');
+        }
+    };
+
+    handleConfirmPayment = async () => {
+        const { orderId, selectedCoupon } = this.state;
+        try {
+            const res = await reqConfirmOrder({ orderId, couponId: selectedCoupon });
+            if (res.status === 0) {
+                message.success('支付成功');
+                this.props.history.push({
+                    pathname: '/order-confirmed',
+                    state: { totalAmount: res.totalAmount }
+                });
+            } else {
+                message.error('支付失败');
+            }
         } catch (error) {
             message.error('支付失败');
         }
+    };
+
+    handleCouponChange = (value) => {
+        const selectedCoupon = this.state.coupons.find(coupon => coupon._id === value);
+        const discount = selectedCoupon ? selectedCoupon.discount : 0;
+        this.setState({ selectedCoupon: value, discount });
     };
 
     handleBack = () => {
@@ -40,7 +71,9 @@ class CheckoutPage extends React.Component {
     };
 
     render() {
-        const { products, totalAmount, status, orderId } = this.state.order;
+        const { products, totalAmount, orderId, coupons, discount } = this.state;
+        const finalAmount = totalAmount - discount;
+
         return (
             <Card title="支付页面">
                 <p>订单号: {orderId}</p>
@@ -53,7 +86,19 @@ class CheckoutPage extends React.Component {
                     ))}
                 </ul>
                 <p>总金额: ¥{totalAmount}</p>
-                <p>状态: {status}</p>
+                <Select
+                    placeholder="选择优惠券"
+                    style={{ width: '100%', marginBottom: '1rem' }}
+                    onChange={this.handleCouponChange}
+                >
+                    {coupons.map((coupon) => (
+                        <Option key={coupon._id} value={coupon._id}>
+                            {coupon.code} - 满{coupon.minSpend}减{coupon.discount} (有效期: {new Date(coupon.expiryDate).toLocaleDateString()})
+                        </Option>
+                    ))}
+                </Select>
+                <p>优惠金额: ¥{discount}</p>
+                <p>应付金额: ¥{finalAmount}</p>
                 <Button type="primary" onClick={this.handleConfirmPayment}>确认支付</Button>
                 <Button type="default" onClick={this.handleBack}>返回购物车</Button>
             </Card>
@@ -62,7 +107,7 @@ class CheckoutPage extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-    userInfo: state.loginUserInfo, // 从Redux store中获取用户信息
+    userInfo: state.loginUserInfo,
 });
 
 export default connect(mapStateToProps)(withRouter(CheckoutPage));

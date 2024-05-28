@@ -624,16 +624,24 @@ router.post('/order/cancel', async (req, res) => {
 
 // 确认订单支付
 router.post('/order/confirm', async (req, res) => {
-    const { orderId } = req.body;
+    const { orderId, couponId } = req.body;
     try {
         const order = await OrderModel.findById(orderId);
-        if (order) {
+        const coupon = await CouponModel.findById(couponId);
+        if (order && order.status === '待付款') {
+            let totalAmount = order.totalAmount;
+            if (coupon && coupon.userId.equals(order.userId) && coupon.minSpend <= totalAmount) {
+                totalAmount -= coupon.discount;
+                coupon.isClaimed = true;
+                await coupon.save();
+            }
+            order.totalAmount = totalAmount;
             order.status = '待发货';
             await order.save();
             await Promise.all(order.products.map(async (product) => {
                 await ProductModel.findByIdAndUpdate(product.productId, { $inc: { orderCount: 1 } }); // 增加成交量
             }));
-            res.send({ status: 0, msg: '支付成功' });
+            res.send({ status: 0, msg: '支付成功', totalAmount });
         } else {
             res.send({ status: 1, msg: '订单无法支付' });
         }
@@ -641,6 +649,7 @@ router.post('/order/confirm', async (req, res) => {
         res.send({ status: 1, msg: '支付失败' });
     }
 });
+
 
 // 确认收货
 router.post('/order/confirmReceipt', async (req, res) => {
@@ -697,6 +706,46 @@ router.get('/coupon', async (req, res) => {
         res.send({status: 1, msg: '获取优惠券信息失败'});
     }
 });
+
+// 领取优惠券
+router.post('/coupon/claim', async (req, res) => {
+    const { userId, couponId } = req.body;
+    try {
+        const coupon = await CouponModel.findById(couponId);
+        if (coupon && !coupon.isClaimed) {
+            coupon.userId = userId;
+            coupon.isClaimed = true;
+            await coupon.save();
+            res.send({ status: 0, data: coupon });
+        } else {
+            res.send({ status: 1, msg: '优惠券已被领取或不存在' });
+        }
+    } catch (error) {
+        res.send({ status: 1, msg: '领取优惠券失败' });
+    }
+});
+
+// 获取所有可领取的优惠券
+router.get('/coupons/available', async (req, res) => {
+    try {
+        const coupons = await CouponModel.find({ isClaimed: false });
+        res.send({ status: 0, data: coupons });
+    } catch (error) {
+        res.send({ status: 1, msg: '获取优惠券失败' });
+    }
+});
+
+// 获取用户的优惠券
+router.get('/coupons/user', async (req, res) => {
+    const { userId } = req.query;
+    try {
+        const coupons = await CouponModel.find({ userId });
+        res.send({ status: 0, data: coupons });
+    } catch (error) {
+        res.send({ status: 1, msg: '获取用户优惠券失败' });
+    }
+});
+
 
 // 商品详情
 router.get('/product/:id', async (req, res) => {

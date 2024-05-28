@@ -8,6 +8,7 @@ const path = require('path');
 const jwt = require('jsonwebtoken');
 const pino = require('pino');
 const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
+const CouponModel = require('./models/CouponModel');
 
 // 配置 CORS 中间件
 app.use(cors({
@@ -62,6 +63,25 @@ app.use((req, res, next) => {
         next();
     }
 });
+
+// 初始化优惠券
+const initializeCoupons = async () => {
+    const initialCoupons = [
+        { code: 'DISCOUNT200', discount: 30, minSpend: 200, expiryDate: new Date('2024-12-31') },
+        { code: 'DISCOUNT300', discount: 50, minSpend: 300, expiryDate: new Date('2024-12-31') },
+        { code: 'DISCOUNT500', discount: 100, minSpend: 500, expiryDate: new Date('2024-12-31') },
+    ];
+
+    for (let coupon of initialCoupons) {
+        const existingCoupon = await CouponModel.findOne({ code: coupon.code });
+        if (!existingCoupon) {
+            await CouponModel.create(coupon);
+        }
+    }
+};
+
+// 在服务器启动时初始化优惠券
+initializeCoupons().catch(console.error);
 
 app.use('/api', require('./routers'));
 

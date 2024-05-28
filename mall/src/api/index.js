@@ -85,3 +85,12 @@ export const reqGetCoupons = (data) => request('/coupon', 'GET', data);
 
 // ��Ʒ����
 export const reqGetProductDetails = (productId) => request(`/product/${productId}`, 'GET');
+
+// 获取可领取优惠券
+export const reqGetAvailableCoupons = () => request('/coupons/available', 'GET');
+
+// 领取优惠券
+export const reqClaimCoupon = (data) => request('/coupon/claim', 'POST', data);
+
+// 获取用户的优惠券
+export const reqGetUserCoupons = (data) => request('/coupons/user', 'GET', data);
