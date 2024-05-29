@@ -7,7 +7,7 @@ import {
   reqGetAvailableCoupons, reqClaimCoupon, reqGetUserCoupons, reqGetOrders,
 } from 'api';
 import { connect } from 'react-redux';
-
+// 1
 const MyPage = ({ history, userInfo }) => {
   const [availableCoupons, setAvailableCoupons] = useState([]);
   const [userCoupons, setUserCoupons] = useState([]);
