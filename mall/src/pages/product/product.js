@@ -41,27 +41,29 @@ class Product extends Component {
             },
             {
                 title: '状态',
-                render: (record) => (<span><Text
-                        type={record.status ? 'success' : 'danger'}>{record.status ? '显示' : '隐藏'}</Text><Button
-                        size='small' style={btnStyle} loading={loading}
-                        onClick={() => this.up_down(record)}
-                        type='primary'>{record.status ? '隐藏' : '显示'}</Button></span>
+                render: (record) => (
+                    <span>
+                        <Text type={record.status ? 'success' : 'danger'}>{record.status ? '上架' : '下架'}</Text>
+                        <Button
+                            size='small'
+                            style={btnStyle}
+                            loading={loading}
+                            onClick={() => this.up_down(record)}
+                            type='primary'
+                        >
+                            {record.status ? '下架' : '上架'}
+                        </Button>
+                    </span>
                 )
             },
             {
                 title: '操作',
                 render: (record) => (
                     <span>
-          <Button type="link" onClick={() => (
-              this.productDetail(record)
-          )}>详情</Button>
-          <Button type="link" onClick={() => (
-              this.productUpdate(record)
-          )}>修改</Button>
-          <Button type="link" loading={this.state.btnLoading} onClick={() => (
-              this.productDelete(record)
-          )}>删除</Button>
-          </span>
+                        <Button type="link" onClick={() => this.productDetail(record)}>详情</Button>
+                        <Button type="link" onClick={() => this.productUpdate(record)}>修改</Button>
+                        <Button type="link" loading={this.state.btnLoading} onClick={() => this.productDelete(record)}>删除</Button>
+                    </span>
                 )
             },
         ];
@@ -72,12 +74,8 @@ class Product extends Component {
         const params = {
             productId: product._id,
         }
-        if (product.status) {
-            params.status = 0
-        } else {
-            params.status = 1
-        }
-        const res = await reqProductStatus(params)
+        params.status = product.status ? 0 : 1;
+        const res = await reqProductStatus(params);
         if (res.status === 0) {
             this.setState({loading: false})
             message.success('更新成功！')
@@ -157,10 +155,6 @@ class Product extends Component {
                 product.desc.toLowerCase().includes(searchText.toLowerCase())
             );
         }
-        // return productListSource.filter(product =>
-        //     product.name.toLowerCase().includes(searchText.toLowerCase()) ||
-        //     product.desc.toLowerCase().includes(searchText.toLowerCase())
-        // );
     };
 
 
@@ -186,8 +180,8 @@ class Product extends Component {
         }
         const addComponment = () => (
             <span>
-      <Button icon="plus" type='primary' onClick={this.addProductBtn}>添加商品</Button>
-      </span>
+                <Button icon="plus" type='primary' onClick={this.addProductBtn}>添加商品</Button>
+            </span>
         )
 
         return (

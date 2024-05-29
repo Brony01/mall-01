@@ -52,6 +52,11 @@ const ProductPage = ({ history }) => {
                 价格: ¥
                 {product.price}
               </Text>
+              <Text>
+                状态:
+                {' '}
+                {product.status === 1 ? '上架' : '下架'}
+              </Text>
             </Card>
           </List.Item>
         )}

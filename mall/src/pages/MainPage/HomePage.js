@@ -3,7 +3,7 @@ import {
   Carousel, Input, Card, List, Button,
 } from 'antd';
 import { withRouter } from 'react-router-dom';
-import specialIcon from './icons/special.png'; // 假设你将图标保存到此路径
+import specialIcon from './icons/special.png';
 import eventIcon from './icons/special.png';
 import discountIcon from './icons/special.png';
 import promotionIcon from './icons/special.png';
