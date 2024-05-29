@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Breadcrumb, Button, Card, Icon, Input, Modal, Table } from 'antd';
+import { Breadcrumb, Button, Card, Icon, Input, Modal, Table, message } from 'antd';
 import { reqAddCategory, reqCatagoryList, reqDeleteCategory, reqUpdateCategory } from 'api';
 import AddForm from './add-form';
 import UpdateForm from './update-form';
@@ -63,7 +63,10 @@ export default class Category extends Component {
             onOk: async () => {
                 const res = await reqDeleteCategory({ _id: record._id });
                 if (res.status === 0) {
+                    message.success('删除分类成功');
                     this.getCategoryList();
+                } else {
+                    message.error('删除分类失败');
                 }
             },
             onCancel() {}
@@ -96,11 +99,15 @@ export default class Category extends Component {
         const { parentId } = this.state;
         this.setState({ loading: true });
         const params = { parentId: parentId };
-        const { data } = await reqCatagoryList(params);
-        if (parentId === '0') {
-            this.setState({ categoryList: data, loading: false }); // 一级列表
+        const res = await reqCatagoryList(params);
+        if (res.status === 0) {
+            if (parentId === '0') {
+                this.setState({ categoryList: res.data, loading: false }); // 一级列表
+            } else {
+                this.setState({ subCategoryList: res.data, loading: false }); // 子列表
+            }
         } else {
-            this.setState({ subCategoryList: data, loading: false }); // 子列表
+            message.error('获取分类列表失败');
         }
     };
 
@@ -136,64 +143,50 @@ export default class Category extends Component {
         this.setState({ searchText: value.toLowerCase() });
     };
 
-    addCategoryModalHandleOk = e => {
+    addCategoryModalHandleOk = () => {
         this.form.validateFields(async (err, values) => {
             if (!err) {
-                this.setState({
-                    confirmLoading: true
-                });
+                this.setState({ confirmLoading: true });
                 const { categoryId, categoryName } = values;
-                const params = {
-                    categoryName,
-                    parentId: categoryId
-                };
-                const { status } = await reqAddCategory(params);
-                this.form.resetFields();
-                if (status === 0) {
-                    this.setState({
-                        showModal: 0,
-                        confirmLoading: false
-                    });
-                    // 当前列表才去请求
-                    if (this.state.parentId === categoryId) {
+                const params = { categoryName, parentId: categoryId };
+                try {
+                    const res = await reqAddCategory(params);
+                    if (res.status === 0) {
+                        message.success('添加分类成功');
+                        this.setState({ showModal: 0, confirmLoading: false });
+                        this.form.resetFields();
                         this.getCategoryList();
-                    } else if (categoryId === '0') {
-                        // 在二级列表下添加一级列表项
+                    } else {
+                        message.error('添加分类失败');
                     }
+                } catch (error) {
+                    message.error('添加分类异常, 请重新尝试');
+                    this.setState({ confirmLoading: false });
                 }
             }
         });
     };
 
-    updateCategoryModalHandleOk = e => {
+    updateCategoryModalHandleOk = () => {
         this.form.validateFields(async (err, values) => {
             if (!err) {
-                this.setState({
-                    confirmLoading: true
-                });
-                const params = {
-                    categoryName: values.categoryName,
-                    categoryId: this.state.currentRowData._id
-                };
-                this.form.resetFields();
-                const { status } = await reqUpdateCategory(params);
-                if (status === 0) {
-                    this.setState({
-                        showModal: 0,
-                        confirmLoading: false
-                    });
-                    // 更新列表
+                this.setState({ confirmLoading: true });
+                const params = { name: values.categoryName, _id: this.state.currentRowData._id };
+                const res = await reqUpdateCategory(params);
+                if (res.status === 0) {
+                    message.success('更新分类成功');
+                    this.setState({ showModal: 0, confirmLoading: false });
+                    this.form.resetFields();
                     this.getCategoryList();
+                } else {
+                    message.error('更新分类失败');
                 }
             }
         });
     };
 
-    modalHandleCancel = e => {
-        this.setState({
-            showModal: 0,
-            currentRowData: {}
-        });
+    modalHandleCancel = () => {
+        this.setState({ showModal: 0, currentRowData: {} });
         this.form.resetFields();
     };
 
@@ -215,9 +208,12 @@ export default class Category extends Component {
                 <Breadcrumb.Item onClick={this.categoryList} style={{ cursor: 'pointer' }}>
                     品类管理
                 </Breadcrumb.Item>
-                <Breadcrumb.Item>{subCategoryListNavName}</Breadcrumb.Item>
+                {parentId !== '0' && (
+                    <Breadcrumb.Item>{subCategoryListNavName}</Breadcrumb.Item>
+                )}
             </Breadcrumb>
         );
+
         return (
             <div>
                 <Card title={title} extra={this.addCatagoryBtn}>
@@ -245,9 +241,7 @@ export default class Category extends Component {
                     <AddForm
                         categoryList={categoryList}
                         currentRowData={currentRowData}
-                        setForm={form => {
-                            this.form = form;
-                        }}
+                        setForm={form => { this.form = form; }}
                     />
                 </Modal>
                 <Modal
@@ -258,9 +252,7 @@ export default class Category extends Component {
                     confirmLoading={confirmLoading}
                 >
                     <UpdateForm
-                        setForm={form => {
-                            this.form = form;
-                        }}
+                        setForm={form => { this.form = form; }}
                         currentRowData={currentRowData}
                     />
                 </Modal>

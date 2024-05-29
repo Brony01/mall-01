@@ -3,7 +3,7 @@ import {
   Card, Input, Select, Table, Typography, Button, message,
 } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { reqProductList } from 'api';
+import { reqProductList, reqSearchProduct } from 'api';
 import { formatNumber } from '../../utils/common';
 
 const { Option } = Select;
@@ -17,15 +17,16 @@ const ProductListPage = ({ history, location }) => {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState(location.state?.searchText || '');
+  const [categoryId, setCategoryId] = useState(location.state?.categoryId || '');
 
   useEffect(() => {
     getProductList(1);
-  }, []);
+  }, [categoryId]);
 
   const getProductList = async (pageNum) => {
     setLoading(true);
     try {
-      const res = await reqProductList({ pageNum, pageSize: PAGE_SIZE });
+      const res = await reqProductList({ pageNum, pageSize: PAGE_SIZE, categoryId });
       if (res.status === 0) {
         const { total, list } = res.data;
         const filteredList = list.filter(item => item.status === 1); // 过滤掉下架商品
@@ -41,8 +42,26 @@ const ProductListPage = ({ history, location }) => {
     setLoading(false);
   };
 
-  const handleSearch = (value) => {
+  const handleSearch = async (value) => {
     setSearchText(value);
+    setCategoryId(''); // 清除分类ID
+
+    setLoading(true);
+    try {
+      const res = await reqSearchProduct({ pageNum: 1, pageSize: PAGE_SIZE, productName: value });
+      if (res.status === 0) {
+        const { total, list } = res.data;
+        const filteredList = list.filter(item => item.status === 1); // 过滤掉下架商品
+        filteredList.forEach((item) => item.price = formatNumber(item.price));
+        setProductListSource(filteredList);
+        setTotal(filteredList.length);
+      } else {
+        message.error('搜索商品列表失败');
+      }
+    } catch (error) {
+      message.error('搜索商品列表失败');
+    }
+    setLoading(false);
   };
 
   const filterData = () => {
@@ -72,7 +91,7 @@ const ProductListPage = ({ history, location }) => {
         <Input.Search placeholder="搜索商品" onSearch={handleSearch} style={{ width: 200 }} />
       </div>
   );
-  const addComponment = (
+  const addComponent = (
       <span>
       <Button icon="plus" type="primary">添加商品</Button>
     </span>
@@ -124,7 +143,7 @@ const ProductListPage = ({ history, location }) => {
   ];
 
   return (
-      <Card title={title} extra={addComponment}>
+      <Card title={title} extra={addComponent}>
         <Table
             dataSource={filteredData}
             columns={columns}

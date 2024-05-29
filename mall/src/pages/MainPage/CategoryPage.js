@@ -1,27 +1,47 @@
-import React, { useState } from 'react';
-import { List, Card } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { List, Card, message } from 'antd';
 import { withRouter } from 'react-router-dom';
-
-const categories = [
-  { title: '服装', items: ['上衣', '裤子', '鞋子'] },
-  { title: '手机数码', items: ['手机', '平板', '配件'] },
-  { title: '家用电器', items: ['冰箱', '洗衣机', '空调'] },
-  { title: '家具家装', items: ['沙发', '床', '桌椅'] },
-  { title: '汽车用品', items: ['导航', '配件', '工具'] },
-  { title: '电脑办公', items: ['笔记本', '台式机', '打印机'] },
-];
+import { reqCatagoryList } from 'api'; // 引入获取分类列表的请求
 
 const CategoryPage = ({ history }) => {
-  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const handleCategoryClick = (category) => {
-    setSelectedCategory(category);
+  useEffect(() => {
+    // 获取一级分类列表
+    const fetchCategories = async () => {
+      try {
+        const res = await reqCatagoryList({ parentId: '0' });
+        if (res.status === 0) {
+          setCategories(res.data);
+          setSelectedCategory(res.data[0]);
+        } else {
+          message.error('获取分类列表失败');
+        }
+      } catch (error) {
+        message.error('获取分类列表失败');
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  const handleCategoryClick = async (category) => {
+    try {
+      const res = await reqCatagoryList({ parentId: category._id });
+      if (res.status === 0) {
+        setSelectedCategory({ ...category, items: res.data });
+      } else {
+        message.error('获取子分类列表失败');
+      }
+    } catch (error) {
+      message.error('获取子分类列表失败');
+    }
   };
 
   const handleItemClick = (item) => {
     history.push({
       pathname: '/mainpage/products',
-      state: { searchText: item },
+      state: { categoryId: item._id },
     });
   };
 
@@ -32,23 +52,25 @@ const CategoryPage = ({ history }) => {
           dataSource={categories}
           renderItem={(category) => (
             <List.Item onClick={() => handleCategoryClick(category)}>
-              <div>{category.title}</div>
+              <div>{category.name}</div>
             </List.Item>
           )}
         />
       </div>
       <div style={{ width: '80%' }}>
-        <Card title={selectedCategory.title}>
-          <List
-            grid={{ gutter: 16, column: 2 }}
-            dataSource={selectedCategory.items}
-            renderItem={(item) => (
-              <List.Item>
-                <Card onClick={() => handleItemClick(item)}>{item}</Card>
-              </List.Item>
-            )}
-          />
-        </Card>
+        {selectedCategory && (
+          <Card title={selectedCategory.name}>
+            <List
+              grid={{ gutter: 16, column: 2 }}
+              dataSource={selectedCategory.items || []}
+              renderItem={(item) => (
+                <List.Item>
+                  <Card onClick={() => handleItemClick(item)}>{item.name}</Card>
+                </List.Item>
+              )}
+            />
+          </Card>
+        )}
       </div>
     </div>
   );

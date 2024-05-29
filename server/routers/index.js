@@ -238,35 +238,42 @@ router.post('/manage/product/delete', (req, res) => {
         });
 });
 
-// 获取产品分页列表
-router.get('/manage/product/list', (req, res) => {
-    const {pageNum, pageSize} = req.query;
-    ProductModel.find().sort({"_id": -1})
-        .then(products => {
-            res.send({status: 0, data: pageFilter(products, pageNum, pageSize)});
-        })
-        .catch(error => {
-            console.error('获取商品列表异常', error);
-            res.send({status: 1, msg: '获取商品列表异常, 请重新尝试'});
-        });
-});
-
 // 搜索产品列表
 router.get('/manage/product/search', (req, res) => {
-    const {pageNum, pageSize, searchName, productName, productDesc} = req.query;
-    let contition = {};
+    const { pageNum, pageSize, searchName, productName, productDesc, categoryId } = req.query;
+    let condition = {};
     if (productName) {
-        contition = {name: new RegExp(`^.*${productName}.*$`)};
+        condition.name = new RegExp(`^.*${productName}.*$`);
     } else if (productDesc) {
-        contition = {desc: new RegExp(`^.*${productDesc}.*$`)};
+        condition.desc = new RegExp(`^.*${productDesc}.*$`);
     }
-    ProductModel.find(contition)
+    if (categoryId) {
+        condition.categoryId = categoryId;
+    }
+    ProductModel.find(condition)
         .then(products => {
-            res.send({status: 0, data: pageFilter(products, pageNum, pageSize)});
+            res.send({ status: 0, data: pageFilter(products, pageNum, pageSize) });
         })
         .catch(error => {
             console.error('搜索商品列表异常', error);
-            res.send({status: 1, msg: '搜索商品列表异常, 请重新尝试'});
+            res.send({ status: 1, msg: '搜索商品列表异常, 请重新尝试' });
+        });
+});
+
+// 获取产品分页列表
+router.get('/manage/product/list', (req, res) => {
+    const { pageNum, pageSize, categoryId } = req.query;
+    let condition = {};
+    if (categoryId) {
+        condition.categoryId = categoryId;
+    }
+    ProductModel.find(condition).sort({ "_id": -1 })
+        .then(products => {
+            res.send({ status: 0, data: pageFilter(products, pageNum, pageSize) });
+        })
+        .catch(error => {
+            console.error('获取商品列表异常', error);
+            res.send({ status: 1, msg: '获取商品列表异常, 请重新尝试' });
         });
 });
 

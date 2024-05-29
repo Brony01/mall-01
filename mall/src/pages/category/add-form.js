@@ -25,14 +25,9 @@ class AddForm extends Component {
                         rules: [{ required: true, message: '请选择分类!' }],
                         initialValue: currentRowData._id
                     })(
-                        <Select
-                            placeholder="选择分类"
-                            onChange={this.handleSelectChange}
-                        >
-                            <Option value={'0'} key={'124'}>分类名称</Option>
-                            {
-                                categoryList.map(item => <Option value={item._id} key={item._id}>{item.name}</Option>)
-                            }
+                        <Select placeholder="选择分类">
+                            <Option value={'0'} key={'0'}>一级分类</Option>
+                            {categoryList.map(item => <Option value={item._id} key={item._id}>{item.name}</Option>)}
                         </Select>
                     )}
                 </Form.Item>
@@ -42,11 +37,10 @@ class AddForm extends Component {
                         rules: [{ required: true, message: '请输入分类!' }],
                     })(<Input placeholder="输入分类" />)}
                 </Form.Item>
-
             </Form>
         );
     }
 }
 
-const WrappedApp = Form.create({ name: 'coordinated' })(AddForm);
-export default WrappedApp;
+const WrappedAddForm = Form.create()(AddForm);
+export default WrappedAddForm;
