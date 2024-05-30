@@ -8,7 +8,10 @@ const OrderConfirmedPage = ({ history, location }) => {
   };
 
   const handleOrders = () => {
-    history.push('/mainpage/my');
+    history.push({
+      pathname: '/order-details',
+      state: { orderId: location.state.orderId },
+    });
   };
 
   const { totalAmount } = location.state || {};

@@ -50,7 +50,10 @@ class CheckoutPage extends React.Component {
                 message.success('支付成功');
                 this.props.history.push({
                     pathname: '/order-confirmed',
-                    state: { totalAmount: res.totalAmount }
+                    state: {
+                        totalAmount: res.totalAmount,
+                        orderId: this.state.orderId,
+                    }
                 });
             } else {
                 message.error('支付失败');
