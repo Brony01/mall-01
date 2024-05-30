@@ -760,15 +760,20 @@ router.get('/coupons/available', async (req, res) => {
 router.get('/coupon/status', async (req, res) => {
     const { userId } = req.query;
     try {
-        const coupons = await CouponModel.find({ userId });
-        const unusedCoupons = coupons.filter(coupon => !coupon.isClaimed);
+        // 获取用户优惠券
+        const userCoupons = await CouponModel.find({ userId });
+        // 获取未领取的优惠券
         const unclaimedCoupons = await CouponModel.find({ userId: { $exists: false } });
+
+        // 获取未使用的优惠券
+        const unusedCoupons = userCoupons.filter(coupon => !coupon.isClaimed);
 
         res.send({
             status: 0,
             data: {
-                hasUnclaimed: unclaimedCoupons.length > 0,
-                hasUnused: unusedCoupons.length > 0
+                hasUnclaimed: userCoupons.length < 3,
+                hasUnused: userCoupons.some(coupon => coupon.isClaimed === false),
+                //count: userCoupons.length
             }
         });
     } catch (error) {
@@ -776,6 +781,9 @@ router.get('/coupon/status', async (req, res) => {
         res.send({ status: 1, msg: '获取优惠券状态失败' });
     }
 });
+
+
+
 
 // 获取用户的优惠券
 router.get('/coupons/user', async (req, res) => {
