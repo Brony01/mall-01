@@ -303,6 +303,18 @@ router.post('/manage/product/updateStatus', (req, res) => {
         });
 });
 
+// 获取按销量排序的热门商品
+router.get('/manage/product/hot', (req, res) => {
+    ProductModel.find().sort({ orderCount: -1 }).limit(10)
+        .then(products => {
+            res.send({ status: 0, data: products });
+        })
+        .catch(error => {
+            console.error('获取热门商品列表异常', error);
+            res.send({ status: 1, msg: '获取热门商品列表异常, 请重新尝试' });
+        });
+});
+
 // 添加角色
 router.post('/manage/role/add', (req, res) => {
     const {roleName} = req.body;
@@ -744,6 +756,27 @@ router.get('/coupons/available', async (req, res) => {
     }
 });
 
+// 获取用户的优惠券状态
+router.get('/coupon/status', async (req, res) => {
+    const { userId } = req.query;
+    try {
+        const coupons = await CouponModel.find({ userId });
+        const unusedCoupons = coupons.filter(coupon => !coupon.isClaimed);
+        const unclaimedCoupons = await CouponModel.find({ userId: { $exists: false } });
+
+        res.send({
+            status: 0,
+            data: {
+                hasUnclaimed: unclaimedCoupons.length > 0,
+                hasUnused: unusedCoupons.length > 0
+            }
+        });
+    } catch (error) {
+        console.error('获取优惠券状态异常', error);
+        res.send({ status: 1, msg: '获取优惠券状态失败' });
+    }
+});
+
 // 获取用户的优惠券
 router.get('/coupons/user', async (req, res) => {
     const { userId } = req.query;
@@ -752,6 +785,31 @@ router.get('/coupons/user', async (req, res) => {
         res.send({ status: 0, data: coupons });
     } catch (error) {
         res.send({ status: 1, msg: '获取用户优惠券失败' });
+    }
+});
+
+// 获取秒杀商品列表
+router.get('/manage/product/seckill', async (req, res) => {
+    try {
+        const now = new Date();
+        const ongoingSeckills = await ProductModel.find({
+            seckillStart: { $lte: now },
+            seckillEnd: { $gte: now }
+        }).sort({ seckillEnd: 1 }).limit(10);
+
+        const upcomingSeckills = await ProductModel.find({
+            seckillStart: { $gt: now }
+        }).sort({ seckillStart: 1 }).limit(10);
+
+        res.send({
+            status: 0,
+            data: {
+                ongoing: ongoingSeckills,
+                upcoming: upcomingSeckills
+            }
+        });
+    } catch (error) {
+        res.send({ status: 1, msg: '获取秒杀商品列表失败' });
     }
 });
 

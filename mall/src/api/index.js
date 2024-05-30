@@ -34,8 +34,14 @@ export const reqDeleteProduct = (data) => request('/manage/product/delete', 'POS
 // ��ȡ��Ʒ�б�
 export const reqProductList = (data) => request('/manage/product/list', 'GET', data);
 
+// 请求获取热门商品
+export const reqHotProducts = (data) => request('/manage/product/hot', 'GET', data);
+
 // ������Ʒ
 export const reqSearchProduct = (data) => request('/manage/product/search', 'GET', data);
+
+// 获取优惠券状态
+export const reqCouponStatus = (data) => request('/coupon/status', 'GET', data);
 
 // ��ӽ�ɫ
 export const reqAddRole = (data) => request('/manage/role/add', 'POST', data);
@@ -97,3 +103,6 @@ export const reqGetUserCoupons = (data) => request('/coupons/user', 'GET', data)
 
 // 秒杀
 export const reqSeckill = (data) => request('/seckill', 'POST', data);
+
+// /manage/product/seckill// 请求获取秒杀商品列表
+export const reqSeckillProducts = (data) => request('/manage/product/seckill', 'GET', data);
