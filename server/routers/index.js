@@ -615,6 +615,17 @@ router.post('/order/delete', async (req, res) => {
     }
 });
 
+
+//获取所有用户的所有订单
+router.get('/order/all', async (req, res) => {
+    try {
+        const orders = await OrderModel.find();
+        res.send({status: 0, data: orders});
+    } catch (error) {
+        res.send({status: 1, msg: '获取订单列表失败'});
+    }
+});
+
 // 根据订单号获取订单
 router.get('/order/:id', async (req, res) => {
     const orderId = req.params.id;
@@ -625,6 +636,7 @@ router.get('/order/:id', async (req, res) => {
         res.send({status: 1, msg: '获取订单详情失败'});
     }
 });
+
 
 // 取消订单
 router.post('/order/cancel', async (req, res) => {

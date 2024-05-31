@@ -55,6 +55,11 @@ const menuList = [
     icon: 'safety',
   },
   {
+    title: '订单管理',
+    key: '/order-manage',
+    icon: 'file',
+  },
+  {
     title: 'GitHub',
     key: '/github',
     icon: 'github',

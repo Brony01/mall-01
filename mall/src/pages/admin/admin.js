@@ -51,6 +51,11 @@ const Product = Loadable({
     loading: Loading
 });
 
+const Order = Loadable({
+    loader: () => import("../order"),
+    loading: Loading
+});
+
 const GitHub = Loadable({
     loader: () => import("../github"),
     loading: Loading
@@ -132,6 +137,7 @@ class Admin extends Component {
                                 <AuthRouter path="/product" component={Product} />
                                 <AuthRouter path="/role" component={Role} />
                                 <AuthRouter path="/user" component={User} />
+                                <AuthRouter path="/order-manage" component={Order} />
                                 <AuthRouter path="/github" component={GitHub} />
                                 <AuthRouter component={NotFoundPage} />
                             </Switch>

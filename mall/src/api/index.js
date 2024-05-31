@@ -71,12 +71,13 @@ export const reqAddToFootprints = (data) => request('/footprint/add', 'POST', da
 export const reqGetFootprints = (data) => request('/footprint', 'GET', data);
 export const reqDeleteFootprintItem = (data) => request('/footprint/delete', 'POST', data);
 
-// ����
 export const reqCreateOrder = (data) => request('/order/create', 'POST', data);
 export const reqGetOrders = (data) => request('/order', 'GET', data);
 export const reqUpdateOrder = (data) => request('/order/update', 'POST', data);
 export const reqDeleteOrder = (data) => request('/order/delete', 'POST', data);
 export const reqCancelOrder = (data) => request('/order/cancel', 'POST', data);
+// 获取所有用户的所有订单
+export const reqAllOrders = () => request('/order/all', 'GET');
 export const reqConfirmReceipt = (data) => request('/order/confirmReceipt', 'POST', data);
 export const reqRequestAfterSales = (data) => request('/order/afterSales', 'POST', data);
 export const reqClearCart = (data) => request('/cart/clear', 'POST', data);
