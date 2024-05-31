@@ -46,33 +46,37 @@ const CategoryPage = ({ history }) => {
   };
 
   return (
-    <div style={{ display: 'flex' }}>
-      <div style={{ width: '20%' }}>
-        <List
-          dataSource={categories}
-          renderItem={(category) => (
-            <List.Item onClick={() => handleCategoryClick(category)}>
-              <div>{category.name}</div>
-            </List.Item>
-          )}
-        />
-      </div>
-      <div style={{ width: '80%' }}>
-        {selectedCategory && (
-          <Card title={selectedCategory.name}>
-            <List
-              grid={{ gutter: 16, column: 2 }}
-              dataSource={selectedCategory.items || []}
-              renderItem={(item) => (
-                <List.Item>
-                  <Card onClick={() => handleItemClick(item)}>{item.name}</Card>
-                </List.Item>
+      <div style={{ display: 'flex' }}>
+        <div style={{ width: '20%' }}>
+          <List
+              dataSource={categories}
+              renderItem={(category) => (
+                  <List.Item onClick={() => handleCategoryClick(category)}>
+                    <img src={category.imageUrl} alt={category.name} style={{ width: '100%' }} />
+                    <div>{category.name}</div>
+                  </List.Item>
               )}
-            />
-          </Card>
-        )}
+          />
+        </div>
+        <div style={{ width: '80%' }}>
+          {selectedCategory && (
+              <Card title={selectedCategory.name}>
+                <List
+                    grid={{ gutter: 16, column: 2 }}
+                    dataSource={selectedCategory.items || []}
+                    renderItem={(item) => (
+                        <List.Item>
+                          <Card onClick={() => handleItemClick(item)}>
+                            <img src={item.imageUrl} alt={item.name} style={{ width: '100%' }} />
+                            {item.name}
+                          </Card>
+                        </List.Item>
+                    )}
+                />
+              </Card>
+          )}
+        </div>
       </div>
-    </div>
   );
 };
 

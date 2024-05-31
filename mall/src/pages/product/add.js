@@ -41,6 +41,7 @@ class ProductAdd extends Component {
                     desc: values.prdDesc,
                     status: 1,
                     detail: getInputData,
+                    imgs: values.imgs.split(','), // Assuming imgs is a comma-separated string of URLs
                     seckillPrice: values.seckillPrice,
                     seckillStock: values.seckillStock,
                     seckillStart: values.seckillTime ? values.seckillTime[0].toDate() : null,
@@ -180,6 +181,14 @@ class ProductAdd extends Component {
                             initialValue: prdCategory,
                             rules: [{ type: 'array', required: true, message: '请输入选择分类!' }],
                         })(<Cascader placeholder='请选择商品分类' options={productClassList} loadData={this.productLoadData} />)}
+                    </Form.Item>
+                    <Form.Item label="商品图片URL">
+                        {getFieldDecorator('imgs', {
+                            rules: [{ required: true, message: '请输入商品图片URL!' }],
+                            initialValue: oldData.imgs ? oldData.imgs.join(',') : ''
+                        })(
+                            <Input placeholder="商品图片URL（多个用逗号隔开）" />)
+                        }
                     </Form.Item>
                     <Form.Item label="秒杀价格">
                         {getFieldDecorator('seckillPrice', {

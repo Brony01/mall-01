@@ -9,14 +9,14 @@ const { confirm } = Modal;
 export default class Category extends Component {
     state = {
         loading: false,
-        categoryList: [], // 一级列表
-        subCategoryList: [], // 子分类列表
-        parentId: '0', // 初始获取一级列表
+        categoryList: [],
+        subCategoryList: [],
+        parentId: '0',
         subCategoryListNavName: '',
-        showModal: 0, // 0: 都不显示；1：显示添加一级分类；2：修改分类
-        currentRowData: {}, // 默认一级
+        showModal: 0,
+        currentRowData: {},
         confirmLoading: false,
-        searchText: '' // 添加搜索文本状态
+        searchText: ''
     };
 
     constructor(props) {
@@ -37,17 +37,23 @@ export default class Category extends Component {
                 dataIndex: 'name'
             },
             {
+                title: '分类图片',
+                key: 'imageUrl',
+                dataIndex: 'imageUrl',
+                render: (text) => <img src={text} alt="分类图片" style={{ width: 50 }} />
+            },
+            {
                 title: '操作',
                 key: '02',
                 width: 300,
                 render: record => (
                     <span>
-                        <Button type="link" onClick={() => this.updateCategory(record)}>修改</Button>
-                        <Button type="link" onClick={() => this.deleteCategory(record)}>删除</Button>
+            <Button type="link" onClick={() => this.updateCategory(record)}>修改</Button>
+            <Button type="link" onClick={() => this.deleteCategory(record)}>删除</Button>
                         {this.state.parentId === '0' ? (
                             <Button type="link" onClick={() => this.getSubCategoryList(record)}>查看子分类</Button>
                         ) : null}
-                    </span>
+          </span>
                 )
             }
         ];
@@ -102,9 +108,9 @@ export default class Category extends Component {
         const res = await reqCatagoryList(params);
         if (res.status === 0) {
             if (parentId === '0') {
-                this.setState({ categoryList: res.data, loading: false }); // 一级列表
+                this.setState({ categoryList: res.data, loading: false });
             } else {
-                this.setState({ subCategoryList: res.data, loading: false }); // 子列表
+                this.setState({ subCategoryList: res.data, loading: false });
             }
         } else {
             message.error('获取分类列表失败');
@@ -129,7 +135,7 @@ export default class Category extends Component {
             parentId: '0',
             subCategoryList: [],
             subCategoryListNavName: null,
-            currentRowData: { _id: '0', name: '一级分类' } // 默认一级
+            currentRowData: { _id: '0', name: '一级分类' }
         });
     };
 
@@ -147,8 +153,8 @@ export default class Category extends Component {
         this.form.validateFields(async (err, values) => {
             if (!err) {
                 this.setState({ confirmLoading: true });
-                const { categoryId, categoryName } = values;
-                const params = { categoryName, parentId: categoryId };
+                const { categoryId, categoryName, imageUrl } = values;
+                const params = { categoryName, parentId: categoryId, imageUrl };
                 try {
                     const res = await reqAddCategory(params);
                     if (res.status === 0) {
@@ -171,7 +177,7 @@ export default class Category extends Component {
         this.form.validateFields(async (err, values) => {
             if (!err) {
                 this.setState({ confirmLoading: true });
-                const params = { name: values.categoryName, _id: this.state.currentRowData._id };
+                const params = { categoryId: this.state.currentRowData._id, categoryName: values.categoryName, imageUrl: values.imageUrl };
                 const res = await reqUpdateCategory(params);
                 if (res.status === 0) {
                     message.success('更新分类成功');

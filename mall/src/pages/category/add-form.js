@@ -8,8 +8,8 @@ class AddForm extends Component {
     static propTypes = {
         categoryList: PropTypes.array.isRequired,
         setForm: PropTypes.func.isRequired,
-        currentRowData: PropTypes.object.isRequired // 父级分类id
-    }
+        currentRowData: PropTypes.object.isRequired
+    };
 
     componentDidMount() {
         this.props.setForm(this.props.form);
@@ -31,11 +31,15 @@ class AddForm extends Component {
                         </Select>
                     )}
                 </Form.Item>
-
                 <Form.Item label="分类名称">
                     {getFieldDecorator('categoryName', {
-                        rules: [{ required: true, message: '请输入分类!' }],
+                        rules: [{ required: true, message: '请输入分类名称!' }],
                     })(<Input placeholder="输入分类" />)}
+                </Form.Item>
+                <Form.Item label="分类图片URL">
+                    {getFieldDecorator('imageUrl', {
+                        rules: [{ required: true, message: '请输入分类图片URL!' }],
+                    })(<Input placeholder="输入分类图片URL" />)}
                 </Form.Item>
             </Form>
         );

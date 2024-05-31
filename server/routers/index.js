@@ -149,14 +149,14 @@ router.get('/manage/user/list', (req, res) => {
 
 // 添加分类
 router.post('/manage/category/add', (req, res) => {
-    const {categoryName, parentId} = req.body;
-    CategoryModel.create({name: categoryName, parentId: parentId || '0'})
+    const { categoryName, parentId, imageUrl } = req.body;
+    CategoryModel.create({ name: categoryName, parentId: parentId || '0', imageUrl })
         .then(category => {
-            res.send({status: 0, data: category});
+            res.send({ status: 0, data: category });
         })
         .catch(error => {
             console.error('添加分类异常', error);
-            res.send({status: 1, msg: '添加分类异常, 请重新尝试'});
+            res.send({ status: 1, msg: '添加分类异常, 请重新尝试' });
         });
 });
 
@@ -186,16 +186,16 @@ router.get('/manage/category/list', (req, res) => {
         });
 });
 
-// 更新分类名称
+// 更新分类
 router.post('/manage/category/update', (req, res) => {
-    const {categoryId, categoryName} = req.body;
-    CategoryModel.findOneAndUpdate({_id: categoryId}, {name: categoryName})
+    const { categoryId, categoryName, imageUrl } = req.body;
+    CategoryModel.findOneAndUpdate({ _id: categoryId }, { name: categoryName, imageUrl })
         .then(oldCategory => {
-            res.send({status: 0});
+            res.send({ status: 0 });
         })
         .catch(error => {
             console.error('更新分类名称异常', error);
-            res.send({status: 1, msg: '更新分类名称异常, 请重新尝试'});
+            res.send({ status: 1, msg: '更新分类名称异常, 请重新尝试' });
         });
 });
 
@@ -217,11 +217,11 @@ router.post('/manage/product/add', (req, res) => {
     const product = req.body;
     ProductModel.create(product)
         .then(product => {
-            res.send({status: 0, data: product});
+            res.send({ status: 0, data: product });
         })
         .catch(error => {
             console.error('添加产品异常', error);
-            res.send({status: 1, msg: '添加产品异常, 请重新尝试'});
+            res.send({ status: 1, msg: '添加产品异常, 请重新尝试' });
         });
 });
 
@@ -280,13 +280,13 @@ router.get('/manage/product/list', (req, res) => {
 // 更新产品
 router.post('/manage/product/update', (req, res) => {
     const product = req.body;
-    ProductModel.findOneAndUpdate({_id: product._id}, product)
+    ProductModel.findOneAndUpdate({ _id: product._id }, product)
         .then(oldProduct => {
-            res.send({status: 0});
+            res.send({ status: 0 });
         })
         .catch(error => {
             console.error('更新商品异常', error);
-            res.send({status: 1, msg: '更新商品名称异常, 请重新尝试'});
+            res.send({ status: 1, msg: '更新商品名称异常, 请重新尝试' });
         });
 });
 

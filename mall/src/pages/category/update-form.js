@@ -13,7 +13,7 @@ class UpdateForm extends Component {
     }
 
     render() {
-        const { name } = this.props.currentRowData;
+        const { name, imageUrl } = this.props.currentRowData;
         const { getFieldDecorator } = this.props.form;
         return (
             <Form labelCol={{ span: 5 }} wrapperCol={{ span: 17 }}>
@@ -22,6 +22,12 @@ class UpdateForm extends Component {
                         rules: [{ required: true, message: '请输入分类名称!' }],
                         initialValue: name
                     })(<Input placeholder="输入分类" />)}
+                </Form.Item>
+                <Form.Item label="分类图片URL">
+                    {getFieldDecorator('imageUrl', {
+                        rules: [{ required: true, message: '请输入分类图片URL!' }],
+                        initialValue: imageUrl
+                    })(<Input placeholder="输入分类图片URL" />)}
                 </Form.Item>
             </Form>
         );

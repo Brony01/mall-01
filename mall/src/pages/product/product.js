@@ -1,15 +1,15 @@
-import React, {Component} from 'react';
-import {withRouter} from 'react-router-dom'
-import {Button, Card, Input, message, Select, Table, Typography} from 'antd';
-import {reqDeleteProduct, reqProductList, reqProductStatus} from 'api'
-import {formatNumber} from '../../utils/common'
+import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import { Button, Card, Input, message, Select, Table, Typography } from 'antd';
+import { reqDeleteProduct, reqProductList, reqProductStatus } from 'api';
+import { formatNumber } from '../../utils/common';
 
-const {Option} = Select;
-const {Text} = Typography;
-const PAGE_SIZE = 5
+const { Option } = Select;
+const { Text } = Typography;
+const PAGE_SIZE = 5;
 const btnStyle = {
     marginLeft: '0.5rem'
-}
+};
 
 class Product extends Component {
     state = {
@@ -23,8 +23,8 @@ class Product extends Component {
     };
 
     constructor() {
-        super()
-        const {loading} = this.state
+        super();
+        const { loading } = this.state;
         this.columns = [
             {
                 title: '商品名称',
@@ -38,6 +38,13 @@ class Product extends Component {
             {
                 title: '商品描述',
                 dataIndex: 'desc',
+            },
+            {
+                title: '商品图片',
+                dataIndex: 'imgs',
+                render: (imgs) => (
+                    <img src={imgs[0]} alt="商品图片" style={{ width: 50 }} />
+                )
             },
             {
                 title: '状态',
@@ -70,33 +77,36 @@ class Product extends Component {
     }
 
     up_down = async (product) => {
-        this.setState({loading: true})
+        this.setState({ loading: true });
         const params = {
             productId: product._id,
-        }
+        };
         params.status = product.status ? 0 : 1;
         const res = await reqProductStatus(params);
         if (res.status === 0) {
-            this.setState({loading: false})
-            message.success('更新成功！')
-            this.getProductList(this.pageNum)
+            this.setState({ loading: false });
+            message.success('更新成功！');
+            this.getProductList(this.pageNum);
         }
     }
+
     productUpdate = async (record) => {
-        this.props.history.push('/product/add', record)
+        this.props.history.push('/product/add', record);
     }
+
     productDelete = async (record) => {
-        const res = await reqDeleteProduct({_id: record._id})
+        const res = await reqDeleteProduct({ _id: record._id });
         if (res.status === 0) {
-            this.getProductList(1)
+            this.getProductList(1);
         }
     }
+
     // 商品详情
     productDetail = (data) => {
         this.props.history.push({
             pathname: '/product/detail',
             state: data
-        })
+        });
     }
 
     // 搜索筛选框
@@ -110,40 +120,40 @@ class Product extends Component {
 
     // 添加商品
     addProductBtn = (e) => {
-        e.stopPropagation()
-        this.props.history.push('/product/add')
+        e.stopPropagation();
+        this.props.history.push('/product/add');
     }
 
     // 商品列表
     getProductList = async (pageNum) => {
-        this.pageNum = pageNum //保存全局，状态更新的时候能够定位到当前页
+        this.pageNum = pageNum; //保存全局，状态更新的时候能够定位到当前页
         this.setState({
             tableLoading: true,
-        })
+        });
         let res;
-        res = await reqProductList({pageNum, pageSize: PAGE_SIZE})
+        res = await reqProductList({ pageNum, pageSize: PAGE_SIZE });
 
-        const {total, list} = res.data
+        const { total, list } = res.data;
         if (res.status === 0 && list.length > 0) {
             // 格式化金额
             list.forEach(item => {
-                item.price = formatNumber(item.price)
-            })
+                item.price = formatNumber(item.price);
+            });
             this.setState({
                 total,
                 productListSource: list,
                 tableLoading: false,
                 btnLoading: false
-            })
+            });
         }
     }
 
     componentDidMount() {
-        this.getProductList(1)
+        this.getProductList(1);
     }
 
     filterData = () => {
-        const {productListSource, searchText, selectValue} = this.state;
+        const { productListSource, searchText, selectValue } = this.state;
         if (!searchText) {
             return productListSource;
         } else if (selectValue === '1') {
@@ -159,30 +169,30 @@ class Product extends Component {
 
 
     render() {
-        const {loading} = this.state
+        const { loading } = this.state;
         const filteredData = this.filterData();
         const title = () => {
             return (
                 <div>
                     <Select defaultValue="1"
-                            style={{width: '7rem'}}
+                            style={{ width: '7rem' }}
                             onChange={this.selectHandleChange}>
                         <Option value="1">按名称搜索</Option>
                         <Option value="2">按描述搜索</Option>
                     </Select>
                     <Input.Search
                         placeholder="搜索商品"
-                        onSearch={value => this.setState({searchText: value})}
-                        style={{width: 200}}
+                        onSearch={value => this.setState({ searchText: value })}
+                        style={{ width: 200 }}
                     />
                 </div>
-            )
+            );
         }
         const addComponment = () => (
             <span>
                 <Button icon="plus" type='primary' onClick={this.addProductBtn}>添加商品</Button>
             </span>
-        )
+        );
 
         return (
             <Card title={title()} extra={addComponment()}>
@@ -204,4 +214,4 @@ class Product extends Component {
     }
 }
 
-export default withRouter(Product)
+export default withRouter(Product);
