@@ -796,9 +796,6 @@ router.get('/coupon/status', async (req, res) => {
     }
 });
 
-
-
-
 // 获取用户的优惠券
 router.get('/coupons/user', async (req, res) => {
     const { userId } = req.query;
@@ -807,6 +804,31 @@ router.get('/coupons/user', async (req, res) => {
         res.send({ status: 0, data: coupons });
     } catch (error) {
         res.send({ status: 1, msg: '获取用户优惠券失败' });
+    }
+});
+
+// 初始化用户优惠券
+router.post('/coupon/init', async (req, res) => {
+    const { userId } = req.body;
+    const initialCoupons = [
+        { code: 'DISCOUNT200', discount: 30, minSpend: 200, expiryDate: new Date('2024-12-31'), isClaimed: false },
+        { code: 'DISCOUNT300', discount: 50, minSpend: 300, expiryDate: new Date('2024-12-31'), isClaimed: false },
+        { code: 'DISCOUNT500', discount: 100, minSpend: 500, expiryDate: new Date('2024-12-31'), isClaimed: false },
+    ];
+
+    try {
+        let userCoupons = await CouponModel.findOne({ userId });
+        if (!userCoupons) {
+            userCoupons = new CouponModel({ userId, coupons: initialCoupons });
+        } else {
+            userCoupons.coupons.push(...initialCoupons);
+        }
+
+        await userCoupons.save();
+        res.send({ status: 0, msg: '初始化优惠券成功' });
+    } catch (error) {
+        console.error('初始化优惠券失败', error);
+        res.send({ status: 1, msg: '初始化优惠券失败' });
     }
 });
 

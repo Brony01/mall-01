@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import {
   reqDeleteCartItem, reqGetCart, reqUpdateCart, reqCreateOrder, reqClearCart, // 确保引入 reqClearCart
 } from '../../api';
+import {withRouter} from "react-router-dom";
 
 const CartPage = ({ history, userInfo }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -138,4 +139,4 @@ const mapStateToProps = (state) => ({
   userInfo: state.loginUserInfo, // 从Redux store中获取用户信息
 });
 
-export default connect(mapStateToProps)(CartPage);
+export default connect(mapStateToProps)(withRouter(CartPage));
