@@ -17,15 +17,16 @@ const ProductListPage = ({ history, location }) => {
     const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(false);
     const [searchText, setSearchText] = useState(location.state?.searchText || '');
+    const [categoryId, setCategoryId] = useState(location.state?.categoryId || '');
 
     useEffect(() => {
         getProductList(1);
-    }, []);
+    }, [categoryId]);
 
     const getProductList = async (pageNum) => {
         setLoading(true);
         try {
-            const res = await reqProductList({ pageNum, pageSize: PAGE_SIZE });
+            const res = await reqProductList({ pageNum, pageSize: PAGE_SIZE, categoryId });
             if (res.status === 0) {
                 const { total, list } = res.data;
                 const filteredList = list.filter(item => item.status === 1); // 过滤掉下架商品
