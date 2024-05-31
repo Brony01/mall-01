@@ -1,7 +1,7 @@
 import React from 'react';
-import { Card, List } from 'antd';
-import { connect } from 'react-redux'; // 假设你有一个获取所有订单的API
-
+import {Card, List, Button, Icon} from 'antd';
+import { connect } from 'react-redux';
+import {ArrowLeftOutlined} from "@ant-design/icons";
 
 class OrderPage extends React.Component {
   state = {
@@ -22,24 +22,32 @@ class OrderPage extends React.Component {
       state: { orderId },
     });
   };
+
+  handleBack = () => {
+    this.props.history.goBack();
+  };
+
   render() {
     const { orders } = this.state;
 
     return (
-      <Card title="所有订单">
-        <List
-          itemLayout="vertical"
-          dataSource={orders}
-          renderItem={(order) => (
-            <List.Item key={order._id} onClick={() => this.handleOrderClick(order._id)}>
-              <List.Item.Meta
-                title={`订单号: ${order._id}`}
-                description={`总金额: ¥${order.totalAmount} | 状态: ${order.status}`}
-              />
-            </List.Item>
-          )}
-        />
-      </Card>
+      <div>
+        <ArrowLeftOutlined onClick={this.handleBack} style={{fontSize: 25}}/>
+        <Card title="所有订单">
+          <List
+            itemLayout="vertical"
+            dataSource={orders}
+            renderItem={(order) => (
+              <List.Item key={order._id} onClick={() => this.handleOrderClick(order._id)}>
+                <List.Item.Meta
+                  title={`订单号: ${order._id}`}
+                  description={`总金额: ¥${order.totalAmount} | 状态: ${order.status}`}
+                />
+              </List.Item>
+            )}
+          />
+        </Card>
+      </div>
     );
   }
 }
