@@ -20,8 +20,8 @@ class ProductAdd extends Component {
         this.richEditTextRef = React.createRef();
         const { state } = this.props.location;
         this.title = (
-            <span><Icon type="arrow-left" onClick={() => { this.props.history.goBack() }} style={{ fontSize: 20, marginRight: 4 }} />
-                {state ? '修改商品' : '添加商品'}
+          <span><Icon type="arrow-left" onClick={() => { this.props.history.goBack() }} style={{ fontSize: 20, marginRight: 4 }} />
+              {state ? '修改商品' : '添加商品'}
             </span>
         );
     }
@@ -41,6 +41,7 @@ class ProductAdd extends Component {
                     desc: values.prdDesc,
                     status: 1,
                     detail: getInputData,
+                    imgs: values.imgs.split(','), // Assuming imgs is a comma-separated string of URLs
                     seckillPrice: values.seckillPrice,
                     seckillStock: values.seckillStock,
                     seckillStart: values.seckillTime && values.seckillTime.length > 0 ? values.seckillTime[0].toDate() : null,
@@ -148,73 +149,81 @@ class ProductAdd extends Component {
             },
         };
         return (
-            <Card title={this.title}>
-                <Form {...formItemLayout} onSubmit={this.handleSubmit}>
-                    <Form.Item label="商品名称">
-                        {getFieldDecorator('prdName', {
-                            rules: [{ required: true, message: '请输入名称!' }],
-                            initialValue: oldData.name
-                        })(
-                            <Input placeholder="商品名称" />,
-                        )}
-                    </Form.Item>
-                    <Form.Item label='商品描述'>
-                        {getFieldDecorator('prdDesc', {
-                            rules: [{ required: true, message: '请输入描述!' }], initialValue: oldData.desc
-                        })(
-                            <TextArea placeholder="商品描述" autosize />,
-                        )}
-                    </Form.Item>
-                    <Form.Item label='商品价格'>
-                        {getFieldDecorator('prdPrice', {
-                            rules: [{ required: true, message: '请输入价格！' },
-                                { validator: this.priceValidator }
-                            ],
-                            initialValue: (oldData.price)
-                        })(
-                            <Input prefix='￥' placeholder="商品价格" suffix="元" />,
-                        )}
-                    </Form.Item>
-                    <Form.Item label="商品分类">
-                        {getFieldDecorator('prdCategory', {
-                            initialValue: prdCategory,
-                            rules: [{ type: 'array', required: true, message: '请输入选择分类!' }],
-                        })(<Cascader placeholder='请选择商品分类' options={productClassList} loadData={this.productLoadData} />)}
-                    </Form.Item>
-                    <Form.Item label="秒杀价格">
-                        {getFieldDecorator('seckillPrice', {
-                            rules: [{ required: false }],
-                            initialValue: oldData.seckillPrice
-                        })(
-                            <Input prefix='￥' placeholder="秒杀价格" suffix="元" />,
-                        )}
-                    </Form.Item>
-                    <Form.Item label="秒杀库存">
-                        {getFieldDecorator('seckillStock', {
-                            rules: [{ required: false }],
-                            initialValue: oldData.seckillStock
-                        })(
-                            <Input placeholder="秒杀库存" />,
-                        )}
-                    </Form.Item>
-                    <Form.Item label="秒杀时间">
-                        {getFieldDecorator('seckillTime', {
-                            rules: [{ required: false }],
-                            initialValue: oldData.seckillStart && oldData.seckillEnd ? [moment(oldData.seckillStart), moment(oldData.seckillEnd)] : []
-                        })(
-                            <DatePicker.RangePicker showTime format="YYYY-MM-DD HH:mm:ss" />,
-                        )}
-                    </Form.Item>
-                    <Form.Item label="商品详情">
-                        <RichEditText preDetail={detail} ref={this.richEditTextRef} />
-                    </Form.Item>
-                    <Form.Item wrapperCol={{ sm: { span: 10, offset: 10 } }}>
-                        <Button type="primary" htmlType="submit" loading={loading}>
-                            增加
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Card>
+          <Card title={this.title}>
+              <Form {...formItemLayout} onSubmit={this.handleSubmit}>
+                  <Form.Item label="商品名称">
+                      {getFieldDecorator('prdName', {
+                          rules: [{ required: true, message: '请输入名称!' }],
+                          initialValue: oldData.name
+                      })(
+                        <Input placeholder="商品名称" />,
+                      )}
+                  </Form.Item>
+                  <Form.Item label='商品描述'>
+                      {getFieldDecorator('prdDesc', {
+                          rules: [{ required: true, message: '请输入描述!' }], initialValue: oldData.desc
+                      })(
+                        <TextArea placeholder="商品描述" autosize />,
+                      )}
+                  </Form.Item>
+                  <Form.Item label='商品价格'>
+                      {getFieldDecorator('prdPrice', {
+                          rules: [{ required: true, message: '请输入价格！' },
+                              { validator: this.priceValidator }
+                          ],
+                          initialValue: (oldData.price)
+                      })(
+                        <Input prefix='￥' placeholder="商品价格" suffix="元" />,
+                      )}
+                  </Form.Item>
+                  <Form.Item label="商品分类">
+                      {getFieldDecorator('prdCategory', {
+                          initialValue: prdCategory,
+                          rules: [{ type: 'array', required: true, message: '请输入选择分类!' }],
+                      })(<Cascader placeholder='请选择商品分类' options={productClassList} loadData={this.productLoadData} />)}
+                  </Form.Item>
+                  <Form.Item label="商品图片URL">
+                      {getFieldDecorator('imgs', {
+                          rules: [{ required: true, message: '请输入商品图片URL!' }],
+                          initialValue: oldData.imgs ? oldData.imgs.join(',') : ''
+                      })(
+                        <Input placeholder="商品图片URL（多个用逗号隔开）" />)
+                      }
+                  </Form.Item>
+                  <Form.Item label="秒杀价格">
+                      {getFieldDecorator('seckillPrice', {
+                          rules: [{ required: false }],
+                          initialValue: oldData.seckillPrice
+                      })(
+                        <Input prefix='￥' placeholder="秒杀价格" suffix="元" />,
+                      )}
+                  </Form.Item>
+                  <Form.Item label="秒杀库存">
+                      {getFieldDecorator('seckillStock', {
+                          rules: [{ required: false }],
+                          initialValue: oldData.seckillStock
+                      })(
+                        <Input placeholder="秒杀库存" />,
+                      )}
+                  </Form.Item>
+                  <Form.Item label="秒杀时间">
+                      {getFieldDecorator('seckillTime', {
+                          rules: [{ required: false }],
+                          initialValue: oldData.seckillStart && oldData.seckillEnd ? [moment(oldData.seckillStart), moment(oldData.seckillEnd)] : []
+                      })(
+                        <DatePicker.RangePicker showTime format="YYYY-MM-DD HH:mm:ss" />,
+                      )}
+                  </Form.Item>
+                  <Form.Item label="商品详情">
+                      <RichEditText preDetail={detail} ref={this.richEditTextRef} />
+                  </Form.Item>
+                  <Form.Item wrapperCol={{ sm: { span: 10, offset: 10 } }}>
+                      <Button type="primary" htmlType="submit" loading={loading}>
+                          增加
+                      </Button>
+                  </Form.Item>
+              </Form>
+          </Card>
         );
     }
 }

@@ -202,14 +202,14 @@ const HomePage = ({ history }) => {
                 <Meta
                   title={(
                     <div style={{ textAlign: 'center' }}>
-                          {`${item.price}￥`}
-                        </div>
+                      {`${item.price}￥`}
+                    </div>
                                       )}
                   description={(
                     <div style={{ textAlign: 'center' }}>
-                          <div>{`描述: ${item.desc}`}</div>
-                          <div>{`销量: ${item.orderCount}`}</div>
-                        </div>
+                      <div>{`描述: ${item.desc}`}</div>
+                      <div>{`销量: ${item.orderCount}`}</div>
+                    </div>
                                       )}
                 />
               </Card>
