@@ -5,7 +5,7 @@ import {
 } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { Space, Swiper } from 'antd-mobile';
-import { reqHotProducts, reqCouponStatus, reqSeckillProducts } from 'api';
+import { reqHotProducts, reqCouponStatus, reqSeckillProducts, reqInitCoupon } from 'api';
 import Meta from 'antd/es/card/Meta';
 import {connect} from "react-redux";
 
@@ -16,6 +16,19 @@ const HomePage = ({ history , userInfo}) => {
   const [hotItems, setHotItems] = useState([]);
   const [couponStatus, setCouponStatus] = useState({ hasUnclaimed: false, hasUnused: false });
   const [seckillItems, setSeckillItems] = useState({ ongoing: [], upcoming: [] });
+
+  const handleInitCoupons = async () => {
+    try {
+      const res = await reqInitCoupon({ userId: userInfo._id });
+      if (res.status === 0) {
+        message.success('初始化优惠券成功');
+      } else {
+        message.error('初始化优惠券失败');
+      }
+    } catch (error) {
+      message.error('初始化优惠券失败');
+    }
+  };
 
   useEffect(() => {
     const fetchHotProducts = async () => {
@@ -137,11 +150,12 @@ const HomePage = ({ history , userInfo}) => {
               <div>有未使用的优惠券</div>
             </List.Item>
             )}
-            {(couponStatus.hasUnclaimed || couponStatus.hasUnused) && (
             <List.Item onClick={handleCouponClick}>
               <Button type="link">查看详情</Button>
             </List.Item>
-            )}
+            <List.Item onClick={handleInitCoupons}>
+                <Button type="link">初始化优惠券</Button>
+            </List.Item>
           </List>
         </Card>
         <Card bordered={false} style={{ borderRadius: 20 }}>

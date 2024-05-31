@@ -724,37 +724,60 @@ router.post('/order/afterSales', async (req, res) => {
 router.post('/coupon/add', async (req, res) => {
     const { code, discount, minSpend, expiryDate, userId } = req.body;
     try {
-        const coupon = new CouponModel({ code, discount, minSpend, expiryDate, userId });
-        await coupon.save();
-        res.send({ status: 0, data: coupon });
+        const userCoupons = await CouponModel.findOne({ userId });
+        const newCoupon = { code, discount, minSpend, expiryDate, isClaimed: false };
+
+        if (userCoupons) {
+            userCoupons.coupons.push(newCoupon);
+            await userCoupons.save();
+        } else {
+            const newUserCoupons = new CouponModel({
+                userId,
+                coupons: [newCoupon]
+            });
+            await newUserCoupons.save();
+        }
+
+        res.send({ status: 0, data: newCoupon });
     } catch (error) {
         res.send({ status: 1, msg: '添加优惠券失败' });
     }
 });
 
 
+//根据用户ID查询并返回其所有优惠券：
 router.get('/coupon', async (req, res) => {
-    const {userId} = req.query;
+    const { userId } = req.query;
     try {
-        const coupons = await CouponModel.find({userId});
-        res.send({status: 0, data: coupons});
+        const userCoupons = await CouponModel.findOne({ userId }).lean();
+        if (userCoupons && userCoupons.coupons.length > 0) {
+            res.send({ status: 0, data: userCoupons.coupons });
+        } else {
+            res.send({ status: 1, msg: '没有找到用户的优惠券' });
+        }
     } catch (error) {
-        res.send({status: 1, msg: '获取优惠券信息失败'});
+        res.send({ status: 1, msg: '获取优惠券信息失败' });
     }
 });
+
 
 // 领取优惠券
 router.post('/coupon/claim', async (req, res) => {
     const { userId, couponId } = req.body;
     try {
-        const coupon = await CouponModel.findById(couponId);
-        if (coupon && !coupon.isClaimed) {
-            coupon.userId = userId;
-            coupon.isClaimed = true;
-            await coupon.save();
-            res.send({ status: 0, data: coupon });
+        const userCoupons = await CouponModel.findOne({ "coupons._id": couponId });
+        if (userCoupons) {
+            const coupon = userCoupons.coupons.id(couponId);
+            if (coupon && !coupon.isClaimed) {
+                coupon.isClaimed = true;
+                coupon.userId = userId;
+                await userCoupons.save();
+                res.send({ status: 0, data: coupon });
+            } else {
+                res.send({ status: 1, msg: '优惠券已被领取或不存在' });
+            }
         } else {
-            res.send({ status: 1, msg: '优惠券已被领取或不存在' });
+            res.send({ status: 1, msg: '优惠券不存在' });
         }
     } catch (error) {
         res.send({ status: 1, msg: '领取优惠券失败' });
@@ -762,34 +785,34 @@ router.post('/coupon/claim', async (req, res) => {
 });
 
 
+
 // 获取所有可领取的优惠券
 router.get('/coupons/available', async (req, res) => {
     try {
-        const coupons = await CouponModel.find({ isClaimed: false });
+        const availableCoupons = await CouponModel.find({ "coupons.isClaimed": false }, { "coupons.$": 1 }).lean();
+        const coupons = availableCoupons.flatMap(userCoupon => userCoupon.coupons);
         res.send({ status: 0, data: coupons });
     } catch (error) {
         res.send({ status: 1, msg: '获取优惠券失败' });
     }
 });
 
+
 // 获取用户的优惠券状态
 router.get('/coupon/status', async (req, res) => {
     const { userId } = req.query;
     try {
-        // 获取用户优惠券
-        const userCoupons = await CouponModel.find({ userId });
-        // 获取未领取的优惠券
-        const unclaimedCoupons = await CouponModel.find({ userId: { $exists: false } });
+        const userCoupons = await CouponModel.findOne({ userId }).lean();
+        const unclaimedCoupons = await CouponModel.find({ "coupons.isClaimed": false }).lean();
 
-        // 获取未使用的优惠券
-        const unusedCoupons = userCoupons.filter(coupon => !coupon.isClaimed);
+        const hasUnclaimed = unclaimedCoupons.length > 0;
+        const hasUnused = userCoupons && userCoupons.coupons.some(coupon => !coupon.isClaimed);
 
         res.send({
             status: 0,
             data: {
-                hasUnclaimed: userCoupons.length < 3,
-                hasUnused: userCoupons.some(coupon => coupon.isClaimed === false),
-                //count: userCoupons.length
+                hasUnclaimed,
+                hasUnused
             }
         });
     } catch (error) {
@@ -798,16 +821,23 @@ router.get('/coupon/status', async (req, res) => {
     }
 });
 
+
 // 获取用户的优惠券
 router.get('/coupons/user', async (req, res) => {
     const { userId } = req.query;
     try {
-        const coupons = await CouponModel.find({ userId });
-        res.send({ status: 0, data: coupons });
+        const userCoupons = await CouponModel.findOne({ userId }).lean();
+        if (userCoupons && userCoupons.coupons.length > 0) {
+            res.send({ status: 0, data: userCoupons.coupons });
+        } else {
+            res.send({ status: 1, msg: '没有找到用户的优惠券' });
+        }
     } catch (error) {
+        console.error('获取用户优惠券失败', error);
         res.send({ status: 1, msg: '获取用户优惠券失败' });
     }
 });
+
 
 // 初始化用户优惠券
 router.post('/coupon/init', async (req, res) => {
@@ -831,6 +861,28 @@ router.post('/coupon/init', async (req, res) => {
     } catch (error) {
         console.error('初始化优惠券失败', error);
         res.send({ status: 1, msg: '初始化优惠券失败' });
+    }
+});
+
+// 使用优惠券
+router.post('/coupon/use', async (req, res) => {
+    const { userId, couponId } = req.body;
+    try {
+        const userCoupons = await CouponModel.findOne({ userId });
+        if (userCoupons) {
+            const couponIndex = userCoupons.coupons.findIndex(coupon => coupon._id.toString() === couponId);
+            if (couponIndex > -1) {
+                userCoupons.coupons.splice(couponIndex, 1);
+                await userCoupons.save();
+                res.send({ status: 0, msg: '优惠券已使用' });
+            } else {
+                res.send({ status: 1, msg: '未找到优惠券' });
+            }
+        } else {
+            res.send({ status: 1, msg: '用户没有优惠券' });
+        }
+    } catch (error) {
+        res.send({ status: 1, msg: '使用优惠券失败' });
     }
 });
 

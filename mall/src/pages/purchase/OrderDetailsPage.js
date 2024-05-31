@@ -160,6 +160,9 @@ class OrderDetailsPage extends React.Component {
     render() {
         const { orderId, products, order } = this.state;
 
+        const totalAmount = products.reduce((total, product) => total + product.price * product.quantity, 0);
+        const finalAmount = order.totalAmount;
+
         return (
             <Card title={`订单号: ${orderId}`}>
                 <List
@@ -175,7 +178,11 @@ class OrderDetailsPage extends React.Component {
                         </List.Item>
                     )}
                 />
-                <Text>总金额: ¥{products.reduce((total, product) => total + product.price * product.quantity, 0)}</Text>
+                <Text>总金额: ¥{totalAmount}</Text>
+                <br />
+                <Text>优惠金额: ¥{totalAmount - finalAmount}</Text>
+                <br />
+                <Text>应付金额: ¥{finalAmount}</Text>
                 <br />
                 <br />
                 <Text>订单状态: {order.status || '未知状态'}</Text>

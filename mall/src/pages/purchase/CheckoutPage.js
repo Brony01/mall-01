@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Button, message, List, Select, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { reqConfirmOrder, reqGetUserCoupons } from 'api';
+import { reqConfirmOrder, reqGetUserCoupons, reqUseCoupon } from 'api';
 import { connect } from 'react-redux';
 
 const { Text } = Typography;
@@ -43,15 +43,17 @@ class CheckoutPage extends React.Component {
     };
 
     handleConfirmPayment = async () => {
-        const { orderId, selectedCoupon } = this.state;
+        const { orderId, selectedCoupon, totalAmount, discount } = this.state;
+        const finalAmount = totalAmount - discount;
         try {
-            const res = await reqConfirmOrder({ orderId, couponId: selectedCoupon });
+            const res = await reqConfirmOrder({ orderId, couponId: selectedCoupon, finalAmount });
             if (res.status === 0) {
                 message.success('支付成功');
+                await reqUseCoupon({ userId: this.props.userInfo._id, couponId: selectedCoupon });
                 this.props.history.push({
                     pathname: '/order-confirmed',
                     state: {
-                        totalAmount: res.totalAmount,
+                        totalAmount: finalAmount,
                         orderId: this.state.orderId,
                     }
                 });
@@ -85,8 +87,7 @@ class CheckoutPage extends React.Component {
                     {products.map((product, index) => (
                         <li key={index}>
                             <img src={product.imgs[0]} alt={product.name} style={{width: '50px', marginRight: '10px'}}/>
-                            名称: {product.name} - 数量: {product.quantity}件 - 价格: ¥{product.price} -
-                            描述: {product.desc}
+                            名称: {product.name} - 数量: {product.quantity}件 - 价格: ¥{product.price} - 描述: {product.desc}
                         </li>
                     ))}
                 </ul>

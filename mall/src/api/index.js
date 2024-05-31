@@ -105,6 +105,9 @@ export const reqGetUserCoupons = (data) => request('/coupons/user', 'GET', data)
 // 初始化优惠券
 export const reqInitCoupon = (data) => request('/coupon/init', 'POST', data);
 
+// 使用优惠券
+export const reqUseCoupon = (data) => request('/coupon/use', 'POST', data);
+
 // 秒杀
 export const reqSeckill = (data) => request('/seckill', 'POST', data);
 
