@@ -4,8 +4,9 @@ import {
   Tabs, message,
 } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { Space, Swiper } from 'antd-mobile';
+import {Space, Swiper} from 'antd-mobile';
 import { reqHotProducts, reqCouponStatus, reqSeckillProducts } from 'api';
+import Meta from "antd/es/card/Meta";
 
 const { Search } = Input;
 const { TabPane } = Tabs;
@@ -185,48 +186,59 @@ const HomePage = ({ history }) => {
               style={{
                 borderRadius: 20,
               }}
-          >
-            <h1 style={{ fontSize: 20, fontWeight: 700 }}>即将开始的秒杀</h1>
-            <List
-                grid={{ gutter: 16, column: 2 }}
-                dataSource={seckillItems.upcoming}
-                renderItem={(item) => (
-                    <List.Item>
-                      <Card title={item.name} onClick={() => handleItemClick(item._id)}>
-                        {`价格: ${item.price}￥`}
-                        <br />
-                        {`秒杀开始时间: ${new Date(item.seckillStart).toLocaleString()}`}
-                        <br />
-                        {`倒计时: ${formatTimeLeft(item.seckillStart)}`}
-                      </Card>
-                    </List.Item>
-                )}
-            />
-          </Card>
-          <span style={{ fontSize: 20, fontWeight: 700 }}>精选好物</span>
+        >
+          <h1 style={{fontSize: 20, fontWeight: 700}}>即将开始的秒杀</h1>
           <List
-              grid={{ gutter: 16, column: 3 }}
-              dataSource={hotItems}
+              grid={{gutter: 16, column: 2}}
+              dataSource={seckillItems.upcoming}
               renderItem={(item) => (
                   <List.Item>
-                    <Card
-                        hoverable
-                        style={{
-                          borderRadius: 20,
-                        }}
-                        onClick={() => handleItemClick(item._id)}
-                    >
-                      {`描述: ${item.desc}`}
-                      <br />
+                      <Card title={item.name} onClick={() => handleItemClick(item._id)}>
                       {`价格: ${item.price}￥`}
-                      <br />
-                      {`销量: ${item.orderCount}`}
+                      <br/>
+                      {`秒杀开始时间: ${new Date(item.seckillStart).toLocaleString()}`}
+                      <br/>
+                      {`倒计时: ${formatTimeLeft(item.seckillStart)}`}
                     </Card>
                   </List.Item>
               )}
           />
-        </Space>
-      </div>
+        </Card>
+        <span style={{fontSize: 20, fontWeight: 700}}>精选好物</span>
+        <List
+            grid={{ gutter: 16, column: 3 }}
+            dataSource={hotItems}
+            renderItem={(item) => (
+                <List.Item>
+                  <Card
+                      // title={item.name}
+                    hoverable={true}
+                    style={{
+                      borderRadius: 20,
+                    }}
+                    cover={<img alt="example" src="https://res.vmallres.com/uomcdn/CN/cms/202405/3490b5070b9e47b7acd05a7eceb42eae.png" />}
+                    onClick={() => handleItemClick(item._id)}
+                  >
+                      <Meta
+
+                          title={
+                              <div style={{ textAlign: 'center' }}>
+                                  {`${item.price}￥`}
+                              </div>
+                          }
+                          description={
+                              <div style={{textAlign: 'center'}}>
+                                  <div>{`描述: ${item.desc}`}</div>
+                                  <div>{`销量: ${item.orderCount}`}</div>
+                              </div>
+                          }
+                      />
+                  </Card>
+                </List.Item>
+            )}
+        />
+      </Space>
+    </div>
   );
 };
 
