@@ -722,15 +722,16 @@ router.post('/order/afterSales', async (req, res) => {
 
 // 优惠券
 router.post('/coupon/add', async (req, res) => {
-    const {code, discount, expiryDate, userId} = req.body;
+    const { code, discount, minSpend, expiryDate, userId } = req.body;
     try {
-        const coupon = new CouponModel({code, discount, expiryDate, userId});
+        const coupon = new CouponModel({ code, discount, minSpend, expiryDate, userId });
         await coupon.save();
-        res.send({status: 0});
+        res.send({ status: 0, data: coupon });
     } catch (error) {
-        res.send({status: 1, msg: '添加优惠券失败'});
+        res.send({ status: 1, msg: '添加优惠券失败' });
     }
 });
+
 
 router.get('/coupon', async (req, res) => {
     const {userId} = req.query;
@@ -759,6 +760,7 @@ router.post('/coupon/claim', async (req, res) => {
         res.send({ status: 1, msg: '领取优惠券失败' });
     }
 });
+
 
 // 获取所有可领取的优惠券
 router.get('/coupons/available', async (req, res) => {

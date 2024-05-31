@@ -34,20 +34,21 @@ const MyPage = ({ history, userInfo }) => {
     fetchOrders();
   }, []);
 
-  const fetchAvailableCoupons = async () => {
-    try {
-      const res = await reqGetAvailableCoupons();
-      if (res.status === 0) {
-        setAvailableCoupons(res.data);
-      } else {
-        message.error('获取可领取优惠券失败');
-      }
-    } catch (error) {
-      message.error('获取可领取优惠券失败');
-    }
-  };
+    const fetchAvailableCoupons = async () => {
+        try {
+            const res = await reqGetAvailableCoupons();
+            if (res.status === 0) {
+                setAvailableCoupons(res.data);
+            } else {
+                message.error('获取可领取优惠券失败');
+            }
+        } catch (error) {
+            message.error('获取可领取优惠券失败');
+        }
+    };
 
-  const fetchUserCoupons = async () => {
+
+    const fetchUserCoupons = async () => {
     try {
       const res = await reqGetUserCoupons({ userId: userInfo._id });
       if (res.status === 0) {

@@ -7,11 +7,12 @@ import { withRouter } from 'react-router-dom';
 import { Space, Swiper } from 'antd-mobile';
 import { reqHotProducts, reqCouponStatus, reqSeckillProducts } from 'api';
 import Meta from 'antd/es/card/Meta';
+import {connect} from "react-redux";
 
 const { Search } = Input;
 const { TabPane } = Tabs;
 
-const HomePage = ({ history }) => {
+const HomePage = ({ history , userInfo}) => {
   const [hotItems, setHotItems] = useState([]);
   const [couponStatus, setCouponStatus] = useState({ hasUnclaimed: false, hasUnused: false });
   const [seckillItems, setSeckillItems] = useState({ ongoing: [], upcoming: [] });
@@ -31,8 +32,8 @@ const HomePage = ({ history }) => {
     };
 
     const fetchCouponStatus = async () => {
+      const userId = userInfo._id;
       try {
-        const userId = 'someUserId'; // Replace with actual user ID
         const res = await reqCouponStatus(userId);
         if (res.status === 0) {
           setCouponStatus(res.data);
@@ -221,4 +222,8 @@ const HomePage = ({ history }) => {
   );
 };
 
-export default withRouter(HomePage);
+const mapStateToProps = (state) => ({
+  userInfo: state.loginUserInfo,
+});
+
+export default connect(mapStateToProps)(withRouter(HomePage));
