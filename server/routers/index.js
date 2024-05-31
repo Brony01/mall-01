@@ -367,7 +367,7 @@ router.post('/manage/role/update', (req, res) => {
 
 // 购物车
 router.post('/cart/add', async (req, res) => {
-    const {userId, productId, name, desc, quantity, price} = req.body;
+    const {userId, productId, name, desc, quantity, price, imgs} = req.body;
 try {
         let cart = await CartModel.findOne({userId});
         if (cart) {
@@ -375,10 +375,10 @@ try {
             if (productIndex > -1) {
                 cart.products[productIndex].quantity += quantity;
             } else {
-                cart.products.push({productId, name, desc, quantity, price});
+                cart.products.push({productId, name, desc, quantity, price, imgs});
             }
         } else {
-            cart = new CartModel({userId, products: [{productId, name, desc, quantity, price}]});
+            cart = new CartModel({userId, products: [{productId, name, desc, quantity, price, imgs}]});
         }
         await cart.save();
         res.send({status: 0});
@@ -398,7 +398,7 @@ router.get('/cart', async (req, res) => {
 });
 
 router.post('/cart/update', async (req, res) => {
-    const {userId, productId, name, desc, quantity} = req.body;
+    const {userId, productId, name, desc, quantity, price, imgs} = req.body;
     try {
         let cart = await CartModel.findOne({userId});
         if (cart) {
@@ -407,6 +407,8 @@ router.post('/cart/update', async (req, res) => {
                 cart.products[productIndex].quantity = quantity;
                 cart.products[productIndex].name = name;
                 cart.products[productIndex].desc = desc;
+                cart.products[productIndex].price = price;
+                cart.products[productIndex].imgs = imgs;
                 await cart.save();
                 res.send({status: 0});
             } else {

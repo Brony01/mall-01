@@ -6,7 +6,8 @@ const footprintSchema = new mongoose.Schema({
     products: [
         {
             productId: { type: mongoose.Types.ObjectId, ref: 'products' },
-            lastVisited: { type: Date, default: Date.now } // 添加 lastVisited 字段
+            lastVisited: { type: Date, default: Date.now }, // 添加 lastVisited 字段
+            imgs: { type: [String], default: [] }
         }
     ]
 });

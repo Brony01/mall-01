@@ -84,7 +84,9 @@ class CheckoutPage extends React.Component {
                 <ul>
                     {products.map((product, index) => (
                         <li key={index}>
-                            名称: {product.name} - 数量: {product.quantity}件 - 价格: ¥{product.price} - 描述: {product.desc}
+                            <img src={product.imgs[0]} alt={product.name} style={{width: '50px', marginRight: '10px'}}/>
+                            名称: {product.name} - 数量: {product.quantity}件 - 价格: ¥{product.price} -
+                            描述: {product.desc}
                         </li>
                     ))}
                 </ul>

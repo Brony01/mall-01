@@ -135,7 +135,7 @@ class ProductDetailPage extends React.Component {
     }
 
     handleAddToCart = async () => {
-        const { _id: productId, name, desc, price } = this.state.product;
+        const { _id: productId, name, desc, price, imgs } = this.state.product;
         const { userInfo } = this.props;
 
         try {
@@ -145,7 +145,8 @@ class ProductDetailPage extends React.Component {
                 name,
                 desc,
                 quantity: 1,
-                price
+                price,
+                imgs
             });
             message.success('商品已加入购物车');
         } catch (error) {

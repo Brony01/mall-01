@@ -102,48 +102,35 @@ const CartPage = ({ history, userInfo }) => {
   }, 0);
 
   return (
-    <Card title="购物车">
-      <Checkbox onChange={handleSelectAll}>全选</Checkbox>
-      <List
-        dataSource={cartItems}
-        renderItem={(item, index) => (
-          <List.Item actions={[
-            <InputNumber min={1} max={10} value={item.quantity} onChange={handleQuantityChange(index)} />,
-            <Button type="link" onClick={handleDeleteItem(index)}>删除</Button>,
-          ]}
-          >
-            <Checkbox
-              checked={selectedItems[index]}
-              onChange={handleSelectItem(index)}
-            >
-              {item.title}
-            </Checkbox>
-            <div>
-              名称:
-              {item.name}
-              {'  | '}
-              单价:
-              {item.price}
-              {'  | '}
-              数量:
-              {item.quantity}
-              {'  | '}
-              描述:
-              {item.desc}
-            </div>
-          </List.Item>
-        )}
-      />
-      <div className="cart-footer">
-        <div>
-          总价:
-          {totalPrice}
-          {' '}
-          元
+      <Card title="购物车">
+        <Checkbox onChange={handleSelectAll}>全选</Checkbox>
+        <List
+            dataSource={cartItems}
+            renderItem={(item, index) => (
+                <List.Item
+                    actions={[
+                      <InputNumber min={1} max={10} value={item.quantity} onChange={handleQuantityChange(index)} />,
+                      <Button type="link" onClick={handleDeleteItem(index)}>删除</Button>,
+                    ]}
+                >
+                  <Checkbox
+                      checked={selectedItems[index]}
+                      onChange={handleSelectItem(index)}
+                  >
+                    {item.title}
+                  </Checkbox>
+                  <div>
+                    <img src={item.imgs[0]} alt={item.name} style={{ width: '50px', marginRight: '10px' }} />
+                    名称: {item.name} | 单价: {item.price} | 数量: {item.quantity} | 描述: {item.desc}
+                  </div>
+                </List.Item>
+            )}
+        />
+        <div className="cart-footer">
+          <div>总价: {totalPrice} 元</div>
+          <Button type="primary" onClick={handleCheckout}>去结算</Button>
         </div>
-        <Button type="primary" onClick={handleCheckout}>去结算</Button>
-      </div>
-    </Card>
+      </Card>
   );
 };
 

@@ -3,9 +3,8 @@ import {
   List, Card, message, Button,
 } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { reqGetFootprints } from 'api';
+import { reqGetFootprints, reqDeleteFootprintItem } from 'api';
 import { connect } from 'react-redux';
-import { reqDeleteFootprintItem } from '../../api';
 
 const FootprintPage = ({ history, userInfo }) => {
   const [footprints, setFootprints] = useState([]);
@@ -47,27 +46,29 @@ const FootprintPage = ({ history, userInfo }) => {
   };
 
   return (
-    <Card title="我的足迹">
-      <List
-        dataSource={footprints}
-        renderItem={(item) => (
-          <List.Item>
-            <Card
-              title={item.productDetails.name}
-              actions={[
-                <Button type="link" onClick={() => handleDetail(item.productDetails._id)}>详情</Button>,
-                <Button type="link" onClick={() => handleDelete(item.productDetails._id)}>删除</Button>,
-              ]}
-            >
-              {item.productDetails.desc}
-              {' '}
-              -
-              {new Date(item.lastVisited).toLocaleString()}
-            </Card>
-          </List.Item>
-        )}
-      />
-    </Card>
+      <Card title="我的足迹">
+        <List
+            dataSource={footprints}
+            renderItem={(item) => (
+                <List.Item>
+                  <Card
+                      title={item.productDetails.name}
+                      actions={[
+                        <Button type="link" onClick={() => handleDetail(item.productDetails._id)}>详情</Button>,
+                        <Button type="link" onClick={() => handleDelete(item.productDetails._id)}>删除</Button>,
+                      ]}
+                  >
+                    {item.productDetails.desc}
+                    {' '}
+                    -
+                    {new Date(item.lastVisited).toLocaleString()}
+                    <br />
+                    <img src={item.productDetails.imgs[0]} alt={item.productDetails.name} style={{ width: '50px', marginTop: '10px' }} />
+                  </Card>
+                </List.Item>
+            )}
+        />
+      </Card>
   );
 };
 

@@ -171,6 +171,7 @@ class OrderDetailsPage extends React.Component {
                                 title={`商品名：${product.name} | 商品描述：${product.desc}`}
                                 description={`价格: ¥${product.price} | 数量: ${product.quantity}`}
                             />
+                            <img src={product.imgs[0]} alt={product.name} style={{ width: '50px', marginTop: '10px' }} />
                         </List.Item>
                     )}
                 />

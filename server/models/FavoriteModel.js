@@ -6,7 +6,8 @@ const favoriteSchema = new mongoose.Schema({
     products: [
         {
             productId: { type: mongoose.Types.ObjectId, ref: 'products' },
-            addTime: { type: Number, default: Date.now }
+            addTime: { type: Number, default: Date.now },
+            imgs: { type: [String], default: [] },
         }
     ]
 });
