@@ -114,12 +114,6 @@ class LeftNav extends Component {
         }, []);
     };
 
-    toggleCollapse = () => {
-        this.setState((prevState) => ({
-            collapsed: !prevState.collapsed,
-        }));
-    };
-
     render() {
         let getCurrentReqPath = this.props.location.pathname;
         if (getCurrentReqPath.includes("/product")) {
@@ -145,11 +139,6 @@ class LeftNav extends Component {
                         >
                             {this.menuNav_reduce(menuLists, this.props.collapsed, false)}
                         </Menu>
-                    </div>
-                </div>
-                <div className="left-nav-footer">
-                    <div className="collapse-button" onClick={this.toggleCollapse}>
-                        {this.state.collapsed ? <Icon type="menu-unfold" /> : <Icon type="menu-fold" />}
                     </div>
                 </div>
             </div>

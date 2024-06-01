@@ -4,17 +4,33 @@ import {
 } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import {
-  reqGetAvailableCoupons, reqClaimCoupon, reqGetUserCoupons, reqGetOrders,
-} from 'api';
 import { Space } from 'antd-mobile';
 import Meta from 'antd/es/card/Meta';
+import {
+  reqGetAvailableCoupons, reqClaimCoupon, reqGetUserCoupons, reqGetOrders,
+} from '../../api';
 import IconFont from './icons/IconFont';
+import './css/card.css';
 
 const MyPage = ({ history, userInfo }) => {
   const [availableCoupons, setAvailableCoupons] = useState([]);
   const [userCoupons, setUserCoupons] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const iconSize = windowWidth < 768 ? 30 : 50;
+  const frontSize = windowWidth < 576 ? 13 : 18;
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     fetchAvailableCoupons();
@@ -91,27 +107,27 @@ const MyPage = ({ history, userInfo }) => {
   };
 
   const menuItems = [
-    { title: '全部订单', icon: <IconFont style={{ fontSize: 50 }} type="icon-dingdan" />, status: 'all' },
-    { title: '待付款', icon: <IconFont style={{ fontSize: 50 }} type="icon-daifukuan" />, status: '待付款' },
-    { title: '待发货', icon: <IconFont style={{ fontSize: 50 }} type="icon-a-daifahuo2x" />, status: '待发货' },
-    { title: '待收货', icon: <IconFont style={{ fontSize: 50 }} type="icon-daishouhuo" />, status: '待收货' },
-    { title: '退换', icon: <IconFont style={{ fontSize: 50 }} type="icon-tuihuanshenqing" />, status: '退款/售后' },
-    { title: '已取消', icon: <IconFont style={{ fontSize: 50 }} type="icon-yiquxiao" />, status: '已取消' },
+    { title: '全部订单', icon: <IconFont style={{ fontSize: iconSize }} type="icon-dingdan" />, status: 'all' },
+    { title: '待付款', icon: <IconFont style={{ fontSize: iconSize }} type="icon-daifukuan" />, status: '待付款' },
+    { title: '待发货', icon: <IconFont style={{ fontSize: iconSize }} type="icon-a-daifahuo2x" />, status: '待发货' },
+    { title: '待收货', icon: <IconFont style={{ fontSize: iconSize }} type="icon-daishouhuo" />, status: '待收货' },
+    { title: '退换', icon: <IconFont style={{ fontSize: iconSize }} type="icon-tuihuanshenqing" />, status: '退款/售后' },
+    { title: '已取消', icon: <IconFont style={{ fontSize: iconSize }} type="icon-yiquxiao" />, status: '已取消' },
   ];
 
   const otherItems = [
-    { title: '地址管理', icon: <IconFont style={{ fontSize: 50 }} type="icon-dizhi" />, page: '/address' },
-    { title: '我的足迹', icon: <IconFont style={{ fontSize: 50 }} type="icon-wodezuji" />, page: '/footprint' },
-    { title: '我的关注', icon: <IconFont style={{ fontSize: 50 }} type="icon-wodewendawodeguanzhu" />, page: '/favorites' },
-    { title: '我的收藏', icon: <IconFont style={{ fontSize: 50 }} type="icon-shoucang" />, page: '/favorite' },
-    { title: '我的评价', icon: <IconFont style={{ fontSize: 50 }} type="icon-wodepingjia" />, page: '/reviews' },
+    { title: '地址管理', icon: <IconFont style={{ fontSize: iconSize }} type="icon-dizhi" />, page: '/address' },
+    { title: '我的足迹', icon: <IconFont style={{ fontSize: iconSize }} type="icon-wodezuji" />, page: '/footprint' },
+    { title: '我的关注', icon: <IconFont style={{ fontSize: iconSize }} type="icon-wodewendawodeguanzhu" />, page: '/favorites' },
+    { title: '我的收藏', icon: <IconFont style={{ fontSize: iconSize }} type="icon-shoucang" />, page: '/favorite' },
+    { title: '我的评价', icon: <IconFont style={{ fontSize: iconSize }} type="icon-wodepingjia" />, page: '/reviews' },
   ];
 
   const unclaimedCoupons = availableCoupons.filter((coupon) => !coupon.isClaimed);
   const claimedCoupons = userCoupons.filter((coupon) => coupon.isClaimed);
 
   return (
-    <div style={{ backgroundColor: '#F4F5F9' , marginRight: ' 5% ', marginLeft: ' 5% ' }}>
+    <div style={{ backgroundColor: '#F4F5F9', marginRight: ' 5% ', marginLeft: ' 5% ' }}>
       <Space direction="vertical" style={{ width: '100%' }}>
         <Card bordered={false} style={{ marginTop: 16, borderRadius: 10 }}>
           <Meta
@@ -134,9 +150,9 @@ const MyPage = ({ history, userInfo }) => {
             style={{ width: '100%' }}
             grid={{
               gutter: 16,
-              xs: 1,
-              sm: 2,
-              md: 3,
+              xs: 3,
+              sm: 4,
+              md: 6,
               lg: 6,
               xl: 6,
               xxl: 6,
@@ -167,9 +183,9 @@ const MyPage = ({ history, userInfo }) => {
           <List
             grid={{
               gutter: 16,
-              xs: 1,
-              sm: 2,
-              md: 3,
+              xs: 3,
+              sm: 4,
+              md: 4,
               lg: 6,
               xl: 6,
               xxl: 6,
@@ -180,7 +196,7 @@ const MyPage = ({ history, userInfo }) => {
                 <Card
                   onClick={() => handlePageNavigation(item.page)}
                   bordered={false}
-                  style={{ textAlign: 'center', margin: '0px', padding: '0px'}}
+                  style={{ textAlign: 'center', margin: '0px', padding: '0px' }}
                 >
                   {item.icon}
                   <p style={{ marginTop: 20 }}>{item.title}</p>
@@ -207,10 +223,12 @@ const MyPage = ({ history, userInfo }) => {
                   <div style={{ flex: 1 }}>
                     <Descriptions title={`优惠券代码: ${coupon.code}`}>
                       <Descriptions.Item label="优惠金额">
-                        ¥{coupon.discount}
+                        ¥
+                        {coupon.discount}
                       </Descriptions.Item>
                       <Descriptions.Item label="最低消费">
-                        ¥{coupon.minSpend}
+                        ¥
+                        {coupon.minSpend}
                       </Descriptions.Item>
                       <Descriptions.Item label="有效期">{new Date(coupon.expiryDate).toLocaleDateString()}</Descriptions.Item>
                     </Descriptions>
@@ -231,24 +249,24 @@ const MyPage = ({ history, userInfo }) => {
                   <Descriptions
                     title={`优惠券代码： ${coupon.code}`}
                     column={{
-  xxl: 4, xl: 4, lg: 2, md: 2, sm: 2, xs: 1,
-}}
+                      xxl: 4, xl: 4, lg: 2, md: 2, sm: 2, xs: 1,
+                    }}
                   >
                     <Descriptions.Item>
                       优惠金额： ¥
-{coupon.discount}
+                      {coupon.discount}
                     </Descriptions.Item>
                     <Descriptions.Item>
                       最低消费： ¥
-{coupon.minSpend}
+                      {coupon.minSpend}
                     </Descriptions.Item>
                     <Descriptions.Item>
                       有效期：
-{new Date(coupon.expiryDate).toLocaleDateString()}
+                      {new Date(coupon.expiryDate).toLocaleDateString()}
                     </Descriptions.Item>
                     <Descriptions.Item>
                       状态：
-{coupon.isClaimed ? '已领取' : '未领取'}
+                      {coupon.isClaimed ? '已领取' : '未领取'}
                     </Descriptions.Item>
                   </Descriptions>
                 </Card>
