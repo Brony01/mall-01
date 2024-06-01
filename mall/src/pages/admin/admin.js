@@ -1,13 +1,11 @@
 import React, { Component, Suspense } from "react";
-import { Redirect, Switch } from "react-router-dom";
+import { Redirect, Switch, Route } from "react-router-dom";
 import { BackTop, Layout } from "antd";
 import { connect } from "react-redux";
-import Loadable from "react-loadable";
 import HeaderSelf from "../../components/header";
-import BottomNav from "../../components/bottom-nav"; // 修改导入的组件
+import BottomNav from "../../components/bottom-nav";
 import FooterComponent from "../../components/footer";
 import Loading from "../../components/loading";
-import AuthRouter from "../../components/AuthRouter";
 import NotFoundPage from "../../components/404";
 
 // 导入页面组件
@@ -42,19 +40,19 @@ class Admin extends Component {
                 <Content style={{ margin: "100px 14px 14px", background: "#fff", paddingBottom: "70px" }}>
                     <Suspense fallback={<Loading />}>
                         <Switch>
-                            <AuthRouter path="/mainpage/home" component={HomePage} />
-                            <AuthRouter path="/mainpage/category" component={CategoryPage} />
-                            <AuthRouter path="/mainpage/cart" component={CartPage} />
-                            <AuthRouter path="/mainpage/my" component={MyPage} />
-                            <AuthRouter path="/mainpage/products" component={ProductListPage} />
-                            <AuthRouter path="/mainpage/product/detail" component={ProductDetailPage} />
-                            <AuthRouter path="/checkout" component={CheckoutPage} />
-                            <AuthRouter path="/order" component={OrderPage} />
-                            <AuthRouter path="/order-confirmed" component={OrderConfirmedPage} />
-                            <AuthRouter path="/order-details" component={OrderDetailsPage} />
-                            <AuthRouter path="/favorite" component={FavoritePage} />
-                            <AuthRouter path="/footprint" component={FootprintPage} />
-                            <AuthRouter component={NotFoundPage} />
+                            <Route path="/mainpage/home" component={HomePage} />
+                            <Route path="/mainpage/category" component={CategoryPage} />
+                            <Route path="/mainpage/cart" component={CartPage} />
+                            <Route path="/mainpage/my" component={MyPage} />
+                            <Route path="/mainpage/products" component={ProductListPage} />
+                            <Route path="/mainpage/product/detail" component={ProductDetailPage} />
+                            <Route path="/checkout" component={CheckoutPage} />
+                            <Route path="/order" component={OrderPage} />
+                            <Route path="/order-confirmed" component={OrderConfirmedPage} />
+                            <Route path="/order-details" component={OrderDetailsPage} />
+                            <Route path="/favorite" component={FavoritePage} />
+                            <Route path="/footprint" component={FootprintPage} />
+                            <Route component={NotFoundPage} />
                         </Switch>
                     </Suspense>
                 </Content>
