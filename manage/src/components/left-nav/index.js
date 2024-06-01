@@ -4,7 +4,7 @@ import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { setHeadTitle } from "./action";
-import menuLists from "config/menuConfig";
+import menuLists from "../../config/menuConfig";
 import "./index.less";
 
 const { SubMenu } = Menu;
@@ -52,61 +52,61 @@ class LeftNav extends Component {
         });
     }
 
-    menuNav_map = (menuConfig) => {
+    menuNav_map = (menuConfig, collapsed) => {
         return menuConfig.map((item) => {
             if (item.children) {
                 return (
-                    <SubMenu
-                        key={item.key}
-                        title={
-                            <span>
-                <img src={item.icon} alt="icon" style={{ width: '16px', marginRight: '8px' }} />
-                <span>{item.title}</span>
-              </span>
-                        }
-                    >
-                        {this.menuNav_map(item.children)}
-                    </SubMenu>
+                  <SubMenu
+                    key={item.key}
+                    title={
+                        <span>
+                            <img src={item.icon} alt="icon" style={{ width: '16px', marginRight: '8px' }} />
+                            {!collapsed && <span>{item.title}</span>}
+                        </span>
+                    }
+                  >
+                      {this.menuNav_map(item.children, collapsed)}
+                  </SubMenu>
                 );
             } else {
                 return (
-                    <Menu.Item key={item.key}>
-                        <Link to={item.key}>
-                            <img src={item.icon} alt="icon" style={{ width: '16px', marginRight: '8px' }} />
-                            <span>{item.title}</span>
-                        </Link>
-                    </Menu.Item>
+                  <Menu.Item key={item.key}>
+                      <Link to={item.key}>
+                          <img src={item.icon} alt="icon" style={{ width: '16px', marginRight: '8px' }} />
+                          {!collapsed && <span>{item.title}</span>}
+                      </Link>
+                  </Menu.Item>
                 );
             }
         });
     };
 
-    menuNav_reduce = (arr) => {
+    menuNav_reduce = (arr, collapsed, isChild = false) => {
         const { setHeadTitle } = this.props;
         return arr.reduce((pre, item) => {
             if (this.hasAuth(item)) {
                 if (item.children) {
                     pre.push(
-                        <SubMenu
-                            key={item.key}
-                            title={
-                                <span>
-                  <img src={item.icon} alt="icon" style={{ width: '16px', marginRight: '8px' }} />
-                  <span>{item.title}</span>
-                </span>
-                            }
-                        >
-                            {this.menuNav_reduce(item.children)}
-                        </SubMenu>
+                      <SubMenu
+                        key={item.key}
+                        title={
+                            <span>
+                                <img src={item.icon} alt="icon" style={{ width: '16px', marginRight: '8px' }} />
+                                {collapsed && !isChild ? null : <span>{item.title}</span>}
+                            </span>
+                        }
+                      >
+                          {this.menuNav_reduce(item.children, collapsed, true)}
+                      </SubMenu>
                     );
                 } else {
                     pre.push(
-                        <Menu.Item key={item.key}>
-                            <Link to={item.key} onClick={() => setHeadTitle(item.title)}>
-                                <img src={item.icon} alt="icon" style={{ width: '16px', marginRight: '8px' }} />
-                                <span>{item.title}</span>
-                            </Link>
-                        </Menu.Item>
+                      <Menu.Item key={item.key}>
+                          <Link to={item.key} onClick={() => setHeadTitle(item.title)}>
+                              <img src={item.icon} alt="icon" style={{ width: '16px', marginRight: '8px' }} />
+                              {collapsed && !isChild ? null : <span>{item.title}</span>}
+                          </Link>
+                      </Menu.Item>
                     );
                 }
             }
@@ -143,7 +143,7 @@ class LeftNav extends Component {
                             selectedKeys={[getCurrentReqPath]}
                             defaultOpenKeys={[getCurrentReqParentPath]}
                         >
-                            {this.menuNav_reduce(menuLists)}
+                            {this.menuNav_reduce(menuLists, this.props.collapsed, false)}
                         </Menu>
                     </div>
                 </div>
