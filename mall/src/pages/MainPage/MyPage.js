@@ -107,20 +107,20 @@ const MyPage = ({ history, userInfo }) => {
   };
 
   const menuItems = [
-    { title: '全部订单', icon: <IconFont style={{ fontSize: iconSize }} type="icon-dingdan" />, status: 'all' },
+    { title: '全部', icon: <IconFont style={{ fontSize: iconSize }} type="icon-dingdan" />, status: 'all' },
+    { title: '收货', icon: <IconFont style={{ fontSize: iconSize }} type="icon-daishouhuo" />, status: '待收货' },
+    { title: '退换', icon: <IconFont style={{ fontSize: iconSize }} type="icon-tuihuanshenqing" />, status: '退款/售后' },
     { title: '待付款', icon: <IconFont style={{ fontSize: iconSize }} type="icon-daifukuan" />, status: '待付款' },
     { title: '待发货', icon: <IconFont style={{ fontSize: iconSize }} type="icon-a-daifahuo2x" />, status: '待发货' },
-    { title: '待收货', icon: <IconFont style={{ fontSize: iconSize }} type="icon-daishouhuo" />, status: '待收货' },
-    { title: '退换', icon: <IconFont style={{ fontSize: iconSize }} type="icon-tuihuanshenqing" />, status: '退款/售后' },
     { title: '已取消', icon: <IconFont style={{ fontSize: iconSize }} type="icon-yiquxiao" />, status: '已取消' },
   ];
 
   const otherItems = [
-    { title: '地址管理', icon: <IconFont style={{ fontSize: iconSize }} type="icon-dizhi" />, page: '/address' },
-    { title: '我的足迹', icon: <IconFont style={{ fontSize: iconSize }} type="icon-wodezuji" />, page: '/footprint' },
-    { title: '我的关注', icon: <IconFont style={{ fontSize: iconSize }} type="icon-wodewendawodeguanzhu" />, page: '/favorites' },
-    { title: '我的收藏', icon: <IconFont style={{ fontSize: iconSize }} type="icon-shoucang" />, page: '/favorite' },
-    { title: '我的评价', icon: <IconFont style={{ fontSize: iconSize }} type="icon-wodepingjia" />, page: '/reviews' },
+    // { title: '地址管理', icon: <IconFont style={{ fontSize: iconSize }} type="icon-dizhi" />, page: '/address' },
+    { title: '足迹', icon: <IconFont style={{ fontSize: iconSize }} type="icon-wodezuji" />, page: '/footprint' },
+    // { title: '我的关注', icon: <IconFont style={{ fontSize: iconSize }} type="icon-wodewendawodeguanzhu" />, page: '/favorites' },
+    { title: '收藏', icon: <IconFont style={{ fontSize: iconSize }} type="icon-shoucang" />, page: '/favorite' },
+    // { title: '我的评价', icon: <IconFont style={{ fontSize: iconSize }} type="icon-wodepingjia" />, page: '/reviews' },
   ];
 
   const unclaimedCoupons = availableCoupons.filter((coupon) => !coupon.isClaimed);

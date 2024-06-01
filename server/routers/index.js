@@ -753,7 +753,7 @@ router.get('/coupon', async (req, res) => {
         if (userCoupons && userCoupons.coupons.length > 0) {
             res.send({ status: 0, data: userCoupons.coupons });
         } else {
-            res.send({ status: 1, msg: '没有找到用户的优惠券' });
+            res.send({ status: 1, msg: '没有找到用户的优惠券，需要在首页初始化' });
         }
     } catch (error) {
         res.send({ status: 1, msg: '获取优惠券信息失败' });
@@ -830,7 +830,7 @@ router.get('/coupons/user', async (req, res) => {
         if (userCoupons && userCoupons.coupons.length > 0) {
             res.send({ status: 0, data: userCoupons.coupons });
         } else {
-            res.send({ status: 1, msg: '没有找到用户的优惠券' });
+            res.send({ status: 1, msg: '没有找到用户的优惠券，需要在首页初始化' });
         }
     } catch (error) {
         console.error('获取用户优惠券失败', error);
