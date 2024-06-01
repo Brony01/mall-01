@@ -26,40 +26,6 @@ import OrderDetailsPage from '../purchase/OrderDetailsPage';
 import FavoritePage from "../purchase/FavoritePage";
 import FootprintPage from "../purchase/FootprintPage";
 
-const Home = Loadable({
-    loader: () => import("../home/home"),
-    loading: Loading
-});
-
-const Category = Loadable({
-    loader: () => import("../category/category"),
-    loading: Loading
-});
-
-const Role = Loadable({
-    loader: () => import("../role/role"),
-    loading: Loading
-});
-
-const User = Loadable({
-    loader: () => import("../user/user"),
-    loading: Loading
-});
-
-const Product = Loadable({
-    loader: () => import("../product"),
-    loading: Loading
-});
-
-const Order = Loadable({
-    loader: () => import("../order"),
-    loading: Loading
-});
-
-const GitHub = Loadable({
-    loader: () => import("../github"),
-    loading: Loading
-});
 
 const { Footer, Sider, Content } = Layout;
 
@@ -132,13 +98,6 @@ class Admin extends Component {
                                 <AuthRouter path="/footprint" component={FootprintPage} />
                                 {/*<AuthRouter path="/mainpage/my/reviews" component={ReviewsPage} />*/}
 
-                                <AuthRouter path="/home" component={Home} />
-                                <AuthRouter path="/category" component={Category} />
-                                <AuthRouter path="/product" component={Product} />
-                                <AuthRouter path="/role" component={Role} />
-                                <AuthRouter path="/user" component={User} />
-                                <AuthRouter path="/order-manage" component={Order} />
-                                <AuthRouter path="/github" component={GitHub} />
                                 <AuthRouter component={NotFoundPage} />
                             </Switch>
                         </Suspense>

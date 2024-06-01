@@ -176,66 +176,66 @@ class Role extends Component {
     }
 
 
-    render() {
-        const {getFieldDecorator} = this.props.form;
-        const {visible, confirmLoading, loading, tableData, role} = this.state;
-        const cardTitle = (
-            <span>
-        <Button type="primary" onClick={this.showModal}>创建角色</Button>
-        <Button type="primary" onClick={this.roleModal} disabled={!this.state.role['_id']}
-                style={{marginLeft: '1rem'}}>设置权限</Button>
-        <Input.Search
-            placeholder="搜索角色"
-            onSearch={value => this.setState({searchText: value})}
-            style={{width: 200, marginLeft: 20}}
-        />
-    </span>
-        )
-
-        return (
-            <Card title={cardTitle}>
-                <Modal
-                    title="创建角色"
-                    visible={visible}
-                    onOk={this.handelAddUser}
-                    confirmLoading={confirmLoading}
-                    onCancel={this.handleCancel}
-                    okText="确认"
-                    cancelText="取消"
-                >
-                    <Form onSubmit={this.handelAddUser} className="login-form">
-                        <Form.Item>
-                            {getFieldDecorator('roleName', {
-                                rules: [{required: true, message: '请输入角色名称!'}],
-                            })(
-                                <Input
-                                    prefix={<Icon type="user" style={iconStyle}/>}
-                                    placeholder="角色名称"
-                                />
-                            )}
-                        </Form.Item>
-                    </Form>
-                </Modal>
-                <AuthModal history={this.props.history} ref={this.roleRef} role={role}
-                           getUserList={() => this.getUserList()}/>
-                <Table
-                    dataSource={this.filterRoles()}
-                    columns={this.columns}
-                    bordered
-                    loading={this.state.loading}
-                    rowKey={'_id'}
-                    size={'small'}
-                    rowSelection={this.rowSelection()}
-                    onRow={this.tableOnRow}
-                    pagination={{
-                        defaultCurrent: 1,
-                        pageSize: PAGE_SIZE,
-                        total: this.filterRoles().length
-                    }}
-                />
-            </Card>
-        )
-    }
+    // render() {
+    //     const {getFieldDecorator} = this.props.form;
+    //     const {visible, confirmLoading, loading, tableData, role} = this.state;
+    //     const cardTitle = (
+    //         <span>
+    //     <Button type="primary" onClick={this.showModal}>创建角色</Button>
+    //     <Button type="primary" onClick={this.roleModal} disabled={!this.state.role['_id']}
+    //             style={{marginLeft: '1rem'}}>设置权限</Button>
+    //     <Input.Search
+    //         placeholder="搜索角色"
+    //         onSearch={value => this.setState({searchText: value})}
+    //         style={{width: 200, marginLeft: 20}}
+    //     />
+    // </span>
+    //     )
+    //
+    //     return (
+    //         <Card title={cardTitle}>
+    //             <Modal
+    //                 title="创建角色"
+    //                 visible={visible}
+    //                 onOk={this.handelAddUser}
+    //                 confirmLoading={confirmLoading}
+    //                 onCancel={this.handleCancel}
+    //                 okText="确认"
+    //                 cancelText="取消"
+    //             >
+    //                 <Form onSubmit={this.handelAddUser} className="login-form">
+    //                     <Form.Item>
+    //                         {getFieldDecorator('roleName', {
+    //                             rules: [{required: true, message: '请输入角色名称!'}],
+    //                         })(
+    //                             <Input
+    //                                 prefix={<Icon type="user" style={iconStyle}/>}
+    //                                 placeholder="角色名称"
+    //                             />
+    //                         )}
+    //                     </Form.Item>
+    //                 </Form>
+    //             </Modal>
+    //             <AuthModal history={this.props.history} ref={this.roleRef} role={role}
+    //                        getUserList={() => this.getUserList()}/>
+    //             <Table
+    //                 dataSource={this.filterRoles()}
+    //                 columns={this.columns}
+    //                 bordered
+    //                 loading={this.state.loading}
+    //                 rowKey={'_id'}
+    //                 size={'small'}
+    //                 rowSelection={this.rowSelection()}
+    //                 onRow={this.tableOnRow}
+    //                 pagination={{
+    //                     defaultCurrent: 1,
+    //                     pageSize: PAGE_SIZE,
+    //                     total: this.filterRoles().length
+    //                 }}
+    //             />
+    //         </Card>
+    //     )
+    // }
 }
 
 export default (Form.create({name: 'normal_login'})(Role));

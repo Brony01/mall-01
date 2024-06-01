@@ -85,39 +85,39 @@ class Auth extends Component {
         })
     }
 
-    render() {
-        // 每次需要拿到最新的role
-        const {role} = this.props
-        const {visible, confirmLoading, menus} = this.state
-        return (
-            <Modal
-                title="设置权限"
-                visible={visible}
-                onOk={this.handelAddUser}
-                confirmLoading={confirmLoading}
-                onCancel={this.handleCancel}
-                okText="确认"
-                cancelText="取消"
-                centered
-                bodyStyle={{overflow: 'auto'}}
-            >
-                <Form.Item label='角色名称' labelCol={{sm: 4}} wrapperCol={{sm: 16}}>
-                    <Input prefix={<Icon type="user" style={iconStyle}/>} disabled value={role.name}/>
-                </Form.Item>
-                <Tree
-                    checkable
-                    // defaultExpandAll
-                    defaultExpandedKeys={['all']}
-                    checkedKeys={menus}
-                    onCheck={this.onCheck}
-                >
-                    <TreeNode title="权限管理" key="all">
-                        {this.treeNodes}
-                    </TreeNode>
-                </Tree>
-            </Modal>
-        );
-    }
+    // render() {
+    //     // 每次需要拿到最新的role
+    //     const {role} = this.props
+    //     const {visible, confirmLoading, menus} = this.state
+    //     return (
+    //         <Modal
+    //             title="设置权限"
+    //             visible={visible}
+    //             onOk={this.handelAddUser}
+    //             confirmLoading={confirmLoading}
+    //             onCancel={this.handleCancel}
+    //             okText="确认"
+    //             cancelText="取消"
+    //             centered
+    //             bodyStyle={{overflow: 'auto'}}
+    //         >
+    //             <Form.Item label='角色名称' labelCol={{sm: 4}} wrapperCol={{sm: 16}}>
+    //                 <Input prefix={<Icon type="user" style={iconStyle}/>} disabled value={role.name}/>
+    //             </Form.Item>
+    //             <Tree
+    //                 checkable
+    //                 // defaultExpandAll
+    //                 defaultExpandedKeys={['all']}
+    //                 checkedKeys={menus}
+    //                 onCheck={this.onCheck}
+    //             >
+    //                 <TreeNode title="权限管理" key="all">
+    //                     {this.treeNodes}
+    //                 </TreeNode>
+    //             </Tree>
+    //         </Modal>
+    //     );
+    // }
 }
 
 Auth.propTypes = {
