@@ -41,7 +41,7 @@ class Login extends Component {
     render() {
         const {userInfo} = this.props;
         if (userInfo._id) {
-            return <Redirect to="/home"/>;
+            return <Redirect to="/mainpage/home"/>;
         }
         const {getFieldDecorator} = this.props.form;
         return (

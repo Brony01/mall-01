@@ -4,16 +4,14 @@ import { BackTop, Layout } from "antd";
 import { connect } from "react-redux";
 import Loadable from "react-loadable";
 import HeaderSelf from "../../components/header";
-import LeftNav from "../../components/left-nav";
+import BottomNav from "../../components/bottom-nav"; // 修改导入的组件
 import FooterComponent from "../../components/footer";
 import Loading from "../../components/loading";
 import AuthRouter from "../../components/AuthRouter";
 import NotFoundPage from "../../components/404";
-import { TabBar } from 'antd-mobile'; // 导入 TabBar 组件
-import { NavLink } from "react-router-dom"; // 导入 NavLink
 
 // 导入页面组件
-import HomePage from '../MainPage/HomePage'; // 请根据实际路径调整
+import HomePage from '../MainPage/HomePage';
 import CategoryPage from '../MainPage/CategoryPage';
 import CartPage from '../MainPage/CartPage';
 import MyPage from '../MainPage/MyPage';
@@ -26,42 +24,12 @@ import OrderDetailsPage from '../purchase/OrderDetailsPage';
 import FavoritePage from "../purchase/FavoritePage";
 import FootprintPage from "../purchase/FootprintPage";
 
-
-const { Footer, Sider, Content } = Layout;
+const { Footer, Content } = Layout;
 
 class Admin extends Component {
     state = {
         collapsed: false,
-        selectedTab: 'home'
     };
-
-    onCollapse = collapsed => {
-        this.setState({ collapsed });
-    };
-
-    renderTabBarItem(title, key, icon, selectedIcon, path) {
-        return (
-            <TabBar.Item
-                title={title}
-                key={key}
-                icon={<div style={{
-                    width: '22px',
-                    height: '22px',
-                    background: `url(${icon}) center center / 21px 21px no-repeat` }} />}
-                selectedIcon={<div style={{
-                    width: '22px',
-                    height: '22px',
-                    background: `url(${selectedIcon}) center center / 21px 21px no-repeat` }} />}
-                selected={this.state.selectedTab === key}
-                onPress={() => {
-                    this.setState({
-                        selectedTab: key,
-                    });
-                    this.props.history.push(path);
-                }}
-            />
-        );
-    }
 
     render() {
         const { userInfo } = this.props;
@@ -70,48 +38,30 @@ class Admin extends Component {
         }
         return (
             <Layout style={{ minHeight: "100%" }}>
-                <Sider
-                    style={{ zIndex: 2 }}
-                    collapsible
-                    collapsed={this.state.collapsed}
-                    onCollapse={this.onCollapse}
-                >
-                    <LeftNav collapsed={this.state.collapsed} />
-                </Sider>
-                <Layout>
-                    <HeaderSelf />
-                    <Content style={{ margin: "100px 14px 14px", background: "#fff" }}>
-                        <Suspense fallback={<Loading />}>
-                            <Switch>
-                                <AuthRouter path="/mainpage/home" component={HomePage} />
-                                <AuthRouter path="/mainpage/category" component={CategoryPage} />
-                                <AuthRouter path="/mainpage/cart" component={CartPage} />
-                                <AuthRouter path="/mainpage/my" component={MyPage} />
-                                <AuthRouter path="/mainpage/products" component={ProductListPage} />
-                                <AuthRouter path="/mainpage/product/detail" component={ProductDetailPage} />
-                                <AuthRouter path="/checkout" component={CheckoutPage} />
-                                <AuthRouter path="/order" component={OrderPage} />
-                                <AuthRouter path="/order-confirmed" component={OrderConfirmedPage} />
-                                <AuthRouter path="/order-details" component={OrderDetailsPage} />
-                                <AuthRouter path="/favorite" component={FavoritePage} />
-                                {/*<AuthRouter path="/mainpage/my/address" component={AddressPage} />*/}
-                                <AuthRouter path="/footprint" component={FootprintPage} />
-                                {/*<AuthRouter path="/mainpage/my/reviews" component={ReviewsPage} />*/}
-
-                                <AuthRouter component={NotFoundPage} />
-                            </Switch>
-                        </Suspense>
-                    </Content>
-                    <TabBar>
-                        {this.renderTabBarItem('首页', 'home', 'home-icon-url', 'home-selected-icon-url', '/mainpage/home')}
-                        {this.renderTabBarItem('分类', 'category', 'category-icon-url', 'category-selected-icon-url', '/mainpage/category')}
-                        {this.renderTabBarItem('购物车', 'cart', 'cart-icon-url', 'cart-selected-icon-url', '/mainpage/cart')}
-                        {this.renderTabBarItem('我的', 'my', 'my-icon-url', 'my-selected-icon-url', '/mainpage/my')}
-                    </TabBar>
-                    <Footer style={{ textAlign: "center", background: "#fff" }}>
-                        <FooterComponent />
-                    </Footer>
-                </Layout>
+                <HeaderSelf />
+                <Content style={{ margin: "100px 14px 14px", background: "#fff", paddingBottom: "70px" }}>
+                    <Suspense fallback={<Loading />}>
+                        <Switch>
+                            <AuthRouter path="/mainpage/home" component={HomePage} />
+                            <AuthRouter path="/mainpage/category" component={CategoryPage} />
+                            <AuthRouter path="/mainpage/cart" component={CartPage} />
+                            <AuthRouter path="/mainpage/my" component={MyPage} />
+                            <AuthRouter path="/mainpage/products" component={ProductListPage} />
+                            <AuthRouter path="/mainpage/product/detail" component={ProductDetailPage} />
+                            <AuthRouter path="/checkout" component={CheckoutPage} />
+                            <AuthRouter path="/order" component={OrderPage} />
+                            <AuthRouter path="/order-confirmed" component={OrderConfirmedPage} />
+                            <AuthRouter path="/order-details" component={OrderDetailsPage} />
+                            <AuthRouter path="/favorite" component={FavoritePage} />
+                            <AuthRouter path="/footprint" component={FootprintPage} />
+                            <AuthRouter component={NotFoundPage} />
+                        </Switch>
+                    </Suspense>
+                </Content>
+                <Footer style={{ textAlign: "center", background: "#fff" }}>
+                    <FooterComponent />
+                </Footer>
+                <BottomNav />
                 <BackTop visibilityHeight={100} />
             </Layout>
         );
