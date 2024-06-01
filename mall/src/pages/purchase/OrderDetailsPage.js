@@ -128,7 +128,7 @@ class OrderDetailsPage extends React.Component {
         const finalAmount = order.totalAmount;
 
         return (
-            <Card title={`订单号: ${orderId}`}>
+            <Card title={`订单号: ${orderId}`} style={{ marginRight: ' 5% ', marginLeft: ' 5% ' }}>
                 <List
                     itemLayout="vertical"
                     dataSource={products}

@@ -17,7 +17,7 @@ const OrderConfirmedPage = ({ history, location }) => {
   const { totalAmount } = location.state || {};
 
   return (
-    <Card title="订单确认">
+    <Card title="订单确认" style={{ marginRight: ' 5% ', marginLeft: ' 5% ' }}>
       <p>您的订单已成功支付！</p>
       <p>
         支付金额: ¥
