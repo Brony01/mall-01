@@ -1,42 +1,83 @@
 .left-nav {
-  position: fixed;
-  top: 0; /* 与顶部栏对齐，避免重叠 */
-  left: 0;
-  width: 200px; /* 固定宽度 */
-  height: 100vh; /* 使用视窗高度确保填满整个屏幕 */
-  background-color: #333; /* 深色背景增加对比 */
-  color: #fff; /* 保持文字可读性 */
-  overflow-y: auto; /* 允许垂直滚动 */
-  z-index: 999; /* 稍低于顶部导航栏的 z-index 以确保不会覆盖 */
-  box-shadow: 2px 0 5px rgba(0,0,0,0.1); /* 添加阴影增加深度感 */
-}
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #002140;
 
-.left-nav-header {
-  padding: 16px; /* 增加内边距 */
-  background-color: #444; /* 深灰色背景提高区域划分的可见性 */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 增加局部阴影 */
-}
-
-.left-nav-header-content {
-  height: 30px;
-  line-height: 30px;
-  font-size: 20px;
-  text-align: center;
-  color: #fff;
-  overflow: hidden;
-  vertical-align: middle;
-}
-
-.left-nav-content {
-  height: calc(100% - 56px); /* 减去头部的高度 */
-  overflow-y: scroll;
-}
-
-.left-nav, .left-nav * {
-  /* 隐藏所有浏览器的滚动条 */
-  ::-webkit-scrollbar {
-    display: none;
+  .left-nav-header {
+    height: 64px; /* 确保与顶部栏对齐 */
+    display: flex;
+    align-items: center;
+    background-color: #001529;
+    padding-left: 16px; /* 添加一些内边距使文本不贴边 */
   }
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+
+  .left-nav-header-content {
+    color: #fff; /* 将文字颜色设置为白色 */
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .left-nav-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    background-color: #001f3f;
+  }
+
+  .left-nav-footer {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #001529;
+    cursor: pointer;
+  }
+
+  .collapse-button {
+    color: #fff;
+  }
+
+  .menu-icon {
+    width: 22px;
+    height: 22px;
+    margin-right: 12px;
+  }
+
+  .head-icon-text {
+    color: #fff; /* 将文字颜色设置为白色 */
+  }
+
+  .ant-menu {
+    background-color: transparent;
+    color: #fff;
+  }
+
+  .ant-menu-item {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+  }
+
+  .ant-menu-item-selected {
+    background-color: #003366 !important;
+  }
+
+  .ant-menu-item span {
+    font-size: 16px;
+  }
+
+  .ant-menu-submenu-title {
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #001f3f;
+  }
+
+  .ant-menu-submenu-title:hover {
+    background-color: #003366;
+  }
+
+  .ant-menu-submenu-arrow::before,
+  .ant-menu-submenu-arrow::after {
+    background-color: #fff;
+  }
 }

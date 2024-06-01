@@ -118,12 +118,6 @@ class Admin extends Component {
                             </Switch>
                         </Suspense>
                     </Content>
-                    <TabBar>
-                        {this.renderTabBarItem('首页', 'home', 'home-icon-url', 'home-selected-icon-url', '/mainpage/home')}
-                        {this.renderTabBarItem('分类', 'category', 'category-icon-url', 'category-selected-icon-url', '/mainpage/category')}
-                        {this.renderTabBarItem('购物车', 'cart', 'cart-icon-url', 'cart-selected-icon-url', '/mainpage/cart')}
-                        {this.renderTabBarItem('我的', 'my', 'my-icon-url', 'my-selected-icon-url', '/mainpage/my')}
-                    </TabBar>
                     <Footer style={{ textAlign: "center", background: "#fff" }}>
                         <FooterComponent />
                     </Footer>

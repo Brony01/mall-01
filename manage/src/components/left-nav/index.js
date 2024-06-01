@@ -1,18 +1,18 @@
-import React, {Component} from "react";
-import {Icon, Menu} from "antd";
-import {Link, withRouter} from "react-router-dom";
-import {connect} from "react-redux";
+import React, { Component } from "react";
+import { Icon, Menu } from "antd";
+import { Link, withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import {setHeadTitle} from "./action";
+import { setHeadTitle } from "./action";
 import menuLists from "config/menuConfig";
 import "./index.less";
 
-const {SubMenu} = Menu;
+const { SubMenu } = Menu;
 
 function HeadIcon() {
     return (
         <>
-            信息管理系统
+            <span className="head-icon-text">商城管理系统</span>
         </>
     );
 }
@@ -32,23 +32,19 @@ class LeftNav extends Component {
         const { menus } = role || { menus: [] };
         const { key, isPublic, children } = item;
 
-        // Checks if user info and roles are defined
         if (username === "admin" || isPublic || menus.includes(key)) {
             return true;
         } else if (children) {
-            return !!children.find(child => menus.includes(child.key));
+            return !!children.find((child) => menus.includes(child.key));
         }
         return false;
     };
 
-
-    // 保持选中状态
     getCurrentReqParentPath(arr, getCurrentReqPath) {
         arr.forEach((element) => {
             if (element.children) {
                 element.children.forEach((cItem) => {
                     if (getCurrentReqPath.includes(cItem.key)) {
-
                         this.getCurrentReqParentPath = element.key;
                     }
                 });
@@ -64,7 +60,7 @@ class LeftNav extends Component {
                         key={item.key}
                         title={
                             <span>
-                <Icon type={item.icon}/>
+                <img src={item.icon} alt="icon" style={{ width: '16px', marginRight: '8px' }} />
                 <span>{item.title}</span>
               </span>
                         }
@@ -76,7 +72,7 @@ class LeftNav extends Component {
                 return (
                     <Menu.Item key={item.key}>
                         <Link to={item.key}>
-                            <Icon type={item.icon}/>
+                            <img src={item.icon} alt="icon" style={{ width: '16px', marginRight: '8px' }} />
                             <span>{item.title}</span>
                         </Link>
                     </Menu.Item>
@@ -86,13 +82,8 @@ class LeftNav extends Component {
     };
 
     menuNav_reduce = (arr) => {
-        const {setHeadTitle} = this.props;
+        const { setHeadTitle } = this.props;
         return arr.reduce((pre, item) => {
-            /**
-             * @desc 权限控制
-             * @desc 拿到权限列表路由进行渲染
-             */
-            //
             if (this.hasAuth(item)) {
                 if (item.children) {
                     pre.push(
@@ -100,7 +91,7 @@ class LeftNav extends Component {
                             key={item.key}
                             title={
                                 <span>
-                  <Icon type={item.icon}/>
+                  <img src={item.icon} alt="icon" style={{ width: '16px', marginRight: '8px' }} />
                   <span>{item.title}</span>
                 </span>
                             }
@@ -112,7 +103,7 @@ class LeftNav extends Component {
                     pre.push(
                         <Menu.Item key={item.key}>
                             <Link to={item.key} onClick={() => setHeadTitle(item.title)}>
-                                <Icon type={item.icon}/>
+                                <img src={item.icon} alt="icon" style={{ width: '16px', marginRight: '8px' }} />
                                 <span>{item.title}</span>
                             </Link>
                         </Menu.Item>
@@ -124,12 +115,10 @@ class LeftNav extends Component {
     };
 
     toggleCollapse = () => {
-        this.setState(prevState => ({
-            collapsed: !prevState.collapsed
+        this.setState((prevState) => ({
+            collapsed: !prevState.collapsed,
         }));
-    }
-
-
+    };
 
     render() {
         let getCurrentReqPath = this.props.location.pathname;
@@ -143,7 +132,7 @@ class LeftNav extends Component {
                     <Link to="/">
                         <div className="left-nav-header">
                             <h1 className="left-nav-header-content">
-                                {this.props.collapsed ? null : <HeadIcon/>}
+                                {this.props.collapsed ? null : <HeadIcon />}
                             </h1>
                         </div>
                     </Link>
@@ -157,11 +146,10 @@ class LeftNav extends Component {
                             {this.menuNav_reduce(menuLists)}
                         </Menu>
                     </div>
-
                 </div>
                 <div className="left-nav-footer">
                     <div className="collapse-button" onClick={this.toggleCollapse}>
-                        {this.state.collapsed ? <Icon type="menu-unfold"/> : <Icon type="menu-fold"/>}
+                        {this.state.collapsed ? <Icon type="menu-unfold" /> : <Icon type="menu-fold" />}
                     </div>
                 </div>
             </div>
@@ -177,14 +165,11 @@ LeftNav.propTypes = {
 const mapStateToProps = (state) => ({
     userInfo: state.loginUserInfo,
 });
+
 const mapDispatchToProps = (dispatch) => ({
     setHeadTitle: (title) => {
         dispatch(setHeadTitle(title));
     },
 });
 
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(withRouter(LeftNav));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(LeftNav));
