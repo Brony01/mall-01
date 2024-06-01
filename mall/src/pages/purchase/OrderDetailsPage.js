@@ -52,21 +52,6 @@ class OrderDetailsPage extends React.Component {
         }
     };
 
-    handleShipOrder = async () => {
-        const { orderId } = this.state;
-        try {
-            const res = await reqUpdateOrder({ orderId, status: '待收货' });
-            if (res.status === 0) {
-                message.success('订单已发货');
-                this.setState({ order: { ...this.state.order, status: '待收货' } });
-            } else {
-                message.error('发货失败');
-            }
-        } catch (error) {
-            message.error('发货失败');
-        }
-    };
-
     handleConfirmReceipt = async () => {
         const { orderId } = this.state;
         try {
@@ -136,27 +121,6 @@ class OrderDetailsPage extends React.Component {
         }
     };
 
-
-    handleAfterSalesDecision = async (decision) => {
-        const { orderId, order } = this.state;
-        if (!order.status) return;
-
-        const afterSalesType = order.status.includes('仅退款') ? '仅退款' : '退货退款';
-        const newStatus = `${afterSalesType}${decision === 'accept' ? '通过' : '未通过'}`;
-
-        try {
-            const res = await reqUpdateOrder({ orderId, status: newStatus });
-            if (res.status === 0) {
-                message.success(`售后请求${decision === 'accept' ? '通过' : '未通过'}`);
-                this.setState({ order: { ...this.state.order, status: newStatus } });
-            } else {
-                message.error(`售后请求处理失败`);
-            }
-        } catch (error) {
-            message.error(`售后请求处理失败`);
-        }
-    };
-
     render() {
         const { orderId, products, order } = this.state;
 
@@ -193,12 +157,6 @@ class OrderDetailsPage extends React.Component {
                         <Button onClick={this.handleCancelOrder} style={{ marginLeft: 10 }}>取消订单</Button>
                     </>
                 )}
-                {order.status === '待发货' && (
-                    <>
-                        <Button type="primary" onClick={this.handleShipOrder}>发货</Button>
-                        <Button onClick={this.handleCancelOrder} style={{ marginLeft: 10 }}>取消订单</Button>
-                    </>
-                )}
                 {order.status === '待收货' && (
                     <>
                         <Button type="primary" onClick={this.handleConfirmReceipt}>确认收货</Button>
@@ -207,12 +165,6 @@ class OrderDetailsPage extends React.Component {
                 )}
                 {order.status === '交易成功' && (
                     <Button type="primary" onClick={this.handleRequestAfterSales}>售后</Button>
-                )}
-                {(order.status && (order.status.startsWith('售后处理中'))) && (
-                    <>
-                        <Button type="danger" onClick={() => this.handleAfterSalesDecision('reject')}>拒绝</Button>
-                        <Button type="primary" onClick={() => this.handleAfterSalesDecision('accept')} style={{ marginLeft: 10 }}>通过</Button>
-                    </>
                 )}
                 {(order.status && order.status.includes('未通过')) && (
                     <Button type="primary" onClick={this.handleRequestAfterSales}>再次申请售后</Button>

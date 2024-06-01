@@ -56,7 +56,7 @@ class OrdersPage extends Component {
           orders: res.data,
           loading: false,
         });
-      } else {
+      }else{
         console.log(res.msg);
       }
     });
@@ -66,9 +66,9 @@ class OrdersPage extends Component {
     const { orders, loading } = this.state;
 
     return (
-        <Spin spinning={loading}>
-          <Table dataSource={orders} columns={this.columns} rowKey="_id" />
-        </Spin>
+      <Spin spinning={loading}>
+        <Table dataSource={orders} columns={this.columns} rowKey="_id" />
+      </Spin>
     );
   }
 }

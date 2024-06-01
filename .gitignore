@@ -63,3 +63,5 @@ typings/
 
 # 秘钥
 *.pem
+
+.stylelintcache

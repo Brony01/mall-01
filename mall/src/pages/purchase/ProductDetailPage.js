@@ -91,9 +91,9 @@ class ProductDetailPage extends React.Component {
     }
 
     handleBuyNow = async () => {
-        const { _id: productId, name, desc, price } = this.state.product;
+        const { _id: productId, name, imgs, desc, price } = this.state.product;
         const { userInfo } = this.props;
-        const products = [{ productId, name, desc, quantity: 1, price }];
+        const products = [{ productId, name, imgs, desc, quantity: 1, price }];
         const totalAmount = price;
         const originalAmount = totalAmount;
 

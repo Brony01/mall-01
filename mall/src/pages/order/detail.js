@@ -30,6 +30,26 @@ class OrderDetail extends Component {
     });
   }
 
+  handleAfterSalesDecision = async (decision) => {
+    const { orderId, order } = this.state;
+    if (!order.status) return;
+
+    const afterSalesType = order.status.includes('仅退款') ? '仅退款' : '退货退款';
+    const newStatus = `${afterSalesType}${decision === 'accept' ? '通过' : '未通过'}`;
+
+    try {
+      const res = await reqUpdateOrder({ orderId, status: newStatus });
+      if (res.status === 0) {
+        message.success(`售后请求${decision === 'accept' ? '通过' : '未通过'}`);
+        this.setState({ order: { ...this.state.order, status: newStatus } });
+      } else {
+        message.error(`售后请求处理失败`);
+      }
+    } catch (error) {
+      message.error(`售后请求处理失败`);
+    }
+  };
+
   handleCancelOrder = async () => {
     const { orderId } = this.state;
     const res = await reqCancelOrder({ orderId });
@@ -86,6 +106,12 @@ class OrderDetail extends Component {
                 <Button type="primary" onClick={this.handleShipOrder}>发货</Button>
                 <Button onClick={this.handleCancelOrder} style={{ marginLeft: 10 }}>取消订单</Button>
               </>
+          )}
+          {(order.status && (order.status.startsWith('售后处理中'))) && (
+            <>
+              <Button type="danger" onClick={() => this.handleAfterSalesDecision('reject')}>拒绝</Button>
+              <Button type="primary" onClick={() => this.handleAfterSalesDecision('accept')} style={{ marginLeft: 10 }}>通过</Button>
+            </>
           )}
         </Card>
     );

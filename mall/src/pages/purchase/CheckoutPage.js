@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Button, message, List, Select, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { reqConfirmOrder, reqGetUserCoupons, reqUseCoupon } from 'api';
+import {reqConfirmOrder, reqGetUserCoupons, reqUseCoupon} from '../../api';
 import { connect } from 'react-redux';
 
 const { Text } = Typography;
