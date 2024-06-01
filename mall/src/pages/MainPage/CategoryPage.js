@@ -52,7 +52,7 @@ const CategoryPage = ({ history }) => {
           dataSource={categories}
           renderItem={(category) => (
             <List.Item onClick={() => handleCategoryClick(category)}>
-              <img src={category.imageUrl} alt={category.name} style={{ width: '100%' }} />
+              {/*<img src={category.imageUrl} alt={category.name} style={{ width: '100%' }} />*/}
               <div>{category.name}</div>
             </List.Item>
           )}
