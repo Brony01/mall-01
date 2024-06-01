@@ -12,7 +12,7 @@ const CouponModel = require('./models/CouponModel');
 
 // 配置 CORS 中间件
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: '*',
     credentials: true,
 }));
 
