@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Card, List, message, Typography } from 'antd';
-import {reqCancelOrder, reqGetOrderDetails, reqUpdateOrder} from '../../api';
-import {withRouter} from "react-router-dom"; // 假设你有这两个函数来分别获取订单详情和发货
+import { reqCancelOrder, reqGetOrderDetails, reqUpdateOrder } from '../../api';
+import { withRouter } from "react-router-dom";
 
 const { Text } = Typography;
 
@@ -24,7 +24,7 @@ class OrderDetail extends Component {
           loading: false,
         });
         console.log(res.data);
-      }else{
+      } else {
         message.error('获取订单详情失败');
       }
     });
@@ -40,7 +40,6 @@ class OrderDetail extends Component {
       message.error(res.msg || '取消订单失败');
     }
   };
-
 
   handleShipOrder = async () => {
     const { orderId } = this.state;
@@ -59,38 +58,38 @@ class OrderDetail extends Component {
 
   render() {
     const { orderId, products, order } = this.state;
-    console.log(this.state.order);
 
     return (
-      <Card title={`订单号: ${orderId}`}>
-        <List
-          itemLayout="vertical"
-          dataSource={products}
-          renderItem={(product) => (
-            <List.Item key={product._id}>
-              <List.Item.Meta
-                title={`商品名：${product.name} | 商品描述：${product.desc}`}
-                description={`价格: ¥${product.price} | 数量: ${product.quantity}`}
-              />
-              <img src={product.imgs[0]} alt={product.name} style={{ width: '50px', marginTop: '10px' }} />
-            </List.Item>
-          )}
-        />
-        <Text>总金额: ¥{products.reduce((total, product) => total + product.price * product.quantity, 0)}</Text>
-        <br />
-        <br />
-        <Text>订单状态: {order.status || '未知状态'}</Text>
+        <Card title={`订单号: ${orderId}`}>
+          <List
+              itemLayout="vertical"
+              dataSource={products}
+              renderItem={(product) => (
+                  <List.Item key={product._id}>
+                    <List.Item.Meta
+                        title={`商品名：${product.name} | 商品描述：${product.desc}`}
+                        description={`价格: ¥${product.price} | 数量: ${product.quantity}`}
+                    />
+                    <img src={product.imgs[0]} alt={product.name} style={{ width: '50px', marginTop: '10px' }} />
+                  </List.Item>
+              )}
+          />
+          <Text>原总金额: ¥{order.originalAmount}</Text>
+          <br />
+          <Text>折扣后总金额: ¥{order.totalAmount}</Text>
+          <br />
+          <br />
+          <Text>订单状态: {order.status || '未知状态'}</Text>
 
-        {order.status === '待发货' && (
-          <>
-            <Button type="primary" onClick={this.handleShipOrder}>发货</Button>
-            <Button onClick={this.handleCancelOrder} style={{ marginLeft: 10 }}>取消订单</Button>
-          </>
-        )}
-      </Card>
+          {order.status === '待发货' && (
+              <>
+                <Button type="primary" onClick={this.handleShipOrder}>发货</Button>
+                <Button onClick={this.handleCancelOrder} style={{ marginLeft: 10 }}>取消订单</Button>
+              </>
+          )}
+        </Card>
     );
   }
 }
-
 
 export default withRouter(OrderDetail);

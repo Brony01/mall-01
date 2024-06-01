@@ -11,6 +11,7 @@ class CheckoutPage extends React.Component {
     state = {
         products: [],
         totalAmount: 0,
+        originalAmount: 0,
         orderId: null,
         coupons: [],
         selectedCoupon: null,
@@ -20,7 +21,12 @@ class CheckoutPage extends React.Component {
     componentDidMount() {
         const { location } = this.props;
         if (location.state && location.state.products && location.state.products.length > 0) {
-            this.setState({ products: location.state.products, totalAmount: location.state.totalAmount, orderId: location.state.orderId });
+            this.setState({
+                products: location.state.products,
+                totalAmount: location.state.totalAmount,
+                originalAmount: location.state.originalAmount,
+                orderId: location.state.orderId
+            });
             this.fetchUserCoupons();
         } else {
             message.error('未能获取订单信息，请返回购物车重新结算');
@@ -76,7 +82,7 @@ class CheckoutPage extends React.Component {
     };
 
     render() {
-        const { products, totalAmount, orderId, coupons, discount } = this.state;
+        const { products, totalAmount, originalAmount, orderId, coupons, discount } = this.state;
         const finalAmount = totalAmount - discount;
 
         return (
@@ -91,14 +97,14 @@ class CheckoutPage extends React.Component {
                         </li>
                     ))}
                 </ul>
-                <p>总金额: ¥{totalAmount}</p>
+                <p>总金额: ¥{originalAmount}</p>
                 <Select
                     placeholder="选择优惠券"
                     style={{ width: '100%', marginBottom: '1rem' }}
                     onChange={this.handleCouponChange}
                 >
                     {coupons.map((coupon) => (
-                        <Option key={coupon._id} value={coupon._id} disabled={totalAmount < coupon.minSpend}>
+                        <Option key={coupon._id} value={coupon._id} disabled={originalAmount < coupon.minSpend}>
                             {coupon.code} - 满{coupon.minSpend}减{coupon.discount} (有效期: {new Date(coupon.expiryDate).toLocaleDateString()})
                         </Option>
                     ))}

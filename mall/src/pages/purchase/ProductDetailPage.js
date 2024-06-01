@@ -14,7 +14,7 @@ class ProductDetailPage extends React.Component {
             product: null,
             countdown: null,
             isSeckillActive: false,
-            seckillStatus: '',  // 新增状态字段
+            seckillStatus: '',
         };
         this.title = (
             <Icon type="arrow-left" onClick={this.goBack} style={{ fontSize: 20 }} />
@@ -95,13 +95,14 @@ class ProductDetailPage extends React.Component {
         const { userInfo } = this.props;
         const products = [{ productId, name, desc, quantity: 1, price }];
         const totalAmount = price;
+        const originalAmount = totalAmount;
 
         try {
-            const res = await reqCreateOrder({ userId: userInfo._id, products, totalAmount });
+            const res = await reqCreateOrder({ userId: userInfo._id, products, totalAmount, originalAmount });
             if (res.status === 0) {
                 this.props.history.push({
                     pathname: '/checkout',
-                    state: { products, totalAmount, orderId: res.data._id },
+                    state: { products, totalAmount, orderId: res.data._id, originalAmount },
                 });
             } else {
                 message.error('创建订单失败');
@@ -122,9 +123,10 @@ class ProductDetailPage extends React.Component {
                 const { orderId } = res;
                 const products = [{ productId, name: this.state.product.name, desc: this.state.product.desc, quantity: 1, price: this.state.product.seckillPrice }];
                 const totalAmount = this.state.product.seckillPrice;
+                const originalAmount = totalAmount;
                 this.props.history.push({
                     pathname: '/checkout',
-                    state: { products, totalAmount, orderId },
+                    state: { products, totalAmount, orderId, originalAmount },
                 });
             } else {
                 message.error(res.msg || '秒杀失败');

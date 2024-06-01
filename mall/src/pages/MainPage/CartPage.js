@@ -4,7 +4,7 @@ import {
 } from 'antd';
 import { connect } from 'react-redux';
 import {
-  reqDeleteCartItem, reqGetCart, reqUpdateCart, reqCreateOrder, reqClearCart, // 确保引入 reqClearCart
+  reqDeleteCartItem, reqGetCart, reqUpdateCart, reqCreateOrder, reqClearCart,
 } from '../../api';
 import {withRouter} from "react-router-dom";
 
@@ -13,7 +13,7 @@ const CartPage = ({ history, userInfo }) => {
   const [selectedItems, setSelectedItems] = useState([]);
 
   useEffect(() => {
-    const userId = userInfo._id; // 从用户登录信息中获取
+    const userId = userInfo._id;
     const fetchCart = async () => {
       try {
         const res = await reqGetCart({ userId });
@@ -43,7 +43,7 @@ const CartPage = ({ history, userInfo }) => {
     setCartItems(newItems);
 
     const { productId, name, desc } = newItems[index];
-    const userId = userInfo._id; // 从用户登录信息中获取
+    const userId = userInfo._id;
     try {
       await reqUpdateCart({
         userId, productId, name, desc, quantity: value,
@@ -57,20 +57,20 @@ const CartPage = ({ history, userInfo }) => {
   const handleCheckout = async () => {
     const selectedProducts = cartItems.filter((_, index) => selectedItems[index]);
     const totalAmount = selectedProducts.reduce((total, item) => total + item.price * item.quantity, 0);
+    const originalAmount = totalAmount;
     if (selectedProducts.length === 0) {
       message.warning('请选择至少一个商品');
       return;
     }
     try {
-      const res = await reqCreateOrder({ userId: userInfo._id, products: selectedProducts, totalAmount });
+      const res = await reqCreateOrder({ userId: userInfo._id, products: selectedProducts, totalAmount, originalAmount });
       if (res.status === 0) {
-        // 创建订单成功后清空购物车
         await reqClearCart({ userId: userInfo._id });
-        setCartItems([]); // 更新购物车为空
+        setCartItems([]);
         setSelectedItems([]);
         history.push({
           pathname: '/checkout',
-          state: { products: selectedProducts, totalAmount, orderId: res.data._id },
+          state: { products: selectedProducts, totalAmount, orderId: res.data._id, originalAmount },
         });
       } else {
         message.error('创建订单失败');
@@ -83,7 +83,7 @@ const CartPage = ({ history, userInfo }) => {
   const handleDeleteItem = (index) => async () => {
     const newItems = [...cartItems];
     const { productId } = newItems[index];
-    const userId = userInfo._id; // 从用户登录信息中获取
+    const userId = userInfo._id;
 
     try {
       await reqDeleteCartItem({ userId, productId });
@@ -136,7 +136,7 @@ const CartPage = ({ history, userInfo }) => {
 };
 
 const mapStateToProps = (state) => ({
-  userInfo: state.loginUserInfo, // 从Redux store中获取用户信息
+  userInfo: state.loginUserInfo,
 });
 
 export default connect(mapStateToProps)(withRouter(CartPage));

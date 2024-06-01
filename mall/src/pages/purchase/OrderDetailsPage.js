@@ -160,7 +160,7 @@ class OrderDetailsPage extends React.Component {
     render() {
         const { orderId, products, order } = this.state;
 
-        const totalAmount = products.reduce((total, product) => total + product.price * product.quantity, 0);
+        const totalAmount = order.originalAmount;
         const finalAmount = order.totalAmount;
 
         return (

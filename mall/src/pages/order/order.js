@@ -21,7 +21,12 @@ class OrdersPage extends Component {
       key: 'userId',
     },
     {
-      title: '总金额',
+      title: '原总金额',
+      dataIndex: 'originalAmount',
+      key: 'originalAmount',
+    },
+    {
+      title: '折扣后总金额',
       dataIndex: 'totalAmount',
       key: 'totalAmount',
     },
@@ -34,12 +39,12 @@ class OrdersPage extends Component {
       title: '操作',
       key: 'action',
       render: (text, record) => (
-        <span>
-      <Link to={{
-        pathname: `/order-manage/detail`,
-        state: { order: record._id }
-      }}>查看</Link>
-    </span>
+          <span>
+          <Link to={{
+            pathname: `/order-manage/detail`,
+            state: { order: record._id }
+          }}>查看</Link>
+        </span>
       ),
     }
   ];
@@ -51,7 +56,7 @@ class OrdersPage extends Component {
           orders: res.data,
           loading: false,
         });
-      }else{
+      } else {
         console.log(res.msg);
       }
     });
@@ -61,9 +66,9 @@ class OrdersPage extends Component {
     const { orders, loading } = this.state;
 
     return (
-      <Spin spinning={loading}>
-        <Table dataSource={orders} columns={this.columns} rowKey="_id" />
-      </Spin>
+        <Spin spinning={loading}>
+          <Table dataSource={orders} columns={this.columns} rowKey="_id" />
+        </Spin>
     );
   }
 }

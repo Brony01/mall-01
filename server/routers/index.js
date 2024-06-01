@@ -575,15 +575,16 @@ router.get('/footprint', async (req, res) => {
 
 // 创建订单
 router.post('/order/create', async (req, res) => {
-    const { userId, products, totalAmount } = req.body;
+    const { userId, products, totalAmount, originalAmount } = req.body;
     try {
-        const order = new OrderModel({ userId, products, totalAmount, status: '待付款' });
+        const order = new OrderModel({ userId, products, totalAmount, originalAmount: originalAmount, status: '待付款' });
         await order.save();
-        res.send({status: 0, data: order});
+        res.send({ status: 0, data: order });
     } catch (error) {
         res.send({ status: 1, msg: '创建订单失败' });
     }
 });
+
 
 router.get('/order', async (req, res) => {
     const {userId} = req.query;
@@ -657,12 +658,12 @@ router.post('/order/cancel', async (req, res) => {
 
 // 确认订单支付
 router.post('/order/confirm', async (req, res) => {
-    const { orderId, couponId } = req.body;
+    const { orderId, couponId, finalAmount } = req.body;
     try {
         const order = await OrderModel.findById(orderId);
         const coupon = await CouponModel.findById(couponId);
         if (order && order.status === '待付款') {
-            let totalAmount = order.totalAmount;
+            let totalAmount = finalAmount;  // 使用前端计算的最终金额
             if (coupon && coupon.userId.equals(order.userId) && coupon.minSpend <= totalAmount) {
                 totalAmount -= coupon.discount;
                 coupon.isClaimed = false;
@@ -683,7 +684,6 @@ router.post('/order/confirm', async (req, res) => {
         res.send({ status: 1, msg: '支付失败' });
     }
 });
-
 
 
 // 确认收货
