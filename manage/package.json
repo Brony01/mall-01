@@ -98,7 +98,7 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://127.0.0.1:8081",
+  "proxy": "http://47.94.129.28:8082",
   "babel": {
     "presets": [
       "module:metro-react-native-babel-preset"

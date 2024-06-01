@@ -1,5 +1,5 @@
 module.exports = {
-    server_port: 8081,
+    server_port: 8082,
     dataBase: "mongodb://localhost/react-mall",
     socketAddress: ''
 }
