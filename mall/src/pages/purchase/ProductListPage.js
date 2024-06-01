@@ -132,7 +132,7 @@ const ProductListPage = ({ history, location }) => {
     ];
 
     return (
-        <Card title={title} extra={addComponment}>
+        <Card title={title} extra={addComponment} style={{ marginRight: ' 5% ', marginLeft: ' 5% ', marginTop:'60px'}}>
             <Table
                 dataSource={filteredData}
                 columns={columns}

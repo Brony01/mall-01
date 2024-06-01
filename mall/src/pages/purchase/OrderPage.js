@@ -32,7 +32,7 @@ class OrderPage extends React.Component {
         const { orders } = this.state;
 
         return (
-            <div>
+            <div style={{ marginRight: ' 5% ', marginLeft: ' 5% ' }}>
                 <ArrowLeftOutlined onClick={this.handleBack} style={{ fontSize: 25 }} />
                 <Card title="所有订单">
                     <List

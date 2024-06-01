@@ -38,7 +38,7 @@ const ProductPage = ({ history }) => {
   };
 
   return (
-    <Card title="商品列表">
+    <Card title="商品列表" style={{ marginRight: ' 5% ', marginLeft: ' 5% ' }}>
       <List
         dataSource={products}
         renderItem={(product) => (

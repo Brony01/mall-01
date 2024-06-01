@@ -7,18 +7,6 @@ import { connect } from 'react-redux';
 import {
   reqGetAvailableCoupons, reqClaimCoupon, reqGetUserCoupons, reqGetOrders,
 } from 'api';
-import {
-  ShoppingCartOutlined,
-  DollarOutlined,
-  TagsOutlined,
-  SyncOutlined,
-  CloseCircleOutlined,
-  EnvironmentOutlined,
-  UserSwitchOutlined,
-  HeartOutlined,
-  StarOutlined,
-  MessageOutlined, PlusOutlined,
-} from '@ant-design/icons';
 import { Space } from 'antd-mobile';
 import Meta from 'antd/es/card/Meta';
 import IconFont from './icons/IconFont';
@@ -103,43 +91,28 @@ const MyPage = ({ history, userInfo }) => {
   };
 
   const menuItems = [
-    { title: '全部订单', icon: <IconFont style={{ fontSize: 70 }} type="icon-dingdan" />, status: 'all' },
-    { title: '待付款', icon: <IconFont style={{ fontSize: 70 }} type="icon-daifukuan" />, status: '待付款' },
-    { title: '待发货', icon: <IconFont style={{ fontSize: 70 }} type="icon-a-daifahuo2x" />, status: '待发货' },
-    { title: '待收货', icon: <IconFont style={{ fontSize: 70 }} type="icon-daishouhuo" />, status: '待收货' },
-    { title: '退换', icon: <IconFont style={{ fontSize: 70 }} type="icon-tuihuanshenqing" />, status: '退款/售后' },
-    { title: '已取消', icon: <IconFont style={{ fontSize: 70 }} type="icon-yiquxiao" />, status: '已取消' },
+    { title: '全部订单', icon: <IconFont style={{ fontSize: 50 }} type="icon-dingdan" />, status: 'all' },
+    { title: '待付款', icon: <IconFont style={{ fontSize: 50 }} type="icon-daifukuan" />, status: '待付款' },
+    { title: '待发货', icon: <IconFont style={{ fontSize: 50 }} type="icon-a-daifahuo2x" />, status: '待发货' },
+    { title: '待收货', icon: <IconFont style={{ fontSize: 50 }} type="icon-daishouhuo" />, status: '待收货' },
+    { title: '退换', icon: <IconFont style={{ fontSize: 50 }} type="icon-tuihuanshenqing" />, status: '退款/售后' },
+    { title: '已取消', icon: <IconFont style={{ fontSize: 50 }} type="icon-yiquxiao" />, status: '已取消' },
   ];
 
   const otherItems = [
-    { title: '地址管理', icon: <IconFont style={{ fontSize: 70 }} type="icon-dizhi" />, page: '/address' },
-    { title: '我的足迹', icon: <IconFont style={{ fontSize: 70 }} type="icon-wodezuji" />, page: '/footprint' },
-    { title: '我的关注', icon: <IconFont style={{ fontSize: 70 }} type="icon-wodewendawodeguanzhu" />, page: '/favorites' },
-    { title: '我的收藏', icon: <IconFont style={{ fontSize: 70 }} type="icon-shoucang" />, page: '/favorite' },
-    { title: '我的评价', icon: <IconFont style={{ fontSize: 70 }} type="icon-wodepingjia" />, page: '/reviews' },
+    { title: '地址管理', icon: <IconFont style={{ fontSize: 50 }} type="icon-dizhi" />, page: '/address' },
+    { title: '我的足迹', icon: <IconFont style={{ fontSize: 50 }} type="icon-wodezuji" />, page: '/footprint' },
+    { title: '我的关注', icon: <IconFont style={{ fontSize: 50 }} type="icon-wodewendawodeguanzhu" />, page: '/favorites' },
+    { title: '我的收藏', icon: <IconFont style={{ fontSize: 50 }} type="icon-shoucang" />, page: '/favorite' },
+    { title: '我的评价', icon: <IconFont style={{ fontSize: 50 }} type="icon-wodepingjia" />, page: '/reviews' },
   ];
 
   const unclaimedCoupons = availableCoupons.filter((coupon) => !coupon.isClaimed);
   const claimedCoupons = userCoupons.filter((coupon) => coupon.isClaimed);
 
   return (
-    <div style={{ backgroundColor: '#F4F5F9', padding: 20 }}>
+    <div style={{ backgroundColor: '#F4F5F9' , marginRight: ' 5% ', marginLeft: ' 5% ' }}>
       <Space direction="vertical" style={{ width: '100%' }}>
-        {/* <div className="user-info"> */}
-        {/*  <img src="user-avatar-url" alt="用户头像" /> */}
-        {/*  <div> */}
-        {/*    <div>会员</div> */}
-        {/*    <div> */}
-        {/*      积分: */}
-        {/*      {' '} */}
-        {/*      {userInfo.points} */}
-        {/*      {' '} */}
-        {/*      成长值: */}
-        {/*      {' '} */}
-        {/*      {userInfo.growth} */}
-        {/*    </div> */}
-        {/*  </div> */}
-        {/* </div> */}
         <Card bordered={false} style={{ marginTop: 16, borderRadius: 10 }}>
           <Meta
             avatar={
@@ -164,9 +137,9 @@ const MyPage = ({ history, userInfo }) => {
               xs: 1,
               sm: 2,
               md: 3,
-              lg: 3,
+              lg: 6,
               xl: 6,
-              xxl: 3,
+              xxl: 6,
             }}
             dataSource={menuItems}
             renderItem={(item) => (
@@ -197,9 +170,9 @@ const MyPage = ({ history, userInfo }) => {
               xs: 1,
               sm: 2,
               md: 3,
-              lg: 3,
-              xl: 5,
-              xxl: 3,
+              lg: 6,
+              xl: 6,
+              xxl: 6,
             }}
             dataSource={otherItems}
             renderItem={(item) => (
@@ -207,7 +180,7 @@ const MyPage = ({ history, userInfo }) => {
                 <Card
                   onClick={() => handlePageNavigation(item.page)}
                   bordered={false}
-                  style={{ textAlign: 'center' }}
+                  style={{ textAlign: 'center', margin: '0px', padding: '0px'}}
                 >
                   {item.icon}
                   <p style={{ marginTop: 20 }}>{item.title}</p>
@@ -216,52 +189,73 @@ const MyPage = ({ history, userInfo }) => {
             )}
           />
         </Card>
-          <Card bordered={false} style={{ borderRadius: 20 }}>
-              <h1 style={{fontSize: 20, fontWeight: 700}}>待领取优惠券</h1>
-              <List
-                  itemLayout="vertical"
-                  dataSource={unclaimedCoupons}
-                  renderItem={(coupon) => (
-                      <List.Item key={coupon._id}>
-                          <Card style={{ borderRadius: 10, position: 'relative' }}>
-                              <div style={{ position: 'absolute', top: 50, right: 30 }}>
-                                  <Button
-                                      onClick={() => handleClaimCoupon(coupon._id)}
-                                      icon="plus"
-                                      type="danger"
-                                  />
-                              </div>
-                              <div style={{ flex: 1 }}>
-                                  <Descriptions title={`优惠券代码: ${coupon.code}`}>
-                                      <Descriptions.Item label="优惠金额">¥{coupon.discount}</Descriptions.Item>
-                                      <Descriptions.Item label="最低消费">¥{coupon.minSpend}</Descriptions.Item>
-                                      <Descriptions.Item label="有效期">{new Date(coupon.expiryDate).toLocaleDateString()}</Descriptions.Item>
-                                  </Descriptions>
-                              </div>
-                          </Card>
-                      </List.Item>
-                  )}
-              />
-          </Card>
-          <Card bordered={false} style={{ borderRadius: 20 }}>
-              <h1 style={{fontSize: 20, fontWeight: 700}}>我的优惠券</h1>
-              <List
-                  itemLayout="vertical"
-                  dataSource={claimedCoupons}
-                  renderItem={(coupon) => (
-                      <List.Item key={coupon._id}>
-                          <Card style={{ borderRadius: 10 }}>
-                              <Descriptions title={`优惠券代码： ${coupon.code}`} column={{xxl: 4, xl: 4, lg: 2, md: 2, sm: 2, xs: 1}}>
-                                  <Descriptions.Item>优惠金额： ¥{coupon.discount}</Descriptions.Item>
-                                  <Descriptions.Item>最低消费： ¥{coupon.minSpend}</Descriptions.Item>
-                                  <Descriptions.Item>有效期：{new Date(coupon.expiryDate).toLocaleDateString()}</Descriptions.Item>
-                                  <Descriptions.Item>状态：{coupon.isClaimed ? '已领取' : '未领取'}</Descriptions.Item>
-                              </Descriptions>
-                          </Card>
-                      </List.Item>
-                  )}
-              />
-          </Card>
+        <Card bordered={false} style={{ borderRadius: 20 }}>
+          <h1 style={{ fontSize: 20, fontWeight: 700 }}>待领取优惠券</h1>
+          <List
+            itemLayout="vertical"
+            dataSource={unclaimedCoupons}
+            renderItem={(coupon) => (
+              <List.Item key={coupon._id}>
+                <Card style={{ borderRadius: 10, position: 'relative' }}>
+                  <div style={{ position: 'absolute', top: 50, right: 30 }}>
+                    <Button
+                      onClick={() => handleClaimCoupon(coupon._id)}
+                      icon="plus"
+                      type="danger"
+                    />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <Descriptions title={`优惠券代码: ${coupon.code}`}>
+                      <Descriptions.Item label="优惠金额">
+                        ¥{coupon.discount}
+                      </Descriptions.Item>
+                      <Descriptions.Item label="最低消费">
+                        ¥{coupon.minSpend}
+                      </Descriptions.Item>
+                      <Descriptions.Item label="有效期">{new Date(coupon.expiryDate).toLocaleDateString()}</Descriptions.Item>
+                    </Descriptions>
+                  </div>
+                </Card>
+              </List.Item>
+            )}
+          />
+        </Card>
+        <Card bordered={false} style={{ borderRadius: 20 }}>
+          <h1 style={{ fontSize: 20, fontWeight: 700 }}>我的优惠券</h1>
+          <List
+            itemLayout="vertical"
+            dataSource={claimedCoupons}
+            renderItem={(coupon) => (
+              <List.Item key={coupon._id}>
+                <Card style={{ borderRadius: 10 }}>
+                  <Descriptions
+                    title={`优惠券代码： ${coupon.code}`}
+                    column={{
+  xxl: 4, xl: 4, lg: 2, md: 2, sm: 2, xs: 1,
+}}
+                  >
+                    <Descriptions.Item>
+                      优惠金额： ¥
+{coupon.discount}
+                    </Descriptions.Item>
+                    <Descriptions.Item>
+                      最低消费： ¥
+{coupon.minSpend}
+                    </Descriptions.Item>
+                    <Descriptions.Item>
+                      有效期：
+{new Date(coupon.expiryDate).toLocaleDateString()}
+                    </Descriptions.Item>
+                    <Descriptions.Item>
+                      状态：
+{coupon.isClaimed ? '已领取' : '未领取'}
+                    </Descriptions.Item>
+                  </Descriptions>
+                </Card>
+              </List.Item>
+            )}
+          />
+        </Card>
       </Space>
     </div>
   );

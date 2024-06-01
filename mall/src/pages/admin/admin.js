@@ -35,9 +35,9 @@ class Admin extends Component {
             return <Redirect to="/login" />;
         }
         return (
-            <Layout style={{ minHeight: "100%" }}>
+            <Layout style={{ minHeight: "100%", backgroundColor: '#F4F5F9', margin: 0}}>
                 <HeaderSelf />
-                <Content style={{ margin: "100px 14px 14px", background: "#fff", paddingBottom: "70px" }}>
+                <Content style={{background: '#F4F5F9', paddingBottom: 20 ,marginTop: 80}}>
                     <Suspense fallback={<Loading />}>
                         <Switch>
                             <Route path="/mainpage/home" component={HomePage} />
@@ -56,7 +56,7 @@ class Admin extends Component {
                         </Switch>
                     </Suspense>
                 </Content>
-                <Footer style={{ textAlign: "center", background: "#fff" }}>
+                <Footer style={{ textAlign: "center", background: '#F4F5F9' }}>
                     <FooterComponent />
                 </Footer>
                 <BottomNav />

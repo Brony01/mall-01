@@ -103,7 +103,7 @@ const CartPage = ({ history, userInfo }) => {
   }, 0);
 
   return (
-      <Card title="购物车">
+      <Card title="购物车" style={{ marginRight: ' 5% ', marginLeft: ' 5% ' }}>
         <Checkbox onChange={handleSelectAll}>全选</Checkbox>
         <List
             dataSource={cartItems}

@@ -46,7 +46,7 @@ const FootprintPage = ({ history, userInfo }) => {
   };
 
   return (
-      <Card title="我的足迹">
+      <Card title="我的足迹" style={{ marginRight: ' 5% ', marginLeft: ' 5% ' }}>
         <List
             dataSource={footprints}
             renderItem={(item) => (

@@ -46,7 +46,7 @@ const FavoritePage = ({ history, userInfo }) => {
   };
 
   return (
-      <Card title="我的收藏">
+      <Card title="我的收藏" style={{ marginRight: ' 5% ', marginLeft: ' 5% ' }}>
         <List
             dataSource={favorites}
             renderItem={(item) => (

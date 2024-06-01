@@ -86,7 +86,7 @@ class CheckoutPage extends React.Component {
         const finalAmount = totalAmount - discount;
 
         return (
-            <Card title="支付页面">
+            <Card title="支付页面" style={{ marginRight: ' 5% ', marginLeft: ' 5% ' }}>
                 <p>订单号: {orderId}</p>
                 <p>商品列表:</p>
                 <ul>

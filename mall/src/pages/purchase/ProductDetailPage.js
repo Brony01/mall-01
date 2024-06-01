@@ -190,7 +190,7 @@ class ProductDetailPage extends React.Component {
         ];
 
         return (
-            <Card title={this.title}>
+            <Card title={this.title} style={{ marginRight: ' 5% ', marginLeft: ' 5% ' }}>
                 <img src={product.imgs[0]} alt={product.name} style={{ width: '100%', marginBottom: '1rem' }} />
                 <List bordered>
                     <List.Item>

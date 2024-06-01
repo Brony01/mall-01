@@ -5,14 +5,16 @@ import {
 } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { Space, Swiper } from 'antd-mobile';
-import { reqHotProducts, reqCouponStatus, reqSeckillProducts, reqInitCoupon } from 'api';
+import {
+  reqHotProducts, reqCouponStatus, reqSeckillProducts, reqInitCoupon,
+} from 'api';
 import Meta from 'antd/es/card/Meta';
-import {connect} from "react-redux";
+import { connect } from 'react-redux';
 
 const { Search } = Input;
 const { TabPane } = Tabs;
 
-const HomePage = ({ history , userInfo}) => {
+const HomePage = ({ history, userInfo }) => {
   const [hotItems, setHotItems] = useState([]);
   const [couponStatus, setCouponStatus] = useState({ hasUnclaimed: false, hasUnused: false });
   const [seckillItems, setSeckillItems] = useState({ ongoing: [], upcoming: [] });
@@ -109,9 +111,8 @@ const HomePage = ({ history , userInfo}) => {
   };
 
   return (
-    <div style={{ backgroundColor: '#F4F5F9', padding: 20 }}>
+    <div style={{ marginRight: ' 5% ', marginLeft: ' 5% ' }}>
       <Space direction="vertical" style={{ width: '100%' }}>
-        <Search placeholder="请输入商品名称 如: 手机" onSearch={handleSearch} enterButton />
         <Swiper autoplay style={{ borderRadius: 20 }}>
           <Swiper.Item key={1}>
             <div>
@@ -154,7 +155,7 @@ const HomePage = ({ history , userInfo}) => {
               <Button type="link">查看详情</Button>
             </List.Item>
             <List.Item onClick={handleInitCoupons}>
-                <Button type="link">初始化优惠券</Button>
+              <Button type="link">初始化优惠券</Button>
             </List.Item>
           </List>
         </Card>

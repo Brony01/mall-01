@@ -1,63 +1,64 @@
-import React, { Component } from 'react';
-import { Icon, Menu } from 'antd';
+import React, { useState, useEffect } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { setHeadTitle } from './action';
 import './index.less';
 
-const { SubMenu } = Menu;
+const BottomNav = ({ history }) => {
+  const [current, setCurrent] = useState('/mainpage/home');
+  const [position, setPosition] = useState({ left: 0, width: 0 });
 
-class BottomNav extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      collapsed: false,
-    };
-  }
+  useEffect(() => {
+    const initCurrent = '/mainpage/home';
+    setCurrent(initCurrent);
+    updateSlidePosition(initCurrent);
+  }, []);
 
-  render() {
-    let getCurrentReqPath = this.props.location.pathname;
-    if (getCurrentReqPath.includes('/product')) {
-      getCurrentReqPath = '/product';
+  const menuItems = [
+    { key: '/mainpage/home', title: '首页' },
+    { key: '/mainpage/category', title: '分类' },
+    { key: '/mainpage/cart', title: '购物车' },
+    { key: '/mainpage/my', title: '我的' }
+  ];
+
+  const handleClick = (key) => {
+    setCurrent(key);
+    updateSlidePosition(key);
+    history.push(key);
+  };
+
+  const updateSlidePosition = (key) => {
+    const element = document.querySelector(`a[data-key="${key}"]`);
+    if (element) {
+      let correctionOffset = 0;
+      if (key === '/mainpage/my') {
+        correctionOffset = -3; // 针对最后一个导航项的偏移量调整
+      }
+      const left = element.offsetLeft + correctionOffset;
+      const width = element.offsetWidth;
+      console.log(`Key: ${key}, OffsetLeft: ${left}, OffsetWidth: ${width}`);
+      setPosition({ left, width });
     }
+  };
 
-    const menuItems = [
-      { key: '/mainpage/home', icon: 'home', title: '首页' },
-      { key: '/mainpage/category', icon: 'appstore', title: '分类' },
-      { key: '/mainpage/cart', icon: 'shopping-cart', title: '购物车' },
-      { key: '/mainpage/my', icon: 'user', title: '我的' },
-    ];
-
-    return (
+  return (
       <div className="bottom-nav">
-        <Menu mode="horizontal" theme="dark" selectedKeys={[getCurrentReqPath]}>
+        <ul id="nav">
+          <li className="slide1" style={{ left: position.left, width: position.width }}></li>
+          <li className="slide2" style={{ left: position.left, width: position.width }}></li>
           {menuItems.map((item) => (
-            <Menu.Item key={item.key}>
-              <Link to={item.key} onClick={() => this.props.setHeadTitle(item.title)}>
-                <Icon type={item.icon} />
-                <span>{item.title}</span>
-              </Link>
-            </Menu.Item>
+              <li key={item.key}>
+                <Link
+                    to={item.key}
+                    data-key={item.key}
+                    className={current === item.key ? 'active' : ''}
+                    onClick={() => handleClick(item.key)}
+                >
+                  {item.title}
+                </Link>
+              </li>
           ))}
-        </Menu>
+        </ul>
       </div>
-    );
-  }
-}
-
-BottomNav.propTypes = {
-  setHeadTitle: PropTypes.func.isRequired,
-  userInfo: PropTypes.object.isRequired,
+  );
 };
 
-const mapStateToProps = (state) => ({
-  userInfo: state.loginUserInfo,
-});
-const mapDispatchToProps = (dispatch) => ({
-  setHeadTitle: (title) => {
-    dispatch(setHeadTitle(title));
-  },
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(BottomNav));
+export default withRouter(BottomNav);
