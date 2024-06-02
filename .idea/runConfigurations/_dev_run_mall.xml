@@ -1,9 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="(dev)run all" type="js.build_tools.npm">
+  <configuration default="false" name="(dev)run mall" type="js.build_tools.npm">
     <package-json value="$PROJECT_DIR$/package.json" />
     <command value="run" />
     <scripts>
-      <script value="start:all" />
+      <script value="start:mall" />
     </scripts>
     <node-interpreter value="project" />
     <envs />
@@ -12,7 +12,7 @@
         <package-json value="$PROJECT_DIR$/package.json" />
         <command value="run" />
         <scripts>
-          <script value="postinstall:all" />
+          <script value="postinstall:mall" />
         </scripts>
         <node-interpreter value="project" />
         <envs />
