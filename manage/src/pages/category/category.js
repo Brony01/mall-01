@@ -183,9 +183,15 @@ export default class Category extends Component {
                     message.success('更新分类成功');
                     this.setState({ showModal: 0, confirmLoading: false });
                     this.form.resetFields();
+                    // 获取最新的分类列表
                     this.getCategoryList();
+                    // 获取最新的子分类列表
+                    if (this.state.parentId !== '0') {
+                        this.getSubCategoryList({ _id: this.state.parentId });
+                    }
                 } else {
                     message.error('更新分类失败');
+                    this.setState({ confirmLoading: false });
                 }
             }
         });

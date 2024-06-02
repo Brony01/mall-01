@@ -189,9 +189,17 @@ router.get('/manage/category/list', (req, res) => {
 // 更新分类
 router.post('/manage/category/update', (req, res) => {
     const { categoryId, categoryName, imageUrl } = req.body;
-    CategoryModel.findOneAndUpdate({ _id: categoryId }, { name: categoryName, imageUrl })
-        .then(oldCategory => {
-            res.send({ status: 0 });
+    CategoryModel.findOneAndUpdate({ _id: categoryId }, { name: categoryName, imageUrl }, { new: true })
+        .then(updatedCategory => {
+            // 级联更新子分类
+            CategoryModel.updateMany({ parentId: categoryId }, { parentId: updatedCategory._id })
+                .then(() => {
+                    res.send({ status: 0 });
+                })
+                .catch(error => {
+                    console.error('更新子分类异常', error);
+                    res.send({ status: 1, msg: '更新子分类异常, 请重新尝试' });
+                });
         })
         .catch(error => {
             console.error('更新分类名称异常', error);
