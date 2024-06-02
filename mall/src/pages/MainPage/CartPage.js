@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Button, Card, Checkbox, InputNumber, List, message,
+  Button, Card, Checkbox, Divider, InputNumber, List, message,
 } from 'antd';
 import { connect } from 'react-redux';
 import {
   reqDeleteCartItem, reqGetCart, reqUpdateCart, reqCreateOrder, reqClearCart,
 } from '../../api';
 import {withRouter} from "react-router-dom";
+import {Space} from "antd-mobile";
+import {SafetyCertificateFilled} from "@ant-design/icons";
 
 const CartPage = ({ history, userInfo }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -101,37 +103,64 @@ const CartPage = ({ history, userInfo }) => {
     }
     return total;
   }, 0);
-
-  return (
-      <Card title="购物车" style={{ marginRight: ' 5% ', marginLeft: ' 5% ' }}>
+  const title = (
+      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+        <div>购物车</div>
         <Checkbox onChange={handleSelectAll}>全选</Checkbox>
+      </div>)
+  return (
+      <Card title={title}>
         <List
             dataSource={cartItems}
             renderItem={(item, index) => (
-                <List.Item
-                    actions={[
-                      <InputNumber min={1} max={10} value={item.quantity} onChange={handleQuantityChange(index)} />,
-                      <Button type="link" onClick={handleDeleteItem(index)}>删除</Button>,
-                    ]}
-                >
-                  <Checkbox
-                      checked={selectedItems[index]}
-                      onChange={handleSelectItem(index)}
-                  >
-                    {item.title}
-                  </Checkbox>
-                  <div>
-                    <img src={item.imgs[0]} alt={item.name} style={{ width: '50px', marginRight: '10px' }} />
-                    名称: {item.name} | 单价: {item.price} | 数量: {item.quantity} | 描述: {item.desc}
+                <List.Item>
+                  <div style={{width:'100%'}}>
+                    <Space style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                      <Space style={{display: 'flex', alignItems: 'center' }}>
+                        <Checkbox
+                            checked={selectedItems[index]}
+                            onChange={handleSelectItem(index)}
+                            style={{display: 'flex', alignItems: 'center'}}
+                        >
+                          {item.title}
+                        </Checkbox>
+                        <img src={item.imgs[0]} alt={item.name} style={{width: '50px', marginRight: '10px'}}/>
+                        <div>
+                          <span style={{fontWeight: 700}}>名称: {item.name}</span>
+                          <br/>
+                          单价: {item.price}
+                          <br/>
+                          数量: {item.quantity}
+                        </div>
+                      </Space>
+
+                      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                        <Space direction="vertical" align="center">
+                          <InputNumber
+                              size="small"
+                              style={{width: 50}}
+                              min={1}
+                              max={10}
+                              value={item.quantity}
+                              onChange={handleQuantityChange(index)}
+                          />
+                          <Button size='small' type="danger" onClick={handleDeleteItem(index)}>删除</Button>
+                        </Space>
+                      </div>
+                    </Space>
+                    {/*<br/>*/}
+                    <Divider/>
                   </div>
+
                 </List.Item>
             )}
         />
-        <div className="cart-footer">
+        <div className="cart-footer" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
           <div>总价: {totalPrice} 元</div>
-          <Button type="primary" onClick={handleCheckout}>去结算</Button>
+          <Button type="default" onClick={handleCheckout}>去结算</Button>
         </div>
       </Card>
+
   );
 };
 

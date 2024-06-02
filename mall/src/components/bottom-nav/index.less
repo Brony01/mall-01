@@ -1,118 +1,69 @@
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+body {
+  padding-bottom: 60px; /* 根据导航栏的高度进行调整 */
 }
 
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-size: cover;
+.bottom-nav-container {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  //max-width: 500px; /* 设置一个最大宽度以控制居中效果 */
+  z-index: 1000;
+  background-color: transparent; /* 确保父容器不影响导航栏样式 */
+  margin-bottom: 10px;
 }
 
 .bottom-nav {
-  position: fixed;
-  bottom: 20px; /* 将导航栏上移 */
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  overflow: hidden;
+  transition: box-shadow 0.3s;
 }
 
-#nav {
+.bottom-nav:hover {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.ant-tab-bar {
   position: relative;
-  width: 80%; /* 设置导航栏宽度为80% */
-  border: none;
-  border-radius: 10em;
   display: flex;
-  list-style: none;
-  background: #f5f5f5;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
-  padding: 5px; /* 压缩高度 */
-  margin: 0 auto; /* 确保导航栏在其父容器内居中 */
-  justify-content: space-around; /* 使导航项在导航栏内均匀分布 */
+  justify-content: space-between;
 }
 
-#nav li {
-  flex: 1;
-  text-align: center;
-}
-
-#nav li a {
-  position: relative;
-  padding: 10px 15px; /* 压缩高度和宽度 */
-  font: 500 12px '优设标题黑'; /* 缩小字体 */
-  border: none;
-  outline: none;
-  color: rgb(70, 100, 180);
-  display: inline-block;
-  text-decoration: none;
-  z-index: 3;
-  text-align: center; /* 确保文字居中 */
-}
-
-.slide1,
-.slide2 {
+.slide1, .slide2 {
   position: absolute;
-  display: inline-block;
-  height: 30px; /* 压缩高度 */
-  border-radius: 10em;
-  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1.05);
-  left: 0; /* 确保初始值 */
-  width: 0; /* 确保初始值 */
+  height: 4px;
+  background-color: #1890ff;
+  transition: left 0.3s, width 0.3s;
+  border-radius: 2px;
 }
 
 .slide1 {
-  background-color: rgb(170, 190, 255);
-  z-index: 2;
+  top: 0;
 }
 
 .slide2 {
-  opacity: 0;
-  background-color: rgba(170, 190, 255, 0.5);
-  z-index: 1;
-  box-shadow: 0 0 20px #ffffffaa inset;
+  bottom: 0;
 }
 
-.squeeze {
-  transform: scale(0.9);
+.ant-tab-bar-item {
+  flex: 1;
+  text-align: center;
+  padding: 10px 0;
+  transition: background-color 0.3s;
+  border-radius: 10px 10px 0 0;
 }
 
-/* Media Queries */
-@media (min-width: 480px) {
-  #nav li a {
-    padding: 12px 20px; /* 调整填充 */
-    font-size: 14px; /* 调整字体大小 */
-  }
-
-  .slide1,
-  .slide2 {
-    height: 35px; /* 调整高度 */
-  }
+.ant-tab-bar-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
-@media (min-width: 768px) {
-  #nav li a {
-    padding: 14px 25px; /* 调整填充 */
-    font-size: 16px; /* 调整字体大小 */
-  }
-
-  .slide1,
-  .slide2 {
-    height: 40px; /* 调整高度 */
-  }
+.ant-tab-bar-item.active {
+  color: #1890ff;
 }
 
-@media (min-width: 1024px) {
-  #nav li a {
-    padding: 12px 30px; /* 调整填充 */
-    font-size: 18px; /* 调整字体大小 */
-  }
-
-  .slide1,
-  .slide2 {
-    height: 45px; /* 调整高度 */
-  }
+.ant-tab-bar-item .anticon {
+  font-size: 24px;
 }

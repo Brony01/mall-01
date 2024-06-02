@@ -162,7 +162,12 @@ const HomePage = ({ history, userInfo }) => {
         <Card bordered={false} style={{ borderRadius: 20, boxShadow: '2px 0 5px rgba(0,0,0,0.1)', }}>
           <h1 style={{ fontSize: 20, fontWeight: 700 }}>正在进行的秒杀</h1>
           <List
-            grid={{ gutter: 16, column: 4 }}
+              grid={{ gutter: 16, xs: 1,
+                sm: 2,
+                md: 4,
+                lg: 4,
+                xl: 4,
+                xxl: 3, }}
             dataSource={seckillItems.ongoing}
             renderItem={(item) => (
               <List.Item>
@@ -205,26 +210,33 @@ const HomePage = ({ history, userInfo }) => {
         </Card>
         <span style={{ fontSize: 20, fontWeight: 700 }}>精选好物</span>
         <List
-          grid={{ gutter: 16, column: 3 }}
+            grid={{ gutter: 16, xs: 1,
+              sm: 2,
+              md: 4,
+              lg: 4,
+              xl: 4,
+              xxl: 3, }}
           dataSource={hotItems}
           renderItem={(item) => (
             <List.Item>
               <Card
                 hoverable
                 style={{ borderRadius: 20 , boxShadow: '2px 0 5px rgba(0,0,0,0.1)',}}
-                cover={<img alt="product" src={item.imgs[0]} />}
+                cover={<div style={{ display: 'flex', justifyContent: 'center', padding: '20px',}}><img alt="product" src={item.imgs[0]} style={{borderRadius: 20}}/></div>
+                }
                 onClick={() => handleItemClick(item._id)}
               >
                 <Meta
                   title={(
                     <div style={{ textAlign: 'center' }}>
-                      {`${item.price}￥`}
+                      {`${item.name}`}
                     </div>
                                       )}
                   description={(
                     <div style={{ textAlign: 'center' }}>
                       <div>{`描述: ${item.desc}`}</div>
-                      <div>{`销量: ${item.orderCount}`}</div>
+                      <br/>
+                      <div style={{fontSize:20, fontWeight:700, color:'#f00'}}>{`${item.price}￥`}</div>
                     </div>
                                       )}
                 />

@@ -1,27 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Card, Input, Select, Table, Typography, Button, message,
+    Card, Typography, Button, message, List,
 } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { reqProductList } from 'api';
+import { reqProductList, reqHotProducts, reqSeckillProducts } from 'api';
 import { formatNumber } from '../../utils/common';
+import {Space} from "antd-mobile";
 
-const { Option } = Select;
 const { Text } = Typography;
 const PAGE_SIZE = 5;
 
 const ProductListPage = ({ history, location }) => {
     const [pageNum, setPageNum] = useState(1);
-    const [selectValue, setSelectValue] = useState('1');
     const [productListSource, setProductListSource] = useState([]);
     const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(false);
-    const [searchText, setSearchText] = useState(location.state?.searchText || '');
     const [categoryId, setCategoryId] = useState(location.state?.categoryId || '');
+    const [hotItems, setHotItems] = useState([]);
+    const [seckillItems, setSeckillItems] = useState({ ongoing: [], upcoming: [] });
 
     useEffect(() => {
         getProductList(1);
+        fetchHotProducts();
+        fetchSeckillProducts();
     }, [categoryId]);
+
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            fetchSeckillProducts();
+        }, 1000);
+
+        return () => clearInterval(intervalId);
+    }, []);
 
     const getProductList = async (pageNum) => {
         setLoading(true);
@@ -42,18 +52,30 @@ const ProductListPage = ({ history, location }) => {
         setLoading(false);
     };
 
-    const handleSearch = (value) => {
-        setSearchText(value);
+    const fetchHotProducts = async () => {
+        try {
+            const res = await reqHotProducts();
+            if (res.status === 0) {
+                setHotItems(res.data);
+            } else {
+                message.error('获取热门商品失败');
+            }
+        } catch (error) {
+            message.error('获取热门商品失败');
+        }
     };
 
-    const filterData = () => {
-        if (!searchText) {
-            return productListSource;
+    const fetchSeckillProducts = async () => {
+        try {
+            const res = await reqSeckillProducts();
+            if (res.status === 0) {
+                setSeckillItems(res.data);
+            } else {
+                message.error('获取秒杀商品失败');
+            }
+        } catch (error) {
+            message.error('获取秒杀商品失败');
         }
-        if (selectValue === '1') {
-            return productListSource.filter((product) => product.name.toLowerCase().includes(searchText.toLowerCase()));
-        }
-        return productListSource.filter((product) => product.desc.toLowerCase().includes(searchText.toLowerCase()));
     };
 
     const handleDetail = (data) => {
@@ -63,86 +85,106 @@ const ProductListPage = ({ history, location }) => {
         });
     };
 
-    const filteredData = filterData();
-    const title = (
-        <div>
-            <Select defaultValue="1" style={{ width: '7rem' }} onChange={setSelectValue}>
-                <Option value="1">按名称搜索</Option>
-                <Option value="2">按描述搜索</Option>
-            </Select>
-            <Input.Search placeholder="搜索商品" onSearch={handleSearch} style={{ width: 200 }} />
-        </div>
-    );
-    const addComponment = (
-        <span>
-      <Button icon="plus" type="primary">添加商品</Button>
-    </span>
-    );
+    const handleItemClick = (productId) => {
+        history.push({
+            pathname: '/mainpage/product/detail',
+            state: { productId },
+        });
+    };
 
-    const columns = [
-        { title: '商品名称', dataIndex: 'name' },
-        { title: '价格', dataIndex: 'price', render: (record) => (`￥${record}`) },
-        { title: '商品描述', dataIndex: 'desc' },
-        { title: '访问量', dataIndex: 'visitCount' },
-        { title: '收藏量', dataIndex: 'favoriteCount' },
-        { title: '成交量', dataIndex: 'orderCount' },
-        {
-            title: '商品图片',
-            dataIndex: 'imgs',
-            render: (imgs) => (
-                <img src={imgs[0]} alt="商品图片" style={{ width: 50 }} />
-            )
-        },
-        {
-            title: '秒杀状态',
-            render: (record) => {
-                if (record.seckillPrice) {
-                    const now = new Date();
-                    const seckillStart = new Date(record.seckillStart);
-                    const seckillEnd = new Date(record.seckillEnd);
-                    if (now < seckillStart) {
-                        return <Text type="warning">秒杀未开始</Text>;
-                    }
-                    if (now >= seckillStart && now <= seckillEnd) {
-                        return (
-                            <span>
-                <Text type="danger">秒杀进行中</Text>
-                <br />
-                <Text>库存: {record.seckillStock}</Text>
-                <br />
-                <Text>结束时间: {seckillEnd.toLocaleString()}</Text>
-              </span>
-                        );
-                    }
-                    if (now > seckillEnd) {
-                        return <Text type="secondary">秒杀已结束</Text>;
-                    }
-                }
-                return null;
-            },
-        },
-        {
-            title: '操作',
-            render: (record) => (
-                <span>
-          <Button type="link" onClick={() => handleDetail(record)}>详情</Button>
-        </span>
-            ),
-        },
-    ];
+    const formatTimeLeft = (endTime) => {
+        const totalSeconds = Math.floor((new Date(endTime) - new Date()) / 1000);
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+        return `${hours}小时 ${minutes}分钟 ${seconds}秒`;
+    };
 
     return (
-        <Card title={title} extra={addComponment} style={{ marginRight: ' 5% ', marginLeft: ' 5% ', marginTop:'60px'}}>
-            <Table
-                dataSource={filteredData}
-                columns={columns}
-                bordered
-                loading={loading}
-                rowKey="_id"
-                size="small"
-                pagination={{ defaultCurrent: 1, pageSize: 5, total: filteredData.length }}
-            />
-        </Card>
+        <div style={{ padding: '0 5%' }}>
+            <Space direction='vertical' style={{width: '100%'}}>
+                <Card bordered={false} style={{borderRadius: 20, boxShadow: '2px 0 5px rgba(0,0,0,0.1)',}}>
+                    <h1 style={{fontSize: 20, fontWeight: 700}}>正在进行的秒杀</h1>
+                    <List
+                        grid={{gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 3}}
+                        dataSource={seckillItems.ongoing}
+                        renderItem={(item) => (
+                            <List.Item>
+                                <Card
+                                    cover={<img alt="product" src={item.imgs[0]}/>}
+                                    title={item.name}
+                                    onClick={() => handleItemClick(item._id)}
+                                >
+                                    {`价格: ${item.price}￥`}
+                                    <br/>
+                                    {`秒杀结束时间: ${new Date(item.seckillEnd).toLocaleString()}`}
+                                    <br/>
+                                    {`剩余时间: ${formatTimeLeft(item.seckillEnd)}`}
+                                </Card>
+                            </List.Item>
+                        )}
+                    />
+                </Card>
+                <Card bordered={false} style={{borderRadius: 20, boxShadow: '2px 0 5px rgba(0,0,0,0.1)',}}>
+                    <h1 style={{fontSize: 20, fontWeight: 700}}>即将开始的秒杀</h1>
+                    <List
+                        grid={{gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 3}}
+                        dataSource={seckillItems.upcoming}
+                        renderItem={(item) => (
+                            <List.Item>
+                                <Card
+                                    cover={<img alt="product" src={item.imgs[0]}/>}
+                                    title={item.name}
+                                    onClick={() => handleItemClick(item._id)}
+                                >
+                                    {`价格: ${item.price}￥`}
+                                    <br/>
+                                    {`秒杀开始时间: ${new Date(item.seckillStart).toLocaleString()}`}
+                                    <br/>
+                                    {`倒计时: ${formatTimeLeft(item.seckillStart)}`}
+                                </Card>
+                            </List.Item>
+                        )}
+                    />
+                </Card>
+                <br/>
+                <h1 style={{fontSize: 24, fontWeight: 700}}>精选好物</h1>
+                <List
+                    grid={{gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 4}}
+                    dataSource={hotItems}
+                    renderItem={(item) => (
+                        <List.Item>
+                            <Card
+                                hoverable
+                                style={{borderRadius: 20, boxShadow: '2px 0 5px rgba(0,0,0,0.1)',}}
+                                cover={<div style={{display: 'flex', justifyContent: 'center', padding: '20px',}}>
+                                    <img alt="product" src={item.imgs[0]} style={{borderRadius: 20}}/></div>}
+                                onClick={() => handleItemClick(item._id)}
+                            >
+                                <Card.Meta
+                                    title={(
+                                        <div style={{textAlign: 'center'}}>
+                                            {`${item.name}`}
+                                        </div>
+                                    )}
+                                    description={(
+                                        <div style={{textAlign: 'center'}}>
+                                            <div>{`描述: ${item.desc}`}</div>
+                                            <br/>
+                                            <div style={{
+                                                fontSize: 20,
+                                                fontWeight: 700,
+                                                color: '#f00'
+                                            }}>{`${item.price}￥`}</div>
+                                        </div>
+                                    )}
+                                />
+                            </Card>
+                        </List.Item>
+                    )}
+                />
+            </Space>
+        </div>
     );
 };
 

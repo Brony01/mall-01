@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { Button, Card, Icon, List, message, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { reqAddToCart, reqAddToFavorites, reqAddToFootprints, reqCreateOrder, reqGetProductDetails, reqSeckill } from '../../api';
+import {Space} from "antd-mobile";
+import {StarOutline} from "antd-mobile-icons";
 
 const { Text } = Typography;
 const listStyle = { fontSize: 15, marginRight: '1rem' };
@@ -17,7 +19,10 @@ class ProductDetailPage extends React.Component {
             seckillStatus: '',
         };
         this.title = (
-            <Icon type="arrow-left" onClick={this.goBack} style={{ fontSize: 20 }} />
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '0 10'}}>
+                <Icon type="arrow-left" onClick={this.goBack} style={{fontSize: 20}}/>
+                <StarOutline onClick={this.handleAddToFavorites} style={{fontSize: 20}}/>
+            </div>
         );
     }
 
@@ -229,15 +234,16 @@ class ProductDetailPage extends React.Component {
                     )}
                 </List>
 
-                <div className="bottom-buttons">
-                    <Button onClick={this.handleHome}>首页</Button>
-                    <Button onClick={this.handleCart}>购物车</Button>
-                    <Button onClick={this.handleAddToFavorites}>收藏</Button>
-                    <Button type="primary" onClick={this.handleBuyNow}>立即购买</Button>
-                    <Button type="primary" onClick={this.handleAddToCart}>加入购物车</Button>
-                    {product.seckillPrice && (
-                        <Button type="danger" onClick={this.handleSeckill} disabled={!isSeckillActive}>秒杀抢购</Button>
-                    )}
+                <div style={{ display: 'flex', justifyContent: 'center', padding: 10, margin: 10}}>
+                    <Space>
+                        <Button type="default" onClick={this.handleBuyNow}>立即购买</Button>
+                        <Button type="default" onClick={this.handleAddToCart}>加入购物车</Button>
+                        {product.seckillPrice && (
+                            <Button type="danger" onClick={this.handleSeckill} disabled={!isSeckillActive}>秒杀抢购</Button>
+                        )}
+                    </Space>
+                    {/*<Button onClick={this.handleAddToFavorites}>收藏</Button>*/}
+
                 </div>
             </Card>
         );

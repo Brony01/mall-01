@@ -1,0 +1,24 @@
+/* CategoryPage.css */
+.custom-sidebar {
+    background-color: white;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    width: 20%;
+    border-radius: 4px;
+    position: sticky;
+    top: 0;
+}
+
+.custom-sidebar-item {
+    padding: 10px 20px;
+    font-size: 16px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.custom-sidebar-item-active {
+    background-color: #1890ff; /* 蓝色填充 */
+    color: white; /* 选中时的文字颜色 */
+}
+
+.custom-sidebar-item:hover {
+    background-color: #e6f7ff;
+}

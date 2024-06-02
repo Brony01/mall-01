@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
+import { TabBar } from 'antd-mobile';
+import {
+  AppOutline,
+  UnorderedListOutline,
+  ShopbagOutline,
+  UserOutline
+} from 'antd-mobile-icons';
 import './index.less';
 
-const BottomNav = ({ history }) => {
+const BottomNav = () => {
+  const history = useHistory();
+  const location = useLocation();
   const [current, setCurrent] = useState('/mainpage/home');
   const [position, setPosition] = useState({ left: 0, width: 0 });
 
@@ -12,11 +21,15 @@ const BottomNav = ({ history }) => {
     updateSlidePosition(initCurrent);
   }, []);
 
+  useEffect(() => {
+    updateSlidePosition(location.pathname);
+  }, [location.pathname]);
+
   const menuItems = [
-    { key: '/mainpage/home', title: '首页' },
-    { key: '/mainpage/category', title: '分类' },
-    { key: '/mainpage/cart', title: '购物车' },
-    { key: '/mainpage/my', title: '我的' }
+    { key: '/mainpage/home', title: '首页', icon: <AppOutline /> },
+    { key: '/mainpage/category', title: '分类', icon: <UnorderedListOutline /> },
+    { key: '/mainpage/cart', title: '购物车', icon: <ShopbagOutline /> },
+    { key: '/mainpage/my', title: '我的', icon: <UserOutline /> }
   ];
 
   const handleClick = (key) => {
@@ -40,25 +53,22 @@ const BottomNav = ({ history }) => {
   };
 
   return (
-      <div className="bottom-nav">
-        <ul id="nav">
-          <li className="slide1" style={{ left: position.left, width: position.width }}></li>
-          <li className="slide2" style={{ left: position.left, width: position.width }}></li>
-          {menuItems.map((item) => (
-              <li key={item.key}>
-                <Link
-                    to={item.key}
-                    data-key={item.key}
-                    className={current === item.key ? 'active' : ''}
-                    onClick={() => handleClick(item.key)}
-                >
-                  {item.title}
-                </Link>
-              </li>
+      <div className="bottom-nav-container">
+        <TabBar activeKey={current} onChange={handleClick} className="bottom-nav">
+          {menuItems.map(item => (
+              <TabBar.Item
+                  key={item.key}
+                  title={item.title}
+                  icon={item.icon}
+                  data-key={item.key}
+                  className={current === item.key ? 'active' : ''}
+              />
           ))}
-        </ul>
+          <div className="slide1" style={{ left: position.left, width: position.width }}></div>
+          <div className="slide2" style={{ left: position.left, width: position.width }}></div>
+        </TabBar>
       </div>
   );
 };
 
-export default withRouter(BottomNav);
+export default BottomNav;

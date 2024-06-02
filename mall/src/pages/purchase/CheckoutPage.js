@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Button, message, List, Select, Typography } from 'antd';
+import {Card, Button, message, List, Select, Typography, Divider} from 'antd';
 import { withRouter } from 'react-router-dom';
 import {reqConfirmOrder, reqGetUserCoupons, reqUseCoupon} from '../../api';
 import { connect } from 'react-redux';
+import {Space} from "antd-mobile";
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -86,33 +87,51 @@ class CheckoutPage extends React.Component {
         const finalAmount = totalAmount - discount;
 
         return (
-            <Card title="支付页面" style={{ marginRight: ' 5% ', marginLeft: ' 5% ' }}>
+            <Card title="支付页面">
                 <p>订单号: {orderId}</p>
                 <p>商品列表:</p>
                 <ul>
                     {products.map((product, index) => (
                         <li key={index}>
-                            <img src={product.imgs[0]} alt={product.name} style={{width: '50px', marginRight: '10px'}}/>
-                            名称: {product.name} - 数量: {product.quantity}件 - 价格: ¥{product.price} - 描述: {product.desc}
+                            <Space>
+                                <img src={product.imgs[0]} alt={product.name}
+                                     style={{width: '80px', marginRight: '10px'}}/>
+                                <Space direction='vertical'>
+                                    <span style={{fontWeight: 700}}>{product.name}</span>
+                                    <span>描述: {product.desc}</span>
+                                    <Space>
+                                        <span>数量: {product.quantity}</span>
+                                        <span>价格: ¥{product.price}</span>
+                                    </Space>
+
+                                </Space>
+                            </Space>
+                            <Divider/>
+                            {/*名称: {product.name} - 数量: {product.quantity}件 - 价格: ¥{product.price} - 描述: {product.desc}*/}
                         </li>
                     ))}
                 </ul>
-                <p>总金额: ¥{originalAmount}</p>
                 <Select
                     placeholder="选择优惠券"
-                    style={{ width: '100%', marginBottom: '1rem' }}
+                    style={{width: '100%', marginBottom: '1rem'}}
                     onChange={this.handleCouponChange}
                 >
                     {coupons.map((coupon) => (
                         <Option key={coupon._id} value={coupon._id} disabled={originalAmount < coupon.minSpend}>
-                            {coupon.code} - 满{coupon.minSpend}减{coupon.discount} (有效期: {new Date(coupon.expiryDate).toLocaleDateString()})
+                            {coupon.code} -
+                            满{coupon.minSpend}减{coupon.discount} (有效期: {new Date(coupon.expiryDate).toLocaleDateString()})
                         </Option>
                     ))}
                 </Select>
-                <p>优惠金额: ¥{discount}</p>
-                <p>应付金额: ¥{finalAmount}</p>
-                <Button type="primary" onClick={this.handleConfirmPayment}>确认支付</Button>
-                <Button type="default" onClick={this.handleBack}>返回购物车</Button>
+                <Space direction='vertical'>
+                    <span>优惠金额: ¥{discount}</span>
+                    <span>应付金额: ¥{finalAmount}</span>
+                </Space>
+                <div style={{display: 'flex', justifyContent: 'space-between', margin: 20}}>
+                    <Button type="default" onClick={this.handleBack}>返回购物车</Button>
+                    <Button type="default" onClick={this.handleConfirmPayment}>确认支付</Button>
+                </div>
+
             </Card>
         );
     }

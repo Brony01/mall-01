@@ -5,6 +5,8 @@ import {
 import { withRouter } from 'react-router-dom';
 import { reqGetFavorites, reqDeleteFavoriteItem } from 'api';
 import { connect } from 'react-redux';
+import Meta from "antd/es/card/Meta";
+import {Space} from "antd-mobile";
 
 const FavoritePage = ({ history, userInfo }) => {
   const [favorites, setFavorites] = useState([]);
@@ -46,28 +48,40 @@ const FavoritePage = ({ history, userInfo }) => {
   };
 
   return (
-      <Card title="我的收藏" style={{ marginRight: ' 5% ', marginLeft: ' 5% ' }}>
-        <List
-            dataSource={favorites}
-            renderItem={(item) => (
-                <List.Item>
-                  <Card
-                      title={item.productDetails.name}
-                      actions={[
-                        <Button type="link" onClick={() => handleDetail(item.productDetails._id)}>详情</Button>,
-                        <Button type="link" onClick={() => handleDelete(item.productDetails._id)}>删除</Button>,
-                      ]}
-                  >
-                    {item.productDetails.desc}
-                    {' '}
-                    -
-                    {new Date(item.addTime).toLocaleString()}
-                    <br />
-                    <img src={item.productDetails.imgs[0]} alt={item.productDetails.name} style={{ width: '50px', marginTop: '10px' }} />
-                  </Card>
-                </List.Item>
-            )}
-        />
+      <Card title="我的收藏" style={{ marginRight: '5%', marginLeft: '5%', marginTop: '20px' }}>
+          <List
+              grid={{ gutter: 16, xs: 1,
+                  sm: 2,
+                  md: 4,
+                  lg: 4,
+                  xl: 4,
+                  xxl: 3, }}
+              dataSource={favorites}
+              renderItem={(item) => (
+                  <List.Item>
+                      <Card
+                          cover={
+                              <div style={{ display: 'flex', justifyContent: 'center', padding: '10px',}}>
+                                  <img src={item.productDetails.imgs[0]} alt={item.productDetails.name} style={{ borderRadius: 5, maxHeight: '200px', objectFit: 'cover' }} />
+                              </div>
+                          }
+                          style={{ borderRadius: 5, marginBottom: '10px'}}
+                      >
+                          <Meta title={<div style={{ textAlign: 'center' }}>{item.productDetails.name}</div>}
+                                description={<div style={{textAlign: 'center'}}>
+                                    <p>{item.productDetails.desc}</p>
+                                    <p>{new Date(item.lastVisited).toLocaleString()}</p>
+                                </div>}/>
+                          <div style={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
+                              <Space>
+                                  <Button type="default" onClick={() => handleDetail(item.productDetails._id)}>详情</Button>
+                                  <Button type="danger" onClick={() => handleDelete(item.productDetails._id)}>删除</Button>
+                              </Space>
+                          </div>
+                      </Card>
+                  </List.Item>
+              )}
+          />
       </Card>
   );
 };
