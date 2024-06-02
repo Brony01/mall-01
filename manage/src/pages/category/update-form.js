@@ -11,7 +11,6 @@ class UpdateForm extends Component {
     componentDidMount() {
         this.props.setForm(this.props.form);
     }
-
     render() {
         const { name, imageUrl } = this.props.currentRowData;
         const { getFieldDecorator } = this.props.form;
@@ -33,6 +32,5 @@ class UpdateForm extends Component {
         );
     }
 }
-
-const WrappedApp = Form.create()(UpdateForm);
-export default WrappedApp;
+const WrappedUpdateForm = Form.create()(UpdateForm);
+export default WrappedUpdateForm;
