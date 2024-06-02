@@ -189,7 +189,7 @@ router.get('/manage/category/list', (req, res) => {
 // 更新分类
 router.post('/manage/category/update', (req, res) => {
     const { categoryId, categoryName, imageUrl } = req.body;
-    CategoryModel.findOneAndUpdate({ _id: categoryId }, { name: categoryName, imageUrl })
+    CategoryModel.findOneAndUpdate({ _id: categoryId }, { name: categoryName, imageUrl }, { new: true })
         .then(oldCategory => {
             res.send({ status: 0 });
         })
@@ -198,6 +198,7 @@ router.post('/manage/category/update', (req, res) => {
             res.send({ status: 1, msg: '更新分类名称异常, 请重新尝试' });
         });
 });
+
 
 // 根据分类ID获取分类
 router.get('/manage/category/info', (req, res) => {
