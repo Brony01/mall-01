@@ -113,7 +113,7 @@ const HomePage = ({ history, userInfo }) => {
   return (
     <div style={{ marginRight: ' 5% ', marginLeft: ' 5% ' }}>
       <Space direction="vertical" style={{ width: '100%' }}>
-        <Swiper autoplay style={{ borderRadius: 20 }}>
+        <Swiper autoplay style={{ borderRadius: 20, boxShadow: '2px 0 5px rgba(0,0,0,0.2)',}}>
           <Swiper.Item key={1}>
             <div>
               <img
@@ -139,7 +139,7 @@ const HomePage = ({ history, userInfo }) => {
             </div>
           </Swiper.Item>
         </Swiper>
-        <Card bordered={false} title="优惠券" style={{ borderRadius: 20 }}>
+        <Card bordered={false} title="优惠券" style={{ borderRadius: 20, boxShadow: '2px 0 5px rgba(0,0,0,0.2)',}}>
           <List>
             {couponStatus.hasUnclaimed && (
             <List.Item onClick={handleCouponClick}>
@@ -159,10 +159,10 @@ const HomePage = ({ history, userInfo }) => {
             </List.Item>
           </List>
         </Card>
-        <Card bordered={false} style={{ borderRadius: 20 }}>
+        <Card bordered={false} style={{ borderRadius: 20, boxShadow: '2px 0 5px rgba(0,0,0,0.1)', }}>
           <h1 style={{ fontSize: 20, fontWeight: 700 }}>正在进行的秒杀</h1>
           <List
-            grid={{ gutter: 16, column: 2 }}
+            grid={{ gutter: 16, column: 4 }}
             dataSource={seckillItems.ongoing}
             renderItem={(item) => (
               <List.Item>
@@ -181,7 +181,7 @@ const HomePage = ({ history, userInfo }) => {
             )}
           />
         </Card>
-        <Card bordered={false} style={{ borderRadius: 20 }}>
+        <Card bordered={false} style={{ borderRadius: 20 , boxShadow: '2px 0 5px rgba(0,0,0,0.1)',}}>
           <h1 style={{ fontSize: 20, fontWeight: 700 }}>即将开始的秒杀</h1>
           <List
             grid={{ gutter: 16, column: 2 }}
@@ -211,7 +211,7 @@ const HomePage = ({ history, userInfo }) => {
             <List.Item>
               <Card
                 hoverable
-                style={{ borderRadius: 20 }}
+                style={{ borderRadius: 20 , boxShadow: '2px 0 5px rgba(0,0,0,0.1)',}}
                 cover={<img alt="product" src={item.imgs[0]} />}
                 onClick={() => handleItemClick(item._id)}
               >
