@@ -1,0 +1,91 @@
+/*! minireset.css v0.0.5 | MIT License | github.com/jgthms/minireset.css */
+html,
+body,
+p,
+ol,
+ul,
+li,
+dl,
+dt,
+dd,
+blockquote,
+figure,
+fieldset,
+legend,
+textarea,
+pre,
+iframe,
+hr,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+    padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: 100%;
+    font-weight: bold; /* 加粗标题字体提高可读性 */
+}
+
+ul {
+    list-style: none;
+}
+
+button,
+input,
+select,
+textarea {
+    margin: 0;
+    font-family: 'Helvetica Neue', Arial, sans-serif; /* 设置统一的现代字体 */
+}
+
+html {
+    box-sizing: border-box;
+    font-size: 16px; /* 增加基本字体大小，适合现代设备 */
+    font-family: 'Helvetica Neue', Arial, sans-serif; /* 默认字体 */
+    background-color: #F4F5F9; /* 轻微灰色背景色 */
+    color: #333; /* 默认文本颜色 */
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+img,
+video {
+    height: auto;
+    max-width: 100%;
+}
+
+iframe {
+    border: 0;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+td,
+th {
+    padding: 0;
+    text-align: left;
+}
+
+#root {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background: #F4F5F9; /* 白色背景提高内容区域的对比度 */
+    box-shadow: 0 0 10px rgba(0,0,0,0.05); /* 添加轻微的阴影以增强层次感 */
+    /*padding: 20px; !* 内边距增强内容的呈现 *!*/
+}
