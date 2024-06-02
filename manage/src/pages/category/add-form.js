@@ -14,7 +14,6 @@ class AddForm extends Component {
     componentDidMount() {
         this.props.setForm(this.props.form);
     }
-
     render() {
         const { getFieldDecorator } = this.props.form;
         const { categoryList, currentRowData } = this.props;
