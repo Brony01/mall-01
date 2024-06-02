@@ -197,6 +197,7 @@ export default class Category extends Component {
         });
     };
 
+
     modalHandleCancel = () => {
         this.setState({ showModal: 0, currentRowData: {} });
         this.form.resetFields();
