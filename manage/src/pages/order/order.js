@@ -52,8 +52,10 @@ class OrdersPage extends Component {
   componentDidMount() {
     reqAllOrders().then((res) => {
       if(res.status === 0) {
+        // 对订单按照createTime字段进行降序排序
+        const sortedOrders = res.data.sort((a, b) => new Date(b.createTime) - new Date(a.createTime));
         this.setState({
-          orders: res.data,
+          orders: sortedOrders,
           loading: false,
         });
       } else {

@@ -32,6 +32,7 @@ class Admin extends Component {
     render() {
         const { userInfo } = this.props;
         if (!userInfo._id) {
+            console.log(userInfo._id)
             return <Redirect to="/login" />;
         }
         return (

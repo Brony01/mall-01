@@ -41,7 +41,7 @@ instance.interceptors.response.use(
             const { token } = res;
             instance.setToken(token);
             config.headers.Authorization = token;
-            config.baseURL = '';
+            // config.baseURL = '';
 
             requests.forEach((cb) => cb(token));
             requests = [];
@@ -57,7 +57,7 @@ instance.interceptors.response.use(
       }
       return new Promise((resolve) => {
         requests.push((token) => {
-          config.baseURL = '';
+          // config.baseURL = '';
           config.headers.Authorization = token;
           resolve(instance(config));
         });
@@ -90,7 +90,6 @@ export default function (url, type = 'GET', data = {}) {
         if (res.data && res.data.status === 0) {
           resolve(res.data);
         } else {
-          message.error(res.data.msg);
           resolve(res.data);
         }
       })

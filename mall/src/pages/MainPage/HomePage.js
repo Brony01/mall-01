@@ -37,7 +37,9 @@ const HomePage = ({ history, userInfo }) => {
       try {
         const res = await reqHotProducts();
         if (res.status === 0) {
-          setHotItems(res.data);
+          const list = res.data;
+          const filteredList = list.filter(item => item.status === 1); // 过滤掉下架商品
+          setHotItems(filteredList);
         } else {
           message.error('获取热门商品失败');
         }
@@ -69,7 +71,7 @@ const HomePage = ({ history, userInfo }) => {
           message.error('获取秒杀商品失败');
         }
       } catch (error) {
-        message.error('获取秒杀商品失败');
+        //message.error('获取秒杀商品失败');
       }
     };
 
@@ -168,7 +170,7 @@ const HomePage = ({ history, userInfo }) => {
                   lg: 4,
                   xl: 4,
                   xxl: 3, }}
-                dataSource={seckillItems.ongoing}
+                dataSource={seckillItems.ongoing.filter(item => item.status === 1)}
                 renderItem={(item) => (
                     <List.Item>
                       <Card
@@ -190,7 +192,7 @@ const HomePage = ({ history, userInfo }) => {
             <h1 style={{ fontSize: 20, fontWeight: 700 }}>即将开始的秒杀</h1>
             <List
                 grid={{ gutter: 16, column: 2 }}
-                dataSource={seckillItems.upcoming}
+                dataSource={seckillItems.upcoming.filter(item => item.status === 1)}
                 renderItem={(item) => (
                     <List.Item>
                       <Card
