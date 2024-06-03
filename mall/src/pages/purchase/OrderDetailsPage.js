@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Card, List, message, Typography, Modal, Radio } from 'antd';
 import { withRouter } from 'react-router-dom';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import { reqCancelOrder, reqConfirmReceipt, reqCreateOrder, reqGetOrderDetails, reqRequestAfterSales, reqUpdateOrder } from '../../api';
 import { connect } from "react-redux";
 
@@ -29,6 +30,10 @@ class OrderDetailsPage extends React.Component {
                 message.error('获取订单详情失败');
             }
         }
+    };
+
+    handleBack = () => {
+        this.props.history.goBack();
     };
 
     handlePayment = () => {
@@ -129,6 +134,7 @@ class OrderDetailsPage extends React.Component {
 
         return (
             <Card title={`订单号: ${orderId}`} style={{ marginRight: ' 5% ', marginLeft: ' 5% ' }}>
+                <ArrowLeftOutlined onClick={this.handleBack} style={{ fontSize: 25, marginBottom: 10 }} />
                 <List
                     itemLayout="vertical"
                     dataSource={products}
