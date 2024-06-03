@@ -14,8 +14,8 @@
 
     "build:mall": "cd mall && yarn build",
     "build:manage": "cd manage && yarn build",
-    "serve-mall": "serve -s ./server/build-mall",
-    "serve-manage": "serve -s ./server/build-manage",
+    "serve-mall": "serve -s ./server/build-mall -p 3000",
+    "serve-manage": "serve -s ./server/build-manage -p 5000",
 
     "startServe:mall&manage": "concurrently \"serve -s ./server/build-mall\" \"serve -s ./server/build-manage\""
   },
