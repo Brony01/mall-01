@@ -968,7 +968,7 @@ router.post('/seckill', async (req, res) => {
         });
         await order.save();
 
-        res.send({ status: 0, msg: '秒杀成功', orderId: order._id });
+        res.send({ status: 0, msg: '秒杀成功', data: order });
     } catch (error) {
         res.send({ status: 1, msg: '秒杀失败' });
     }

@@ -135,13 +135,12 @@ class ProductDetailPage extends React.Component {
         try {
             const res = await reqSeckill({ productId, userId: userInfo._id });
             if (res.status === 0) {
-                const { orderId } = res.data._id;
                 const products = [{ productId, name, imgs, desc, quantity: 1, price: seckillPrice}];
                 const totalAmount = seckillPrice;
                 const originalAmount = totalAmount;
                 this.props.history.push({
                     pathname: '/checkout',
-                    state: { products, totalAmount, orderId, originalAmount },
+                    state: { products, totalAmount, orderId: res.data._id, originalAmount },
                 });
                 message.success('秒杀成功');
             } else {
