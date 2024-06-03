@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "./login/static/css/main.edf93005.chunk.css",
-    "main.js": "./login/static/js/main.06113163.chunk.js",
+    "main.js": "./login/static/js/main.54cabfaf.chunk.js",
     "runtime-main.js": "./login/static/js/runtime-main.a8a559fd.js",
     "static/css/2.9cf01dcc.chunk.css": "./login/static/css/2.9cf01dcc.chunk.css",
     "static/js/2.3e50619f.chunk.js": "./login/static/js/2.3e50619f.chunk.js",
     "index.html": "./login/index.html",
-    "precache-manifest.2f73dc28e6e477e6d05088c4c5e54950.js": "./login/precache-manifest.2f73dc28e6e477e6d05088c4c5e54950.js",
+    "precache-manifest.0cf454abd66e9daffe7a041dd4ef2d53.js": "./login/precache-manifest.0cf454abd66e9daffe7a041dd4ef2d53.js",
     "service-worker.js": "./login/service-worker.js",
     "static/css/2.9cf01dcc.chunk.css.gz": "./login/static/css/2.9cf01dcc.chunk.css.gz",
     "static/js/2.3e50619f.chunk.js.gz": "./login/static/js/2.3e50619f.chunk.js.gz",
-    "static/js/main.06113163.chunk.js.gz": "./login/static/js/main.06113163.chunk.js.gz",
+    "static/js/main.54cabfaf.chunk.js.gz": "./login/static/js/main.54cabfaf.chunk.js.gz",
     "static/media/index.less": "./login/static/media/404.6dd346f0.png",
     "static/media/register.less": "./login/static/media/bg.ed80d514.png"
   },
@@ -19,6 +19,6 @@
     "static/css/2.9cf01dcc.chunk.css",
     "static/js/2.3e50619f.chunk.js",
     "static/css/main.edf93005.chunk.css",
-    "static/js/main.06113163.chunk.js"
+    "static/js/main.54cabfaf.chunk.js"
   ]
 }
