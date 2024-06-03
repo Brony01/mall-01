@@ -16,13 +16,9 @@ const BottomNav = () => {
   const [position, setPosition] = useState({ left: 0, width: 0 });
 
   useEffect(() => {
-    const initCurrent = '/mainpage/home';
+    const initCurrent = location.pathname;
     setCurrent(initCurrent);
     updateSlidePosition(initCurrent);
-  }, []);
-
-  useEffect(() => {
-    updateSlidePosition(location.pathname);
   }, [location.pathname]);
 
   const menuItems = [
@@ -47,7 +43,6 @@ const BottomNav = () => {
       }
       const left = element.offsetLeft + correctionOffset;
       const width = element.offsetWidth;
-      console.log(`Key: ${key}, OffsetLeft: ${left}, OffsetWidth: ${width}`);
       setPosition({ left, width });
     }
   };
