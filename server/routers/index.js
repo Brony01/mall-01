@@ -465,6 +465,9 @@ router.post('/favorite/add', async (req, res) => {
             if (productIndex === -1) {
                 favorite.products.push({ productId: mongoose.Types.ObjectId(productId) });
                 await ProductModel.findByIdAndUpdate(productId, { $inc: { favoriteCount: 1 } }); // 增加收藏量
+            } else {
+                // 更新lastVisited字段
+                favorite.products[productIndex].lastVisited = new Date();
             }
         } else {
             favorite = new FavoriteModel({ userId, products: [{ productId: mongoose.Types.ObjectId(productId) }] });
@@ -477,6 +480,7 @@ router.post('/favorite/add', async (req, res) => {
     }
 });
 
+// 获取收藏列表
 router.get('/favorite', async (req, res) => {
     const {userId} = req.query;
     try {
@@ -495,6 +499,7 @@ router.get('/favorite', async (req, res) => {
     }
 });
 
+// 删除收藏商品
 router.post('/favorite/delete', async (req, res) => {
     const {userId, productId} = req.body;
     try {

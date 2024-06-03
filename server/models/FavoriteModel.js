@@ -6,7 +6,7 @@ const favoriteSchema = new mongoose.Schema({
     products: [
         {
             productId: { type: mongoose.Types.ObjectId, ref: 'products' },
-            addTime: { type: Number, default: Date.now },
+            lastVisited: { type: Date, default: Date.now }, // 添加 lastVisited 字段
             imgs: { type: [String], default: [] },
         }
     ]
