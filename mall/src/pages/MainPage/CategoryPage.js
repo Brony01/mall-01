@@ -19,7 +19,15 @@ const CategoryPage = ({ history }) => {
                 const res = await reqCatagoryList({ parentId: '0' });
                 if (res.status === 0) {
                     setCategories(res.data);
-                    setSelectedCategory(res.data[0]);
+                    const firstCategory = res.data[0];
+                    if (firstCategory) {
+                        const subRes = await reqCatagoryList({ parentId: firstCategory._id });
+                        if (subRes.status === 0) {
+                            setSelectedCategory({ ...firstCategory, items: subRes.data });
+                        } else {
+                            message.error('获取子分类列表失败');
+                        }
+                    }
                 } else {
                     message.error('获取分类列表失败');
                 }
