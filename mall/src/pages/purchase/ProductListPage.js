@@ -21,10 +21,17 @@ const ProductListPage = ({ history, location }) => {
     const [seckillItems, setSeckillItems] = useState({ ongoing: [], upcoming: [] });
 
     useEffect(() => {
+        if (location.state?.categoryId) {
+            setCategoryId(location.state.categoryId);
+            setSearchText('');
+        } else if (location.state?.searchText) {
+            setSearchText(location.state.searchText);
+            setCategoryId('');
+        }
         getProductList(1);
         fetchHotProducts();
         fetchSeckillProducts();
-    }, [categoryId, searchText]);
+    }, [location.state]);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -93,6 +100,17 @@ const ProductListPage = ({ history, location }) => {
         });
     };
 
+    const handleBack = () => {
+        const from = location.state?.from;
+        if (from === 'category') {
+            history.push('/mainpage/category');
+        } else if (from === 'header') {
+            history.push('/mainpage/home');
+        } else {
+            history.goBack();
+        }
+    };
+
     const formatTimeLeft = (endTime) => {
         const totalSeconds = Math.floor((new Date(endTime) - new Date()) / 1000);
         const hours = Math.floor(totalSeconds / 3600);
@@ -103,6 +121,7 @@ const ProductListPage = ({ history, location }) => {
 
     return (
         <div style={{ padding: '0 5%' }}>
+            <Button onClick={handleBack} style={{ marginBottom: '10px' }}>返回</Button>
             <Space direction='vertical' style={{ width: '100%' }}>
                 <Card bordered={false} style={{ borderRadius: 20, boxShadow: '2px 0 5px rgba(0,0,0,0.1)', }}>
                     <h1 style={{ fontSize: 20, fontWeight: 700 }}>正在进行的秒杀</h1>

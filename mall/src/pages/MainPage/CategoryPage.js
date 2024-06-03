@@ -13,7 +13,6 @@ const CategoryPage = ({ history }) => {
     const contentRef = useRef(null);
 
     useEffect(() => {
-        // 获取一级分类列表
         const fetchCategories = async () => {
             try {
                 const res = await reqCatagoryList({ parentId: '0' });
@@ -111,7 +110,7 @@ const CategoryPage = ({ history }) => {
                             <h1 style={{ fontSize: 20, fontWeight: 700 }}>{selectedCategory.name}</h1>
                             <Divider />
                             <List
-                                grid={{ gutter: 16, xs: 2, sm: 2, md: 4, lg: 4, xl: 4, xxl: 3 }}
+                                grid={{ gutter: 16, xs: 2, sm: 2, md: 2, lg: 2, xl: 2, xxl: 2 }}
                                 dataSource={selectedCategory.items || []}
                                 renderItem={(item) => (
                                     <List.Item>

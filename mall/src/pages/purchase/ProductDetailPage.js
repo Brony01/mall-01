@@ -129,7 +129,7 @@ class ProductDetailPage extends React.Component {
     }
 
     handleSeckill = async () => {
-        const { _id: productId } = this.state.product;
+        const { _id: productId, name, desc, seckillPrice, imgs } = this.state.product;
         const { userInfo } = this.props;
 
         try {
@@ -137,8 +137,8 @@ class ProductDetailPage extends React.Component {
             if (res.status === 0) {
                 message.success('秒杀成功');
                 const { orderId } = res;
-                const products = [{ productId, name: this.state.product.name, desc: this.state.product.desc, quantity: 1, price: this.state.product.seckillPrice }];
-                const totalAmount = this.state.product.seckillPrice;
+                const products = [{ productId, name, desc, quantity: 1, price: seckillPrice, imgs }];
+                const totalAmount = seckillPrice;
                 const originalAmount = totalAmount;
                 this.props.history.push({
                     pathname: '/checkout',

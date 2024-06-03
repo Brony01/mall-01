@@ -34,7 +34,7 @@ class OrderPage extends React.Component {
         return (
             <div style={{ marginRight: ' 5% ', marginLeft: ' 5% ' }}>
                 <ArrowLeftOutlined onClick={this.handleBack} style={{ fontSize: 25 }} />
-                <Card title="所有订单">
+                <Card title="订单">
                     <List
                         itemLayout="vertical"
                         dataSource={orders}

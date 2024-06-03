@@ -3,12 +3,10 @@ import {
   Button, Card, Checkbox, Divider, InputNumber, List, message,
 } from 'antd';
 import { connect } from 'react-redux';
-import {
-  reqDeleteCartItem, reqGetCart, reqUpdateCart, reqCreateOrder, reqClearCart,
-} from '../../api';
-import {withRouter} from "react-router-dom";
-import {Space} from "antd-mobile";
-import {SafetyCertificateFilled} from "@ant-design/icons";
+import { reqDeleteCartItem, reqGetCart, reqUpdateCart, reqCreateOrder, reqClearCart } from '../../api';
+import { withRouter } from "react-router-dom";
+import { Space } from "antd-mobile";
+import { SafetyCertificateFilled } from "@ant-design/icons";
 
 const CartPage = ({ history, userInfo }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -112,7 +110,7 @@ const CartPage = ({ history, userInfo }) => {
   }, 0);
 
   const title = (
-      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>购物车</div>
         <Checkbox onChange={handleSelectAll}>全选</Checkbox>
       </div>
@@ -123,31 +121,31 @@ const CartPage = ({ history, userInfo }) => {
         <List
             dataSource={cartItems}
             renderItem={(item, index) => (
-                <List.Item onClick={() => handleItemClick(item.productId)}>
-                  <div style={{width:'100%'}}>
-                    <Space style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                      <Space style={{display: 'flex', alignItems: 'center' }}>
+                <List.Item>
+                  <div style={{ width: '100%' }}>
+                    <Space style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <Space style={{ display: 'flex', alignItems: 'center' }}>
                         <Checkbox
                             checked={selectedItems[index]}
                             onChange={handleSelectItem(index)}
-                            style={{display: 'flex', alignItems: 'center'}}
+                            style={{ display: 'flex', alignItems: 'center' }}
                         >
                           {item.title}
                         </Checkbox>
-                        <img src={item.imgs[0]} alt={item.name} style={{width: '50px', marginRight: '10px'}}/>
-                        <div>
-                          <span style={{fontWeight: 700}}>名称: {item.name}</span>
-                          <br/>
+                        <img src={item.imgs[0]} alt={item.name} style={{ width: '50px', marginRight: '10px' }} />
+                        <div onClick={() => handleItemClick(item.productId)}>
+                          <span style={{ fontWeight: 700 }}>名称: {item.name}</span>
+                          <br />
                           单价: {item.price}
-                          <br/>
+                          <br />
                           数量: {item.quantity}
                         </div>
                       </Space>
-                      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <Space direction="vertical" align="center">
                           <InputNumber
                               size="small"
-                              style={{width: 50}}
+                              style={{ width: 50 }}
                               min={1}
                               max={10}
                               value={item.quantity}
@@ -157,12 +155,12 @@ const CartPage = ({ history, userInfo }) => {
                         </Space>
                       </div>
                     </Space>
-                    <Divider/>
+                    <Divider />
                   </div>
                 </List.Item>
             )}
         />
-        <div className="cart-footer" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+        <div className="cart-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>总价: {totalPrice} 元</div>
           <Button type="default" onClick={handleCheckout}>去结算</Button>
         </div>
