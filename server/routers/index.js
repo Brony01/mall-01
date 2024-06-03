@@ -961,7 +961,7 @@ router.post('/seckill', async (req, res) => {
 
         const order = new OrderModel({
             userId,
-            products: [{ productId, name: product.name, desc: product.desc, quantity: 1, price: product.seckillPrice }],
+            products: [{ productId, name: product.name, desc: product.desc, quantity: 1, price: product.seckillPrice, imgs: product.imgs}],
             totalAmount: product.seckillPrice,
             originalAmount: product.price,
             status: '待付款'

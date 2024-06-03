@@ -129,7 +129,7 @@ const MyPage = ({ history, userInfo }) => {
   return (
     <div style={{ backgroundColor: '#F4F5F9', marginRight: ' 5% ', marginLeft: ' 5% ' }}>
       <Space direction="vertical" style={{ width: '100%' }}>
-        <Card bordered={false} style={{ marginTop: 16, borderRadius: 10 , boxShadow: '2px 0 5px rgba(0,0,0,0.1)' }}>
+        <Card bordered={false} style={{ marginTop: 16, borderRadius: 10, boxShadow: '2px 0 5px rgba(0,0,0,0.1)' }}>
           <Meta
             avatar={
               <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
@@ -142,7 +142,7 @@ const MyPage = ({ history, userInfo }) => {
         <Card
           bordered={false}
           style={{
-            borderRadius: 20 , boxShadow: '2px 0 5px rgba(0,0,0,0.1)'
+            borderRadius: 20, boxShadow: '2px 0 5px rgba(0,0,0,0.1)',
           }}
         >
           <h1 style={{ fontSize: 20, fontWeight: 700 }}>我的订单</h1>
@@ -163,7 +163,7 @@ const MyPage = ({ history, userInfo }) => {
                 <Card
                   bordered={false}
                   onClick={() => handleOrderClick(item.status)}
-                  style={{ textAlign: 'center'}}
+                  style={{ textAlign: 'center' }}
                 >
                   {item.icon}
                   <p style={{ marginTop: 20 }}>{item.title}</p>
@@ -176,7 +176,7 @@ const MyPage = ({ history, userInfo }) => {
         <Card
           bordered={false}
           style={{
-            borderRadius: 20 , boxShadow: '2px 0 5px rgba(0,0,0,0.1)'
+            borderRadius: 20, boxShadow: '2px 0 5px rgba(0,0,0,0.1)',
           }}
         >
           <h1 style={{ fontSize: 20, fontWeight: 700 }}>更多功能</h1>
@@ -205,7 +205,7 @@ const MyPage = ({ history, userInfo }) => {
             )}
           />
         </Card>
-        <Card bordered={false} style={{ borderRadius: 20 , boxShadow: '2px 0 5px rgba(0,0,0,0.1)' }}>
+        <Card bordered={false} style={{ borderRadius: 20, boxShadow: '2px 0 5px rgba(0,0,0,0.1)' }}>
           <h1 style={{ fontSize: 20, fontWeight: 700 }}>待领取优惠券</h1>
           <List
             itemLayout="vertical"
@@ -238,7 +238,7 @@ const MyPage = ({ history, userInfo }) => {
             )}
           />
         </Card>
-        <Card bordered={false} style={{ borderRadius: 20 , boxShadow: '2px 0 5px rgba(0,0,0,0.1)' }}>
+        <Card bordered={false} style={{ borderRadius: 20, boxShadow: '2px 0 5px rgba(0,0,0,0.1)' }}>
           <h1 style={{ fontSize: 20, fontWeight: 700 }}>我的优惠券</h1>
           <List
             itemLayout="vertical"
