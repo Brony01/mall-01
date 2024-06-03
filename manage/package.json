@@ -2,6 +2,7 @@
   "name": "client",
   "private": true,
   "version": "0.1.0",
+  "homepage": "./login",
   "devDependencies": {
     "compression-webpack-plugin": "^3.0.0",
     "concurrently": "^7.0.0",
