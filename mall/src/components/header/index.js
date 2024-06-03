@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
-import { Button, Modal, Input} from 'antd';
+import { Button, Modal, Input } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { LOG_OUT } from '../../pages/login/action-type';
 import store from '../../utils/storeUtils';
 import { getCurrentDate } from '../../utils/common';
-// import LinkA from '../../components/link-a';
 import './index.less';
-import {SearchBar, Space} from "antd-mobile";
-
-// const { Search } = Input;
+import { SearchBar, Space } from "antd-mobile";
 
 class HeaderSelf extends Component {
     state = {
@@ -53,7 +50,7 @@ class HeaderSelf extends Component {
     handleSearch = (value) => {
         this.props.history.push({
             pathname: '/mainpage/products',
-            state: { searchText: value },
+            state: { searchText: value, from: 'header' },
         });
     };
 
@@ -63,7 +60,7 @@ class HeaderSelf extends Component {
             <div className='header'>
                 <div className='header-top'>
                     <span>Hello，{userInfo.username}</span>
-                    <SearchBar style={{width:'60%'}} placeholder="请输入商品名称 如: 手机" onSearch={this.handleSearch} enterButton/>
+                    <SearchBar style={{ width: '60%' }} placeholder="请输入商品名称 如: 手机" onSearch={this.handleSearch} enterButton />
                     <Button type='link' onClick={this.exitConfirm}>退出</Button>
                 </div>
             </div>

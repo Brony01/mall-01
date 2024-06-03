@@ -5,7 +5,7 @@ import {
 import { withRouter } from 'react-router-dom';
 import { reqProductList, reqHotProducts, reqSeckillProducts } from 'api';
 import { formatNumber } from '../../utils/common';
-import {Space} from "antd-mobile";
+import { Space } from "antd-mobile";
 
 const { Text } = Typography;
 const PAGE_SIZE = 5;
@@ -16,6 +16,7 @@ const ProductListPage = ({ history, location }) => {
     const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(false);
     const [categoryId, setCategoryId] = useState(location.state?.categoryId || '');
+    const [searchText, setSearchText] = useState(location.state?.searchText || '');
     const [hotItems, setHotItems] = useState([]);
     const [seckillItems, setSeckillItems] = useState({ ongoing: [], upcoming: [] });
 
@@ -23,7 +24,7 @@ const ProductListPage = ({ history, location }) => {
         getProductList(1);
         fetchHotProducts();
         fetchSeckillProducts();
-    }, [categoryId]);
+    }, [categoryId, searchText]);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -36,7 +37,7 @@ const ProductListPage = ({ history, location }) => {
     const getProductList = async (pageNum) => {
         setLoading(true);
         try {
-            const res = await reqProductList({ pageNum, pageSize: PAGE_SIZE, categoryId });
+            const res = await reqProductList({ pageNum, pageSize: PAGE_SIZE, categoryId, searchText });
             if (res.status === 0) {
                 const { total, list } = res.data;
                 const filteredList = list.filter(item => item.status === 1); // 过滤掉下架商品
@@ -88,7 +89,7 @@ const ProductListPage = ({ history, location }) => {
     const handleItemClick = (productId) => {
         history.push({
             pathname: '/mainpage/product/detail',
-            state: { productId },
+            state: { productId, from: location.state?.from || 'productList' },
         });
     };
 
@@ -102,75 +103,75 @@ const ProductListPage = ({ history, location }) => {
 
     return (
         <div style={{ padding: '0 5%' }}>
-            <Space direction='vertical' style={{width: '100%'}}>
-                <Card bordered={false} style={{borderRadius: 20, boxShadow: '2px 0 5px rgba(0,0,0,0.1)',}}>
-                    <h1 style={{fontSize: 20, fontWeight: 700}}>正在进行的秒杀</h1>
+            <Space direction='vertical' style={{ width: '100%' }}>
+                <Card bordered={false} style={{ borderRadius: 20, boxShadow: '2px 0 5px rgba(0,0,0,0.1)', }}>
+                    <h1 style={{ fontSize: 20, fontWeight: 700 }}>正在进行的秒杀</h1>
                     <List
-                        grid={{gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 3}}
+                        grid={{ gutter: 16, xs: 2, sm: 2, md: 2, lg: 2, xl: 2, xxl: 2 }}
                         dataSource={seckillItems.ongoing}
                         renderItem={(item) => (
                             <List.Item>
                                 <Card
-                                    cover={<img alt="product" src={item.imgs[0]}/>}
+                                    cover={<img alt="product" src={item.imgs[0]} />}
                                     title={item.name}
                                     onClick={() => handleItemClick(item._id)}
                                 >
                                     {`价格: ${item.price}￥`}
-                                    <br/>
+                                    <br />
                                     {`秒杀结束时间: ${new Date(item.seckillEnd).toLocaleString()}`}
-                                    <br/>
+                                    <br />
                                     {`剩余时间: ${formatTimeLeft(item.seckillEnd)}`}
                                 </Card>
                             </List.Item>
                         )}
                     />
                 </Card>
-                <Card bordered={false} style={{borderRadius: 20, boxShadow: '2px 0 5px rgba(0,0,0,0.1)',}}>
-                    <h1 style={{fontSize: 20, fontWeight: 700}}>即将开始的秒杀</h1>
+                <Card bordered={false} style={{ borderRadius: 20, boxShadow: '2px 0 5px rgba(0,0,0,0.1)', }}>
+                    <h1 style={{ fontSize: 20, fontWeight: 700 }}>即将开始的秒杀</h1>
                     <List
-                        grid={{gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 3}}
+                        grid={{ gutter: 16, xs: 2, sm: 2, md: 2, lg: 2, xl: 2, xxl: 2 }}
                         dataSource={seckillItems.upcoming}
                         renderItem={(item) => (
                             <List.Item>
                                 <Card
-                                    cover={<img alt="product" src={item.imgs[0]}/>}
+                                    cover={<img alt="product" src={item.imgs[0]} />}
                                     title={item.name}
                                     onClick={() => handleItemClick(item._id)}
                                 >
                                     {`价格: ${item.price}￥`}
-                                    <br/>
+                                    <br />
                                     {`秒杀开始时间: ${new Date(item.seckillStart).toLocaleString()}`}
-                                    <br/>
+                                    <br />
                                     {`倒计时: ${formatTimeLeft(item.seckillStart)}`}
                                 </Card>
                             </List.Item>
                         )}
                     />
                 </Card>
-                <br/>
-                <h1 style={{fontSize: 24, fontWeight: 700}}>精选好物</h1>
+                <br />
+                <h1 style={{ fontSize: 24, fontWeight: 700 }}>精选好物</h1>
                 <List
-                    grid={{gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 4}}
+                    grid={{ gutter: 16, xs: 2, sm: 2, md: 2, lg: 2, xl: 2, xxl: 2 }}
                     dataSource={hotItems}
                     renderItem={(item) => (
                         <List.Item>
                             <Card
                                 hoverable
-                                style={{borderRadius: 20, boxShadow: '2px 0 5px rgba(0,0,0,0.1)',}}
-                                cover={<div style={{display: 'flex', justifyContent: 'center', padding: '20px',}}>
-                                    <img alt="product" src={item.imgs[0]} style={{borderRadius: 20}}/></div>}
+                                style={{ borderRadius: 20, boxShadow: '2px 0 5px rgba(0,0,0,0.1)', }}
+                                cover={<div style={{ display: 'flex', justifyContent: 'center', padding: '20px', }}>
+                                    <img alt="product" src={item.imgs[0]} style={{ borderRadius: 20 }} /></div>}
                                 onClick={() => handleItemClick(item._id)}
                             >
                                 <Card.Meta
                                     title={(
-                                        <div style={{textAlign: 'center'}}>
+                                        <div style={{ textAlign: 'center' }}>
                                             {`${item.name}`}
                                         </div>
                                     )}
                                     description={(
-                                        <div style={{textAlign: 'center'}}>
+                                        <div style={{ textAlign: 'center' }}>
                                             <div>{`描述: ${item.desc}`}</div>
-                                            <br/>
+                                            <br />
                                             <div style={{
                                                 fontSize: 20,
                                                 fontWeight: 700,

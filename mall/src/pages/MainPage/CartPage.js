@@ -97,23 +97,33 @@ const CartPage = ({ history, userInfo }) => {
     }
   };
 
+  const handleItemClick = (productId) => {
+    history.push({
+      pathname: '/mainpage/product/detail',
+      state: { productId },
+    });
+  };
+
   const totalPrice = cartItems.reduce((total, item, index) => {
     if (selectedItems[index]) {
       return total + item.price * item.quantity;
     }
     return total;
   }, 0);
+
   const title = (
       <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <div>购物车</div>
         <Checkbox onChange={handleSelectAll}>全选</Checkbox>
-      </div>)
+      </div>
+  );
+
   return (
       <Card title={title}>
         <List
             dataSource={cartItems}
             renderItem={(item, index) => (
-                <List.Item>
+                <List.Item onClick={() => handleItemClick(item.productId)}>
                   <div style={{width:'100%'}}>
                     <Space style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                       <Space style={{display: 'flex', alignItems: 'center' }}>
@@ -133,7 +143,6 @@ const CartPage = ({ history, userInfo }) => {
                           数量: {item.quantity}
                         </div>
                       </Space>
-
                       <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                         <Space direction="vertical" align="center">
                           <InputNumber
@@ -148,10 +157,8 @@ const CartPage = ({ history, userInfo }) => {
                         </Space>
                       </div>
                     </Space>
-                    {/*<br/>*/}
                     <Divider/>
                   </div>
-
                 </List.Item>
             )}
         />
@@ -160,7 +167,6 @@ const CartPage = ({ history, userInfo }) => {
           <Button type="default" onClick={handleCheckout}>去结算</Button>
         </div>
       </Card>
-
   );
 };
 

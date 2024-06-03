@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { List, Card, message, Divider } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { reqCatagoryList } from 'api'; // 引入获取分类列表的请求
-import { SideBar } from 'antd-mobile'; // 引入 antd-mobile 的 SideBar
+import { reqCatagoryList } from 'api';
+import { SideBar } from 'antd-mobile';
 import 'antd-mobile/es/global';
 
 const { Meta } = Card;
@@ -54,7 +54,7 @@ const CategoryPage = ({ history }) => {
     const handleItemClick = (item) => {
         history.push({
             pathname: '/mainpage/products',
-            state: { categoryId: item._id },
+            state: { categoryId: item._id, from: 'category' },
         });
     };
 
@@ -72,7 +72,7 @@ const CategoryPage = ({ history }) => {
                         boxShadow: '2px 0 5px rgba(0,0,0,0.1)',
                         width: '20%',
                         borderRadius: '4px',
-                        overflowY: 'auto', // 使侧边栏在内容溢出时可以滚动
+                        overflowY: 'auto',
                     }}
                 >
                     {categories.map(category => (
@@ -111,12 +111,7 @@ const CategoryPage = ({ history }) => {
                             <h1 style={{ fontSize: 20, fontWeight: 700 }}>{selectedCategory.name}</h1>
                             <Divider />
                             <List
-                                grid={{ gutter: 16, xs: 2,
-                                    sm: 2,
-                                    md: 4,
-                                    lg: 4,
-                                    xl: 4,
-                                    xxl: 3, }}
+                                grid={{ gutter: 16, xs: 2, sm: 2, md: 4, lg: 4, xl: 4, xxl: 3 }}
                                 dataSource={selectedCategory.items || []}
                                 renderItem={(item) => (
                                     <List.Item>
@@ -128,11 +123,12 @@ const CategoryPage = ({ history }) => {
                                         >
                                             <Meta
                                                 title={<div style={{
-                                                        textAlign: 'center',
-                                                        fontWeight: 'bold',
-                                                        fontSize:12 }}>
-                                                        {item.name}
-                                                    </div>}
+                                                    textAlign: 'center',
+                                                    fontWeight: 'bold',
+                                                    fontSize: 12
+                                                }}>
+                                                    {item.name}
+                                                </div>}
                                             />
                                         </Card>
                                     </List.Item>

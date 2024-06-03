@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { Button, Card, Icon, List, message, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { reqAddToCart, reqAddToFavorites, reqAddToFootprints, reqCreateOrder, reqGetProductDetails, reqSeckill } from '../../api';
-import {Space} from "antd-mobile";
-import {StarOutline} from "antd-mobile-icons";
+import { Space } from "antd-mobile";
+import { StarOutline } from "antd-mobile-icons";
 
 const { Text } = Typography;
 const listStyle = { fontSize: 15, marginRight: '1rem' };
@@ -19,9 +19,9 @@ class ProductDetailPage extends React.Component {
             seckillStatus: '',
         };
         this.title = (
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '0 10'}}>
-                <Icon type="arrow-left" onClick={this.goBack} style={{fontSize: 20}}/>
-                <StarOutline onClick={this.handleAddToFavorites} style={{fontSize: 20}}/>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '0 10' }}>
+                <Icon type="arrow-left" onClick={this.goBack} style={{ fontSize: 20 }} />
+                <StarOutline onClick={this.handleAddToFavorites} style={{ fontSize: 20 }} />
             </div>
         );
     }
@@ -92,7 +92,18 @@ class ProductDetailPage extends React.Component {
     }
 
     goBack = () => {
-        this.props.history.goBack();
+        const { from } = this.props.location.state;
+        if (from === 'cart') {
+            this.props.history.push('/mainpage/cart');
+        } else if (from === 'productList') {
+            this.props.history.push('/mainpage/product/list');
+        } else if (from === 'category') {
+            this.props.history.push('/mainpage/category');
+        } else if (from === 'header') {
+            this.props.history.push('/mainpage/home');
+        } else {
+            this.props.history.goBack();
+        }
     }
 
     handleBuyNow = async () => {
@@ -234,7 +245,7 @@ class ProductDetailPage extends React.Component {
                     )}
                 </List>
 
-                <div style={{ display: 'flex', justifyContent: 'center', padding: 10, margin: 10}}>
+                <div style={{ display: 'flex', justifyContent: 'center', padding: 10, margin: 10 }}>
                     <Space>
                         <Button type="default" onClick={this.handleBuyNow}>立即购买</Button>
                         <Button type="default" onClick={this.handleAddToCart}>加入购物车</Button>
@@ -242,8 +253,6 @@ class ProductDetailPage extends React.Component {
                             <Button type="danger" onClick={this.handleSeckill} disabled={!isSeckillActive}>秒杀抢购</Button>
                         )}
                     </Space>
-                    {/*<Button onClick={this.handleAddToFavorites}>收藏</Button>*/}
-
                 </div>
             </Card>
         );
