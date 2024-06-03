@@ -929,6 +929,18 @@ router.get('/product/:id', async (req, res) => {
     }
 });
 
+// // 创建订单
+// router.post('/order/create', async (req, res) => {
+//     const { userId, products, totalAmount, originalAmount } = req.body;
+//     try {
+//         const order = new OrderModel({ userId, products, totalAmount, originalAmount: originalAmount, status: '待付款' });
+//         await order.save();
+//         res.send({ status: 0, data: order });
+//     } catch (error) {
+//         res.send({ status: 1, msg: '创建订单失败' });
+//     }
+// });
+
 // 秒杀抢购API
 router.post('/seckill', async (req, res) => {
     const { productId, userId } = req.body;
@@ -951,6 +963,7 @@ router.post('/seckill', async (req, res) => {
             userId,
             products: [{ productId, name: product.name, desc: product.desc, quantity: 1, price: product.seckillPrice }],
             totalAmount: product.seckillPrice,
+            originalAmount: product.price,
             status: '待付款'
         });
         await order.save();

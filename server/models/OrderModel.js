@@ -9,12 +9,13 @@ const orderSchema = new mongoose.Schema({
             name: { type: String, required: true },
             desc: { type: String, required: true },
             quantity: { type: Number, required: true },
-            price: { type: Number, required: true }
+            price: { type: Number, required: true },
+            imgs: { type: [String], default: [] },
         }
     ],
     status: { type: String, required: true, default: '待付款' }, // 订单状态：待付款、待收货、已完成、退款/售后
     totalAmount: { type: Number, required: true },
-    originalAmount: { type: Number, required: false },
+    originalAmount: { type: Number, required: true },
     createTime: { type: Number, default: Date.now }
 });
 

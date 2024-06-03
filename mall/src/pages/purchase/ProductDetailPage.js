@@ -136,7 +136,7 @@ class ProductDetailPage extends React.Component {
             const res = await reqSeckill({ productId, userId: userInfo._id });
             if (res.status === 0) {
                 message.success('秒杀成功');
-                const { orderId } = res;
+                const { orderId } = res.data._id;
                 const products = [{ productId, name, desc, quantity: 1, price: seckillPrice, imgs }];
                 const totalAmount = seckillPrice;
                 const originalAmount = totalAmount;
