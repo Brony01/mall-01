@@ -183,7 +183,7 @@ const ProductListPage = ({ history, location }) => {
                 <h1 style={{ fontSize: 24, fontWeight: 700 }}>精选好物</h1>
                 <List
                     grid={{ gutter: 16, xs: 2, sm: 2, md: 2, lg: 2, xl: 2, xxl: 2 }}
-                    dataSource={hotItems}
+                    dataSource={productListSource}
                     renderItem={(item) => (
                         <List.Item>
                             <Card

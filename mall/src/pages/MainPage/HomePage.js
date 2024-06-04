@@ -210,7 +210,7 @@ const HomePage = ({ history, userInfo }) => {
                 )}
             />
           </Card>
-          <span style={{ fontSize: 20, fontWeight: 700 }}>精选好物</span>
+          <span style={{ fontSize: 20, fontWeight: 700 }}>热门商品</span>
           <List
               grid={{ gutter: 16, xs: 1,
                 sm: 2,
