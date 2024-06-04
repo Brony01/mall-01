@@ -16,6 +16,7 @@ const ProductListPage = ({ history, location }) => {
     const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(false);
     const [categoryId, setCategoryId] = useState(location.state?.categoryId || '');
+    const [pCategoryId, setParentCategoryId] = useState(location.state?.pCategoryId || '');
     const [searchText, setSearchText] = useState(location.state?.searchText || '');
     const [hotItems, setHotItems] = useState([]);
     const [seckillItems, setSeckillItems] = useState({ ongoing: [], upcoming: [] });
@@ -34,17 +35,26 @@ const ProductListPage = ({ history, location }) => {
     }, [location.state]);
 
     useEffect(() => {
-        const intervalId = setInterval(() => {
-            fetchSeckillProducts();
-        }, 1000);
-
-        return () => clearInterval(intervalId);
-    }, []);
+        if (location.state?.categoryId && location.state?.pCategoryId) {
+            console.log('Received Category ID:', location.state.categoryId); // 添加日志
+            console.log('Received Parent Category ID:', location.state.pCategoryId); // 添加日志
+            setCategoryId(location.state.categoryId);
+            setParentCategoryId(location.state.pCategoryId);
+            setSearchText('');
+        } else if (location.state?.searchText) {
+            setSearchText(location.state.searchText);
+            setCategoryId('');
+            setParentCategoryId('');
+        }
+        getProductList(1);
+        fetchHotProducts();
+        fetchSeckillProducts();
+    }, [location.state]);
 
     const getProductList = async (pageNum) => {
         setLoading(true);
         try {
-            const res = await reqProductList({ pageNum, pageSize: PAGE_SIZE, categoryId, searchText });
+            const res = await reqProductList({ pageNum, pageSize: PAGE_SIZE, categoryId, pCategoryId, searchText });
             if (res.status === 0) {
                 const { total, list } = res.data;
                 const filteredList = list.filter(item => item.status === 1); // 过滤掉下架商品
