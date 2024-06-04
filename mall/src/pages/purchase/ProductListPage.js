@@ -3,7 +3,7 @@ import {
     Card, Typography, Button, message, List,
 } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { reqProductList, reqHotProducts, reqSeckillProducts } from 'api';
+import { reqProductList, reqHotProducts, reqSeckillProducts } from '../../api';
 import { formatNumber } from '../../utils/common';
 import { Space } from "antd-mobile";
 

@@ -41,6 +41,7 @@ class Admin extends Component {
                 <Content style={{background: '#F4F5F9', paddingBottom: 20 ,marginTop: 80}}>
                     <Suspense fallback={<Loading />}>
                         <Switch>
+                            <Route path="/" exact render={() => <Redirect to="/mainpage/home" />} />
                             <Route path="/mainpage/home" component={HomePage} />
                             <Route path="/mainpage/category" component={CategoryPage} />
                             <Route path="/mainpage/cart" component={CartPage} />

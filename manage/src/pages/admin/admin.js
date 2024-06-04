@@ -1,5 +1,5 @@
 import React, { Component, Suspense } from "react";
-import { Redirect, Switch } from "react-router-dom";
+import {Redirect, Route, Switch} from "react-router-dom";
 import { BackTop, Layout } from "antd";
 import { connect } from "react-redux";
 import Loadable from "react-loadable";
@@ -106,7 +106,7 @@ class Admin extends Component {
                             <Switch>
                                 {/*<AuthRouter path="/mainpage/my/address" component={AddressPage} />*/}
                                 {/*<AuthRouter path="/mainpage/my/reviews" component={ReviewsPage} />*/}
-
+                                <Route path="/" exact render={() => <Redirect to="/home" />} />
                                 <AuthRouter path="/home" component={Home} />
                                 <AuthRouter path="/category" component={Category} />
                                 <AuthRouter path="/product" component={Product} />
