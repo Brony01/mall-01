@@ -51,9 +51,10 @@ const CategoryPage = ({ history }) => {
     };
 
     const handleItemClick = (item) => {
+        console.log('Selected Category ID:', item._id); // 添加日志
         history.push({
             pathname: '/mainpage/products',
-            state: { categoryId: item._id, from: 'category' },
+            state: { categoryId: item._id, pCategoryId: selectedCategory._id, from: 'category' },
         });
     };
 

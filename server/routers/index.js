@@ -262,10 +262,12 @@ router.get('/manage/product/search', (req, res) => {
 
 // 获取产品分页列表
 router.get('/manage/product/list', (req, res) => {
-    const { pageNum, pageSize, categoryId } = req.query;
+    const { pageNum, pageSize, categoryId, pCategoryId } = req.query;
+    console.log('API received categoryId:', categoryId); // 添加日志
+    console.log('API received pCategoryId:', pCategoryId); // 添加日志
     let condition = {};
-    if (categoryId) {
-        condition.categoryId = categoryId;
+    if (categoryId && pCategoryId) {
+        condition = { categoryId, pCategoryId };
     }
     ProductModel.find(condition).sort({ "_id": -1 })
         .then(products => {
@@ -894,15 +896,28 @@ router.post('/coupon/use', async (req, res) => {
 // 获取秒杀商品列表
 router.get('/manage/product/seckill', async (req, res) => {
     try {
+        const { categoryId, pCategoryId } = req.query;
         const now = new Date();
-        const ongoingSeckills = await ProductModel.find({
+        let condition = {
             seckillStart: { $lte: now },
             seckillEnd: { $gte: now }
-        }).sort({ seckillEnd: 1 }).limit(10);
+        };
+        if (categoryId && pCategoryId) {
+            condition.categoryId = categoryId;
+            condition.pCategoryId = pCategoryId;
+        }
 
-        const upcomingSeckills = await ProductModel.find({
+        const ongoingSeckills = await ProductModel.find(condition).sort({ seckillEnd: 1 }).limit(100);
+
+        condition = {
             seckillStart: { $gt: now }
-        }).sort({ seckillStart: 1 }).limit(10);
+        };
+        if (categoryId && pCategoryId) {
+            condition.categoryId = categoryId;
+            condition.pCategoryId = pCategoryId;
+        }
+
+        const upcomingSeckills = await ProductModel.find(condition).sort({ seckillStart: 1 }).limit(100);
 
         res.send({
             status: 0,
@@ -915,6 +930,7 @@ router.get('/manage/product/seckill', async (req, res) => {
         res.send({ status: 1, msg: '获取秒杀商品列表失败' });
     }
 });
+
 
 
 // 商品详情
