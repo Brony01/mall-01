@@ -896,15 +896,28 @@ router.post('/coupon/use', async (req, res) => {
 // 获取秒杀商品列表
 router.get('/manage/product/seckill', async (req, res) => {
     try {
+        const { categoryId, pCategoryId } = req.query;
         const now = new Date();
-        const ongoingSeckills = await ProductModel.find({
+        let condition = {
             seckillStart: { $lte: now },
             seckillEnd: { $gte: now }
-        }).sort({ seckillEnd: 1 }).limit(10);
+        };
+        if (categoryId && pCategoryId) {
+            condition.categoryId = categoryId;
+            condition.pCategoryId = pCategoryId;
+        }
 
-        const upcomingSeckills = await ProductModel.find({
+        const ongoingSeckills = await ProductModel.find(condition).sort({ seckillEnd: 1 }).limit(100);
+
+        condition = {
             seckillStart: { $gt: now }
-        }).sort({ seckillStart: 1 }).limit(10);
+        };
+        if (categoryId && pCategoryId) {
+            condition.categoryId = categoryId;
+            condition.pCategoryId = pCategoryId;
+        }
+
+        const upcomingSeckills = await ProductModel.find(condition).sort({ seckillStart: 1 }).limit(100);
 
         res.send({
             status: 0,
@@ -917,6 +930,7 @@ router.get('/manage/product/seckill', async (req, res) => {
         res.send({ status: 1, msg: '获取秒杀商品列表失败' });
     }
 });
+
 
 
 // 商品详情
