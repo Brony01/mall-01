@@ -16,6 +16,8 @@ const FavoriteModel = require('../models/FavoriteModel');
 const OrderModel = require('../models/OrderModel');
 const FootprintModel = require('../models/FootprintModel');
 
+const pinyin = require('pinyin');
+
 // 生成token的方法
 function generateToken(data = {}) {
     const created = Math.floor(Date.now() / 1000);
@@ -269,11 +271,19 @@ router.get('/manage/product/list', (req, res) => {
 
     let condition = {};
     if (categoryId && pCategoryId) {
-        condition.categoryId = categoryId;
-        condition.pCategoryId = pCategoryId;
+        condition = { categoryId, pCategoryId };
     }
     if (searchText) {
-        condition.name = new RegExp(searchText, 'i'); // 添加搜索条件，忽略大小写
+        const regex = new RegExp(searchText, 'i'); // 模糊搜索，忽略大小写
+        const pinyinSearchTextArray = pinyin(searchText, { style: pinyin.STYLE_NORMAL });
+        const pinyinSearchText = pinyinSearchTextArray.join('');
+        const pinyinInitialsSearchText = pinyinSearchTextArray.map(item => item[0]).join('');
+
+        condition.$or = [
+            { name: regex },
+            { name: new RegExp(pinyinSearchText, 'i') },
+            { name: new RegExp(pinyinInitialsSearchText, 'i') }
+        ];
     }
 
     ProductModel.find(condition).sort({ "_id": -1 })
@@ -903,7 +913,7 @@ router.post('/coupon/use', async (req, res) => {
 // 获取秒杀商品列表
 router.get('/manage/product/seckill', async (req, res) => {
     try {
-        const { categoryId, pCategoryId } = req.query;
+        const { categoryId, pCategoryId, searchText } = req.query;
         const now = new Date();
         let condition = {
             seckillStart: { $lte: now },
@@ -912,6 +922,18 @@ router.get('/manage/product/seckill', async (req, res) => {
         if (categoryId && pCategoryId) {
             condition.categoryId = categoryId;
             condition.pCategoryId = pCategoryId;
+        }
+        if (searchText) {
+            const regex = new RegExp(searchText, 'i'); // 模糊搜索，忽略大小写
+            const pinyinSearchTextArray = pinyin(searchText, { style: pinyin.STYLE_NORMAL });
+            const pinyinSearchText = pinyinSearchTextArray.join('');
+            const pinyinInitialsSearchText = pinyinSearchTextArray.map(item => item[0]).join('');
+
+            condition.$or = [
+                { name: regex },
+                { name: new RegExp(pinyinSearchText, 'i') },
+                { name: new RegExp(pinyinInitialsSearchText, 'i') }
+            ];
         }
 
         const ongoingSeckills = await ProductModel.find(condition).sort({ seckillEnd: 1 }).limit(100);
@@ -922,6 +944,18 @@ router.get('/manage/product/seckill', async (req, res) => {
         if (categoryId && pCategoryId) {
             condition.categoryId = categoryId;
             condition.pCategoryId = pCategoryId;
+        }
+        if (searchText) {
+            const regex = new RegExp(searchText, 'i'); // 模糊搜索，忽略大小写
+            const pinyinSearchTextArray = pinyin(searchText, { style: pinyin.STYLE_NORMAL });
+            const pinyinSearchText = pinyinSearchTextArray.join('');
+            const pinyinInitialsSearchText = pinyinSearchTextArray.map(item => item[0]).join('');
+
+            condition.$or = [
+                { name: regex },
+                { name: new RegExp(pinyinSearchText, 'i') },
+                { name: new RegExp(pinyinInitialsSearchText, 'i') }
+            ];
         }
 
         const upcomingSeckills = await ProductModel.find(condition).sort({ seckillStart: 1 }).limit(100);
@@ -937,8 +971,6 @@ router.get('/manage/product/seckill', async (req, res) => {
         res.send({ status: 1, msg: '获取秒杀商品列表失败' });
     }
 });
-
-
 
 // 商品详情
 router.get('/product/:id', async (req, res) => {

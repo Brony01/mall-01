@@ -82,7 +82,7 @@ const ProductListPage = ({ history, location }) => {
 
     const fetchSeckillProducts = async () => {
         try {
-            const res = await reqSeckillProducts({ categoryId, pCategoryId });
+            const res = await reqSeckillProducts({ categoryId, pCategoryId, searchText });
             if (res.status === 0) {
                 setSeckillItems(res.data);
             } else {
