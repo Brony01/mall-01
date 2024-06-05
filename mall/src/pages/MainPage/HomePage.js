@@ -35,7 +35,7 @@ const HomePage = ({ history, userInfo }) => {
   useEffect(() => {
     const fetchHotProducts = async () => {
       try {
-        const res = await reqHotProducts();
+        const res = await reqHotProducts({ searchText: '' });
         if (res.status === 0) {
           const list = res.data;
           const filteredList = list.filter(item => item.status === 1); // 过滤掉下架商品
@@ -64,7 +64,7 @@ const HomePage = ({ history, userInfo }) => {
 
     const fetchSeckillProducts = async () => {
       try {
-        const res = await reqSeckillProducts();
+        const res = await reqSeckillProducts({ searchText: '' });
         if (res.status === 0) {
           setSeckillItems(res.data);
         } else {
@@ -84,7 +84,7 @@ const HomePage = ({ history, userInfo }) => {
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [userInfo]);
 
   const handleSearch = (value) => {
     history.push({

@@ -16,7 +16,7 @@ const FavoriteModel = require('../models/FavoriteModel');
 const OrderModel = require('../models/OrderModel');
 const FootprintModel = require('../models/FootprintModel');
 
-const PinyinHelper = require('pinyin4js').PinyinHelper;
+const pinyinMatch = require('pinyin-match');
 
 // 生成token的方法
 function generateToken(data = {}) {
@@ -275,13 +275,11 @@ router.get('/manage/product/list', (req, res) => {
     }
     if (searchText) {
         const regex = new RegExp(searchText, 'i'); // 模糊搜索，忽略大小写
-        const pinyinSearchText = PinyinHelper.convertToPinyinString(searchText, '', PinyinFormat.WITHOUT_TONE);
-        const pinyinInitialsSearchText = PinyinHelper.getShortPinyin(searchText);
+        const pinyinRegex = pinyinMatch.match(searchText, 'g'); // 使用 pinyin-match 进行拼音匹配
 
         condition.$or = [
             { name: regex },
-            { name: new RegExp(pinyinSearchText, 'i') },
-            { name: new RegExp(pinyinInitialsSearchText, 'i') }
+            { name: pinyinRegex }
         ];
     }
 
@@ -924,13 +922,11 @@ router.get('/manage/product/seckill', async (req, res) => {
         }
         if (searchText) {
             const regex = new RegExp(searchText, 'i'); // 模糊搜索，忽略大小写
-            const pinyinSearchText = PinyinHelper.convertToPinyinString(searchText, '', PinyinFormat.WITHOUT_TONE);
-            const pinyinInitialsSearchText = PinyinHelper.getShortPinyin(searchText);
+            const pinyinRegex = pinyinMatch.match(searchText, 'g'); // 使用 pinyin-match 进行拼音匹配
 
             condition.$or = [
                 { name: regex },
-                { name: new RegExp(pinyinSearchText, 'i') },
-                { name: new RegExp(pinyinInitialsSearchText, 'i') }
+                { name: pinyinRegex }
             ];
         }
 
@@ -945,13 +941,11 @@ router.get('/manage/product/seckill', async (req, res) => {
         }
         if (searchText) {
             const regex = new RegExp(searchText, 'i'); // 模糊搜索，忽略大小写
-            const pinyinSearchText = PinyinHelper.convertToPinyinString(searchText, '', PinyinFormat.WITHOUT_TONE);
-            const pinyinInitialsSearchText = PinyinHelper.getShortPinyin(searchText);
+            const pinyinRegex = pinyinMatch.match(searchText, 'g'); // 使用 pinyin-match 进行拼音匹配
 
             condition.$or = [
                 { name: regex },
-                { name: new RegExp(pinyinSearchText, 'i') },
-                { name: new RegExp(pinyinInitialsSearchText, 'i') }
+                { name: pinyinRegex }
             ];
         }
 
