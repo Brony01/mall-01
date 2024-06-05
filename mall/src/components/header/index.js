@@ -48,10 +48,17 @@ class HeaderSelf extends Component {
     }
 
     handleSearch = (value) => {
-        this.props.history.push({
-            pathname: '/mainpage/products',
-            state: { searchText: value, from: 'header' },
-        });
+        if (this.props.location.pathname !== '/mainpage/products') {
+            this.props.history.push({
+                pathname: '/mainpage/products',
+                state: { searchText: value, from: 'header' },
+            });
+        } else {
+            this.props.history.replace({
+                pathname: '/mainpage/products',
+                state: { searchText: value, from: 'header' },
+            });
+        }
     };
 
     render() {

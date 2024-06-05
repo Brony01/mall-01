@@ -262,13 +262,20 @@ router.get('/manage/product/search', (req, res) => {
 
 // 获取产品分页列表
 router.get('/manage/product/list', (req, res) => {
-    const { pageNum, pageSize, categoryId, pCategoryId } = req.query;
+    const { pageNum, pageSize, categoryId, pCategoryId, searchText } = req.query;
     console.log('API received categoryId:', categoryId); // 添加日志
     console.log('API received pCategoryId:', pCategoryId); // 添加日志
+    console.log('API received searchText:', searchText); // 添加日志
+
     let condition = {};
     if (categoryId && pCategoryId) {
-        condition = { categoryId, pCategoryId };
+        condition.categoryId = categoryId;
+        condition.pCategoryId = pCategoryId;
     }
+    if (searchText) {
+        condition.name = new RegExp(searchText, 'i'); // 添加搜索条件，忽略大小写
+    }
+
     ProductModel.find(condition).sort({ "_id": -1 })
         .then(products => {
             res.send({ status: 0, data: pageFilter(products, pageNum, pageSize) });

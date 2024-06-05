@@ -22,19 +22,6 @@ const ProductListPage = ({ history, location }) => {
     const [seckillItems, setSeckillItems] = useState({ ongoing: [], upcoming: [] });
 
     useEffect(() => {
-        if (location.state?.categoryId) {
-            setCategoryId(location.state.categoryId);
-            setSearchText('');
-        } else if (location.state?.searchText) {
-            setSearchText(location.state.searchText);
-            setCategoryId('');
-        }
-        getProductList(1);
-        fetchHotProducts();
-        fetchSeckillProducts();
-    }, [location.state]);
-
-    useEffect(() => {
         if (location.state?.categoryId && location.state?.pCategoryId) {
             console.log('Received Category ID:', location.state.categoryId); // 添加日志
             console.log('Received Parent Category ID:', location.state.pCategoryId); // 添加日志
@@ -50,6 +37,14 @@ const ProductListPage = ({ history, location }) => {
         fetchHotProducts();
         fetchSeckillProducts();
     }, [location.state]);
+
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            fetchSeckillProducts();
+        }, 1000);
+
+        return () => clearInterval(intervalId);
+    }, []);
 
     const getProductList = async (pageNum) => {
         setLoading(true);
