@@ -23,8 +23,6 @@ const ProductListPage = ({ history, location }) => {
 
     useEffect(() => {
         if (location.state?.categoryId && location.state?.pCategoryId) {
-            console.log('Received Category ID:', location.state.categoryId); // 添加日志
-            console.log('Received Parent Category ID:', location.state.pCategoryId); // 添加日志
             setCategoryId(location.state.categoryId);
             setParentCategoryId(location.state.pCategoryId);
             setSearchText('');
@@ -36,15 +34,13 @@ const ProductListPage = ({ history, location }) => {
         getProductList(1);
         fetchHotProducts();
         fetchSeckillProducts();
-    }, [location.state]);
 
-    useEffect(() => {
         const intervalId = setInterval(() => {
             fetchSeckillProducts();
         }, 1000);
 
         return () => clearInterval(intervalId);
-    }, []);
+    }, [location.state, searchText]);
 
     const getProductList = async (pageNum) => {
         setLoading(true);
@@ -89,7 +85,7 @@ const ProductListPage = ({ history, location }) => {
                 message.error('获取秒杀商品失败');
             }
         } catch (error) {
-            //message.error('获取秒杀商品失败');
+            message.error('获取秒杀商品失败');
         }
     };
 
