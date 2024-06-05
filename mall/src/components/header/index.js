@@ -67,7 +67,7 @@ class HeaderSelf extends Component {
             <div className='header'>
                 <div className='header-top'>
                     <span>Hello，{userInfo.username}</span>
-                    <SearchBar style={{ width: '60%' }} placeholder="请输入商品名称 如: 手机" onSearch={this.handleSearch} enterButton />
+                    <SearchBar style={{ width: '60%' }} placeholder="请输入商品名称" onSearch={this.handleSearch} enterButton />
                     <Button type='link' onClick={this.exitConfirm}>退出</Button>
                 </div>
             </div>
