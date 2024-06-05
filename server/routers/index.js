@@ -16,7 +16,7 @@ const FavoriteModel = require('../models/FavoriteModel');
 const OrderModel = require('../models/OrderModel');
 const FootprintModel = require('../models/FootprintModel');
 
-const pinyin = require('pinyin');
+const PinyinHelper = require('pinyin4js').PinyinHelper;
 
 // 生成token的方法
 function generateToken(data = {}) {
@@ -275,9 +275,8 @@ router.get('/manage/product/list', (req, res) => {
     }
     if (searchText) {
         const regex = new RegExp(searchText, 'i'); // 模糊搜索，忽略大小写
-        const pinyinSearchTextArray = pinyin(searchText, { style: pinyin.STYLE_NORMAL });
-        const pinyinSearchText = pinyinSearchTextArray.join('');
-        const pinyinInitialsSearchText = pinyinSearchTextArray.map(item => item[0]).join('');
+        const pinyinSearchText = PinyinHelper.convertToPinyinString(searchText, '', PinyinFormat.WITHOUT_TONE);
+        const pinyinInitialsSearchText = PinyinHelper.getShortPinyin(searchText);
 
         condition.$or = [
             { name: regex },
@@ -925,9 +924,8 @@ router.get('/manage/product/seckill', async (req, res) => {
         }
         if (searchText) {
             const regex = new RegExp(searchText, 'i'); // 模糊搜索，忽略大小写
-            const pinyinSearchTextArray = pinyin(searchText, { style: pinyin.STYLE_NORMAL });
-            const pinyinSearchText = pinyinSearchTextArray.join('');
-            const pinyinInitialsSearchText = pinyinSearchTextArray.map(item => item[0]).join('');
+            const pinyinSearchText = PinyinHelper.convertToPinyinString(searchText, '', PinyinFormat.WITHOUT_TONE);
+            const pinyinInitialsSearchText = PinyinHelper.getShortPinyin(searchText);
 
             condition.$or = [
                 { name: regex },
@@ -947,9 +945,8 @@ router.get('/manage/product/seckill', async (req, res) => {
         }
         if (searchText) {
             const regex = new RegExp(searchText, 'i'); // 模糊搜索，忽略大小写
-            const pinyinSearchTextArray = pinyin(searchText, { style: pinyin.STYLE_NORMAL });
-            const pinyinSearchText = pinyinSearchTextArray.join('');
-            const pinyinInitialsSearchText = pinyinSearchTextArray.map(item => item[0]).join('');
+            const pinyinSearchText = PinyinHelper.convertToPinyinString(searchText, '', PinyinFormat.WITHOUT_TONE);
+            const pinyinInitialsSearchText = PinyinHelper.getShortPinyin(searchText);
 
             condition.$or = [
                 { name: regex },
