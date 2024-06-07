@@ -1,9 +1,10 @@
 import React from 'react';
-import { Button, Card, List, message, Typography, Modal, Radio } from 'antd';
+import {Button, Card, List, message, Typography, Modal, Radio, Divider} from 'antd';
 import { withRouter } from 'react-router-dom';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { reqCancelOrder, reqConfirmReceipt, reqCreateOrder, reqGetOrderDetails, reqRequestAfterSales, reqUpdateOrder } from '../../api';
 import { connect } from "react-redux";
+import {NavBar, Space} from "antd-mobile";
 
 const { Text } = Typography;
 const { confirm } = Modal;
@@ -133,53 +134,72 @@ class OrderDetailsPage extends React.Component {
         const finalAmount = order.totalAmount;
 
         return (
-            <Card title={`订单号: ${orderId}`} style={{ marginRight: ' 5% ', marginLeft: ' 5% ' }}>
-                <ArrowLeftOutlined onClick={this.handleBack} style={{ fontSize: 25, marginBottom: 10 }} />
-                <List
-                    itemLayout="vertical"
-                    dataSource={products}
-                    renderItem={(product) => (
-                        <List.Item key={product._id}>
-                            <List.Item.Meta
-                                title={`商品名：${product.name} | 商品描述：${product.desc}`}
-                                description={`价格: ¥${product.price} | 数量: ${product.quantity}`}
-                            />
-                            <img src={product.imgs[0]} alt={product.name} style={{ width: '50px', marginTop: '10px' }} />
-                        </List.Item>
+            <div style={{backgroundColor:'white', height:'100vh'}}>
+                <NavBar onBack={this.handleBack} style={{ fontSize: 25, fontWeight:700 }}>{`订单号: ${orderId}`}</NavBar>
+                <div style={{ padding:'0 5%' }}>
+                    {/*<ArrowLeftOutlined onClick={}  />*/}
+                    <List
+                        itemLayout="vertical"
+                        dataSource={products}
+                        renderItem={(product) => (
+                            <List.Item key={product._id}>
+                                <Card
+                                    bordered={false}
+                                    style={{width:'100%', borderRadius:15}}>
+                                    <Space >
+                                        <div>
+                                            <img src={product.imgs[0]} alt={product.name} style={{ width: '80px'}}/>
+                                        </div>
+                                        <div>
+                                            <span style={{fontSize:20, fontWeight:700, color:'black'}}>{`${product.name}`}</span>
+                                            <br/>
+                                            <span style={{fontSize:16, fontWeight:500}}>{`${product.desc}`}</span>
+                                            <br/>
+                                            <span>{`价格: ¥${product.price} | 数量: ${product.quantity}`}</span>
+                                        </div>
+                                    </Space>
+                                </Card>
+                                <Divider/>
+                            </List.Item>
+                        )}
+                    />
+                    <div style={{textAlign: 'right'}}>
+                        <span>总金额: ¥{totalAmount}</span>
+                        <br/>
+                        <span>优惠金额: ¥{totalAmount - finalAmount}</span>
+                        <br/>
+                        <span>应付金额: ¥{finalAmount}</span>
+                        <br/>
+                        <span>订单状态: {order.status || '未知状态'}</span>
+                        <br/>
+                    </div>
+
+
+                    {order.status === '待付款' && (
+                        <>
+                            <Button type="primary" onClick={this.handlePayment}>去支付</Button>
+                            <Button onClick={this.handleCancelOrder} style={{marginLeft: 10 }}>取消订单</Button>
+                        </>
                     )}
-                />
-                <Text>总金额: ¥{totalAmount}</Text>
-                <br />
-                <Text>优惠金额: ¥{totalAmount - finalAmount}</Text>
-                <br />
-                <Text>应付金额: ¥{finalAmount}</Text>
-                <br />
-                <br />
-                <Text>订单状态: {order.status || '未知状态'}</Text>
-                <br />
-                {order.status === '待付款' && (
-                    <>
-                        <Button type="primary" onClick={this.handlePayment}>去支付</Button>
-                        <Button onClick={this.handleCancelOrder} style={{ marginLeft: 10 }}>取消订单</Button>
-                    </>
-                )}
-                {order.status === '待收货' && (
-                    <>
-                        <Button type="primary" onClick={this.handleConfirmReceipt}>确认收货</Button>
-                        <Button onClick={this.handleRequestAfterSales} style={{ marginLeft: 10 }}>售后</Button>
-                    </>
-                )}
-                {order.status === '交易成功' && (
-                    <Button type="primary" onClick={this.handleRequestAfterSales}>售后</Button>
-                )}
-                {(order.status && order.status.includes('未通过')) && (
-                    <Button type="primary" onClick={this.handleRequestAfterSales}>再次申请售后</Button>
-                )}
-                {(order.status && order.status.includes('通过')) && null}
-                {order.status === '已取消' && (
-                    <Button type="primary" onClick={this.handleReorder}>重新下单</Button>
-                )}
-            </Card>
+                    {order.status === '待收货' && (
+                        <>
+                            <Button type="primary" onClick={this.handleConfirmReceipt}>确认收货</Button>
+                            <Button onClick={this.handleRequestAfterSales} style={{ marginLeft: 10 }}>售后</Button>
+                        </>
+                    )}
+                    {order.status === '交易成功' && (
+                        <Button type="primary" onClick={this.handleRequestAfterSales}>售后</Button>
+                    )}
+                    {(order.status && order.status.includes('未通过')) && (
+                        <Button type="primary" onClick={this.handleRequestAfterSales}>再次申请售后</Button>
+                    )}
+                    {(order.status && order.status.includes('通过')) && null}
+                    {order.status === '已取消' && (
+                        <Button type="primary" onClick={this.handleReorder}>重新下单</Button>
+                    )}
+                </div>
+            </div>
+
         );
     }
 }

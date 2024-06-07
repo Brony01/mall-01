@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, List, Button, Icon } from 'antd';
 import { connect } from 'react-redux';
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import {NavBar} from "antd-mobile";
 
 class OrderPage extends React.Component {
     state = {
@@ -32,9 +33,10 @@ class OrderPage extends React.Component {
         const { orders } = this.state;
 
         return (
-            <div style={{ marginRight: ' 5% ', marginLeft: ' 5% ' }}>
-                <ArrowLeftOutlined onClick={this.handleBack} style={{ fontSize: 25 }} />
-                <Card title="订单">
+            <div>
+                <NavBar onBack={this.handleBack} style={{ fontSize: 25, fontWeight:700, background: 'white'}}>订单</NavBar>
+                {/*<ArrowLeftOutlined onClick={this.handleBack} style={{ fontSize: 25 }} />*/}
+                <Card style={{padding:'0 3%'}}>
                     <List
                         itemLayout="vertical"
                         dataSource={orders}

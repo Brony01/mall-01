@@ -38,7 +38,7 @@ class Admin extends Component {
         return (
             <Layout style={{ minHeight: "100%", backgroundColor: '#F4F5F9', margin: 0}}>
                 <HeaderSelf />
-                <Content style={{background: '#F4F5F9', paddingBottom: 20 ,marginTop: 80}}>
+                <Content style={{background: '#F4F5F9', paddingBottom: 20 ,marginTop: 73}}>
                     <Suspense fallback={<Loading />}>
                         <Switch>
                             <Route path="/" exact render={() => <Redirect to="/mainpage/home" />} />

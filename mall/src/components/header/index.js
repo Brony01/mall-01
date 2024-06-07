@@ -48,17 +48,10 @@ class HeaderSelf extends Component {
     }
 
     handleSearch = (value) => {
-        if (this.props.location.pathname !== '/mainpage/products') {
-            this.props.history.push({
-                pathname: '/mainpage/products',
-                state: { searchText: value, from: 'header' },
-            });
-        } else {
-            this.props.history.replace({
-                pathname: '/mainpage/products',
-                state: { searchText: value, from: 'header' },
-            });
-        }
+        this.props.history.push({
+            pathname: '/mainpage/products',
+            state: { searchText: value, from: 'header' },
+        });
     };
 
     render() {
@@ -66,8 +59,9 @@ class HeaderSelf extends Component {
         return (
             <div className='header'>
                 <div className='header-top'>
-                    <span>Hello，{userInfo.username}</span>
-                    <SearchBar style={{ width: '60%' }} placeholder="请输入商品名称" onSearch={this.handleSearch} enterButton />
+                    <Icon type="taobao-circle" theme="filled" style={{fontSize: 40}}/>
+                    {/*<span>Hello，{userInfo.username}</span>*/}
+                    <SearchBar style={{ width: '60%' }} placeholder="请输入商品名称 如: 手机" onSearch={this.handleSearch} enterButton />
                     <Button type='link' onClick={this.exitConfirm}>退出</Button>
                 </div>
             </div>

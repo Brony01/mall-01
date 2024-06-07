@@ -13,7 +13,7 @@ export default class extends Component {
     render() {
         return (
             <div>
-                Made with ❤React and Node.js by <LinkA params={this.state.params}/>
+                {/*Made with ❤React and Node.js by <LinkA params={this.state.params}/>*/}
             </div>
         );
     }

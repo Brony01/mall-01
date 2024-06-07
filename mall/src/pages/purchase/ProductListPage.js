@@ -5,7 +5,7 @@ import {
 import { withRouter } from 'react-router-dom';
 import { reqProductList, reqHotProducts, reqSeckillProducts } from '../../api';
 import { formatNumber } from '../../utils/common';
-import { Space } from "antd-mobile";
+import {NavBar, Space, Swiper} from "antd-mobile";
 
 const { Text } = Typography;
 const PAGE_SIZE = 5;
@@ -123,52 +123,73 @@ const ProductListPage = ({ history, location }) => {
     };
 
     return (
-        <div style={{ padding: '0 5%' }}>
-            <Button onClick={handleBack} style={{ marginBottom: '10px' }}>返回</Button>
-            <Space direction='vertical' style={{ width: '100%' }}>
-                <Card bordered={false} style={{ borderRadius: 20, boxShadow: '2px 0 5px rgba(0,0,0,0.1)', }}>
+        <div>
+            <NavBar onBack={handleBack} style={{backgroundColor:'white', boxShadow: '2px 0 5px rgba(0,0,0,0.1)', marginBottom: '10px' }}>商品</NavBar>
+            {/*<Button onClick={handleBack} style={{ marginBottom: '10px' }}>返回</Button>*/}
+            <Space direction='vertical' style={{ width: '100%', padding:'0 3%'}}>
+                <Card bordered={false} style={{ borderRadius: 20, boxShadow: '2px 0 5px rgba(0,0,0,0.1)' }}>
                     <h1 style={{ fontSize: 20, fontWeight: 700 }}>正在进行的秒杀</h1>
-                    <List
-                        grid={{ gutter: 16, xs: 2, sm: 2, md: 2, lg: 2, xl: 2, xxl: 2 }}
-                        dataSource={seckillItems.ongoing.filter(item => item.status === 1)}
-                        renderItem={(item) => (
-                            <List.Item>
+                    <Swiper style={{ padding: '16px 0' }}>
+                        {seckillItems.ongoing.filter((item) => item.status === 1).map((item) => (
+                            <Swiper.Item key={item._id}>
                                 <Card
+                                    bordered={false}
                                     cover={<img alt="product" src={item.imgs[0]} />}
-                                    title={item.name}
                                     onClick={() => handleItemClick(item._id)}
                                 >
-                                    {`价格: ${item.price}￥`}
-                                    <br />
-                                    {`秒杀结束时间: ${new Date(item.seckillEnd).toLocaleString()}`}
-                                    <br />
-                                    {`剩余时间: ${formatTimeLeft(item.seckillEnd)}`}
+                                    <h1 style={{ fontWeight: 700, fontSize: 24 }}>{item.name}</h1>
+                                    <p style={{ fontWeight: 500, fontSize: 20 }}>{item.desc}</p>
+
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <span style={{ fontWeight: 700, fontSize: 20, color: 'red' }}>{`${item.price}￥`}</span>
+                                        <span style={{ fontWeight: 500, fontSize: 16 }}>{`倒计时：${formatTimeLeft(item.seckillEnd)}`}</span>
+                                    </div>
                                 </Card>
-                            </List.Item>
-                        )}
-                    />
+                            </Swiper.Item>
+                        ))}
+                    </Swiper>
                 </Card>
-                <Card bordered={false} style={{ borderRadius: 20, boxShadow: '2px 0 5px rgba(0,0,0,0.1)', }}>
+                <Card bordered={false} style={{ borderRadius: 20, boxShadow: '2px 0 5px rgba(0,0,0,0.1)' }}>
                     <h1 style={{ fontSize: 20, fontWeight: 700 }}>即将开始的秒杀</h1>
-                    <List
-                        grid={{ gutter: 16, xs: 2, sm: 2, md: 2, lg: 2, xl: 2, xxl: 2 }}
-                        dataSource={seckillItems.upcoming.filter(item => item.status === 1)}
-                        renderItem={(item) => (
-                            <List.Item>
+                    <Swiper style={{ padding: '16px 0' }}>
+                        {seckillItems.upcoming.filter((item) => item.status === 1).map((item) => (
+                            <Swiper.Item key={item._id}>
                                 <Card
                                     cover={<img alt="product" src={item.imgs[0]} />}
-                                    title={item.name}
+                                    // title={item.name}
                                     onClick={() => handleItemClick(item._id)}
                                 >
-                                    {`价格: ${item.price}￥`}
-                                    <br />
-                                    {`秒杀开始时间: ${new Date(item.seckillStart).toLocaleString()}`}
-                                    <br />
-                                    {`倒计时: ${formatTimeLeft(item.seckillStart)}`}
+                                    <h1 style={{ fontWeight: 700, fontSize: 24 }}>{item.name}</h1>
+                                    <p style={{ fontWeight: 500, fontSize: 20 }}>{item.desc}</p>
+                                    <div style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                    }}
+                                    >
+                    <span style={{
+                        fontWeight: 700,
+                        fontSize: 20,
+                        color: 'red',
+                    }}
+                    >
+                      {`${item.price}￥`}
+                    </span>
+                                        <span style={{
+                                            fontWeight: 500,
+                                            fontSize: 16,
+                                        }}
+                                        >
+                      {`秒杀开始时间：${formatTimeLeft(item.seckillStart)}`}
+                    </span>
+                                    </div>
+                                    {/* {`价格: ${item.price}￥`} */}
+                                    {/* <br/> */}
+                                    {/* {`${formatTimeLeft(item.seckillStart)}`} */}
                                 </Card>
-                            </List.Item>
-                        )}
-                    />
+                            </Swiper.Item>
+                        ))}
+                    </Swiper>
                 </Card>
                 <br />
                 <h1 style={{ fontSize: 24, fontWeight: 700 }}>精选好物</h1>
@@ -192,8 +213,7 @@ const ProductListPage = ({ history, location }) => {
                                     )}
                                     description={(
                                         <div style={{ textAlign: 'center' }}>
-                                            <div>{`描述: ${item.desc}`}</div>
-                                            <br />
+                                            {/*<div>{`描述: ${item.desc}`}</div>*/}
                                             <div style={{
                                                 fontSize: 20,
                                                 fontWeight: 700,

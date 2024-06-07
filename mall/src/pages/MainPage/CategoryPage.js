@@ -60,7 +60,7 @@ const CategoryPage = ({ history }) => {
 
     return (
         <div className="main-content">
-            <div className="page-content" style={{ display: 'flex', marginRight: '5%', marginLeft: '5%', height: '100vh' }}>
+            <div style={{ display: 'flex', height: '100vh', backgroundColor:''}}>
                 <SideBar
                     activeKey={selectedCategory?._id}
                     onChange={(key) => {
