@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Modal, Input } from 'antd';
+import {Button, Modal, Input, Icon} from 'antd';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
